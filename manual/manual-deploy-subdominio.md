@@ -4,8 +4,6 @@
 
 Este manual documenta como configurar e fazer deploy de projetos Next.js via FTP para subdomínios na Hostinger.
 
----
-
 ## 📋 Pré-requisitos
 
 1. **Extensão VS Code SFTP instalada:**
@@ -16,8 +14,6 @@ Este manual documenta como configurar e fazer deploy de projetos Next.js via FTP
 
 2. **Projeto Next.js criado**
 3. **Acesso FTP do servidor**
-
----
 
 ## 🗂️ Arquivos Necessários
 
@@ -45,8 +41,6 @@ module.exports = nextConfig;
 - `images.unoptimized: true` → Desabilita otimização de imagens (necessário para FTP)
 - `trailingSlash: true` → Melhora compatibilidade com servidores estáticos
 - ⚠️ `redirects()` e `headers()` NÃO funcionam com `output: "export"`
-
----
 
 ### 2. `.vscode/sftp.json` (configuração FTP)
 
@@ -98,8 +92,6 @@ module.exports = nextConfig;
 - `watcher.files`: `"out/**/*"` para monitorar apenas a pasta de build
 - `ignore`: Arquivos que não devem ser enviados
 
----
-
 ### 3. `deploy.js` (script de deploy automático)
 
 **Crie na raiz do projeto:**
@@ -147,8 +139,6 @@ deploy();
 - Altere `remotePath` (`/subdominio/`)
 - Altere a URL final no console.log
 
----
-
 ### 4. `package.json` (adicionar script de deploy)
 
 **Adicione no objeto `scripts`:**
@@ -164,8 +154,6 @@ deploy();
   }
 }
 ```
-
----
 
 ## 🚀 Instalação e Configuração
 
@@ -193,8 +181,6 @@ npm install --save-dev basic-ftp
    - `.vscode/sftp.json`
    - `deploy.js`
 
----
-
 ## 📦 Processo de Deploy
 
 ### Método 1: Deploy Automático (Recomendado)
@@ -209,8 +195,6 @@ Isso irá:
 
 1. Executar `npm run build` (gera pasta `out/`)
 2. Executar `node deploy.js` (envia via FTP)
-
----
 
 ### Método 2: Deploy Manual via VS Code
 
@@ -233,16 +217,12 @@ Ou:
 - Clicar com botão direito na pasta `out/`
 - Selecionar `SFTP: Upload Folder`
 
----
-
 ### Método 3: Upload Automático ao Salvar
 
 Se `"uploadOnSave": true` estiver configurado:
 
 - Qualquer arquivo salvo na pasta `out/` será automaticamente enviado
 - Útil para pequenas correções
-
----
 
 ## 🔧 Comandos Úteis
 
@@ -260,8 +240,6 @@ npm run deploy
 npm run lint
 ```
 
----
-
 ## 📁 Estrutura de Arquivos
 
 ```
@@ -276,8 +254,6 @@ seu-projeto/
 ├── package.json               ← Dependências e scripts
 └── README.md
 ```
-
----
 
 ## ⚠️ Problemas Comuns
 
@@ -340,8 +316,6 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.html [L]
 ```
 
----
-
 ## 🔒 Segurança
 
 ### ⚠️ IMPORTANTE: Proteger credenciais
@@ -388,8 +362,6 @@ Instalar:
 npm install --save-dev dotenv
 ```
 
----
-
 ## 📊 Checklist de Deploy
 
 - [ ] Criar projeto Next.js
@@ -402,8 +374,6 @@ npm install --save-dev dotenv
 - [ ] Fazer primeiro deploy: `npm run deploy`
 - [ ] Verificar site no navegador
 - [ ] Adicionar `.gitignore` para proteger credenciais
-
----
 
 ## 🎓 Exemplo Completo
 
@@ -445,7 +415,5 @@ npm run deploy
 - ✅ Performance excelente (arquivos estáticos são muito rápidos)
 - ✅ Compatível com qualquer hospedagem que suporte arquivos HTML
 
----
-
 **Criado em:** Janeiro 2026  
-**Última atualização:** Janeiro 2026  
+**Última atualização:** Janeiro 2026
