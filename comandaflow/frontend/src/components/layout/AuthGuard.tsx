@@ -4,17 +4,19 @@ import { authService } from "@/services/auth.service";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+const PUBLIC_ROUTES = ["/", "/login", "/cadastro"];
+
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const logged = authService.isAuthenticated();
+    const isPublic = PUBLIC_ROUTES.includes(pathname);
 
     // Se não estiver logado, força ir para /login (exceto se já estiver lá)
-    if (!logged && pathname !== "/login") {
+    if (!logged && !isPublic) {
       router.replace("/login");
       return;
     }

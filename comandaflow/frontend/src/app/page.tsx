@@ -1,9 +1,10 @@
+// src/app/page.tsx
 "use client";
 
+import { authService } from "@/services/auth.service";
+import styles from "@/styles/pages/login.module.css";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { authService } from "../services/auth.service";
-import styles from "../styles/pages/login.module.css";
 
 export default function Home() {
   const router = useRouter();
