@@ -32,18 +32,18 @@ submódulos acidentais, estrutura de projetos e fluxo de commits.
       <td>01</td>
       <td>Descrição</td>
       <td align="center">
-        <a href="https://burgersqueen.vercel.app/login" target="_blank">
+        <a href="https://github.com/elizabetefabri/personal-platform/tree/main/comandaflow/frontend" target="_blank">
            <img align="center" alt="Botao" src="https://img.shields.io/badge/Ver%20Github-1F1F1F?style=for-the-badge" width="120px">
         </a>
       </td>
       <td align="center">
-        <a href="https://burgersqueen.vercel.app/login" target="_blank">
+        <a href="https://comandaflow.elizabetesousafabri.com.br/" target="_blank">
            <img align="center" alt="Botao" src="https://img.shields.io/badge/Ver%20Deploy-EA580C?style=for-the-badge" width="120px">
         </a>
       </td>
     </tr> 
   </tbody> 
-</table>                                                                         
+</table>
 
 <div align="center">
 
