@@ -1,39 +1,26 @@
-# Dependencies
-node_modules/
+# Arquivos privados da plataforma
+MASTER_CONTEXT.md
+PADROES.md
+GOVERNANCA_IA.md
+WIP.md
 
-# Next.js build
-.next/
-out/
+# Agentes internos
+.agentes/
 
-# Environment variables
+# Ambientes
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# VS Code / SFTP
+.vscode/sftp.json
 
-# Coverage
-coverage/
-
-# Cache
+# Dependências e builds
+node_modules/
+dist/
+.angular/
 .cache/
-.eslintcache
 
-# OS
+# Sistema operacional
 .DS_Store
 Thumbs.db
-
-# Editor / IDE
-.vscode/
-.idea/
-
-# Turborepo / Nx (se usar no futuro)
-.turbo/
-dist/
-
-# Temporary files
-*.log

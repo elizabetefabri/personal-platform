@@ -1,0 +1,24 @@
+// ============================================================================
+// Main SCSS entry point
+// ============================================================================
+
+// Abstracts (Variables, Mixins, Functions)
+@import 'styles/abstracts/variables';
+
+// Base (Reset, Typography, General styles)
+@import 'styles/base/reset';
+@import 'styles/base/typography';
+
+// Components (Reusable component styles)
+// @import 'styles/components/button';
+// @import 'styles/components/form';
+
+// Layouts (Header, Footer, Sidebar, etc)
+// @import 'styles/layouts/header';
+// @import 'styles/layouts/footer';
+
+// Pages (Page-specific styles)
+// @import 'styles/pages/home';
+
+// Themes (Light, Dark, etc)
+// @import 'styles/themes/light';
