@@ -2,23 +2,23 @@
 // Main SCSS entry point
 // ============================================================================
 
-// Abstracts (Variables, Mixins, Functions)
-@import 'styles/abstracts/variables';
+// Abstracts (Variables, Mixins, Functions) - Must be first
+@use 'styles/abstracts/variables' as vars;
 
 // Base (Reset, Typography, General styles)
-@import 'styles/base/reset';
-@import 'styles/base/typography';
+@use 'styles/base/reset';
+@use 'styles/base/typography';
 
 // Components (Reusable component styles)
-// @import 'styles/components/button';
-// @import 'styles/components/form';
+// @use 'styles/components/button';
+// @use 'styles/components/form';
 
 // Layouts (Header, Footer, Sidebar, etc)
-// @import 'styles/layouts/header';
-// @import 'styles/layouts/footer';
+// @use 'styles/layouts/header';
+// @use 'styles/layouts/footer';
 
 // Pages (Page-specific styles)
-// @import 'styles/pages/home';
+// @use 'styles/pages/home';
 
 // Themes (Light, Dark, etc)
-// @import 'styles/themes/light';
+// @use 'styles/themes/light';

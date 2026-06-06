@@ -2,6 +2,8 @@
 // Breakpoints for responsive design
 // ============================================================================
 
+@use 'sass:map';
+
 $breakpoints: (
   'mobile': 20rem,      // 320px
   'mobile-sm': 23.4375rem,  // 375px
@@ -15,7 +17,7 @@ $breakpoints: (
 
 // Mixin for media queries
 @mixin media($breakpoint) {
-  @media (min-width: map-get($breakpoints, $breakpoint)) {
+  @media (min-width: map.get($breakpoints, $breakpoint)) {
     @content;
   }
 }
