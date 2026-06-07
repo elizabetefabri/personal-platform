@@ -33,6 +33,7 @@ $breakpoints: (
   --header-height: 4rem;
   --icon-size: 1.25rem;
   --text-xs: 0.75rem;
+  --radius-md: 0.75rem;
 
   /* 🎨 Nova base */
   --color-bg: #f1f1f1;
@@ -80,18 +81,12 @@ $breakpoints: (
   --color-green-10: #ccffeb;
   --color-green-50: #00ff88;
 
-  --header-height: 4rem;
-  // --sidebar-width-collapsed: 70px;
-  // --sidebar-width-expanded: 12.5rem;
-
   /* Sidebar width used by the main layout (updated at runtime) */
-  // --sidebar-current-width: var(--sidebar-width-collapsed);
+  --sidebar-current-width: var(--sidebar-width-collapsed);
 
-  // --layout-main-margin-left: calc(var(--sidebar-current-width) + 2rem);
-  // --layout-main-margin-right: 2rem;
+  --layout-main-margin-left: calc(var(--sidebar-current-width) + 2rem);
+  --layout-main-margin-right: 2rem;
 
-  --text-xs: 0.75rem;
-  --radius-md: 0.75rem;
   --container-width: 90rem;
 }
 

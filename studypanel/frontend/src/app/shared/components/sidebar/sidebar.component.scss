@@ -110,14 +110,17 @@
   display: flex;
   flex-flow: column;
   gap: 0.25rem;
-  justify-content: center;
+  justify-content: flex-start;
   align-content: flex-start;
-
+  flex: 1 1 auto;
+  overflow-y: hidden;
   margin-top: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 0.5rem;
 }
 
 .navExpanded {
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 .navCollapsed {
@@ -140,8 +143,8 @@
 }
 
 .navItemExpanded {
-  width: 100%;
-  gap: 0.75rem;
+  width: calc(100% - 1rem);
+  gap: 1rem;
   padding: 0 0.75rem;
 }
 
@@ -170,17 +173,9 @@
 }
 
 .label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.nav {
-  flex: 1 1 auto;
-  overflow-y: auto;
-  justify-content: flex-start;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  min-width: 0;
 }
 
 .sidebarFooter {

@@ -96,17 +96,18 @@
 }
 
 .studyCard__skill {
-  display: inline-flex;
-  align-self: flex-start;
-  align-items: center;
+  display: flex;
+  align-self: flex-end;
   padding: 0.2rem 0.65rem;
-  border-radius: 999rem;
-  background: var(--card-accent);
-  color: #fff;
+  border-radius: 0.2rem;
+  border: 1px solid var(--card-accent);
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--card-accent);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
 .studyCard__title {

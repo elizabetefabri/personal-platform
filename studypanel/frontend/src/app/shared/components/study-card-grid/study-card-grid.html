@@ -25,19 +25,18 @@
         </div>
 
         <div class="studyCard__content">
-          <span class="studyCard__skill">{{ item.skill }}</span>
-
           <h2 class="studyCard__title">{{ item.title }}</h2>
 
           <p class="studyCard__description">
             {{ item.description }}
           </p>
 
+          <span class="studyCard__skill">{{ item.skill }}</span>
+
           <a
             pButton
             [routerLink]="item.detailRoute"
-
-            label="Ver detalhes"
+            label="Abrir Trilha ⭐"
             iconPos="right"
             class="studyCard__button"
           ></a>
