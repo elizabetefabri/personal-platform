@@ -1,15 +1,12 @@
 .header {
-  width: 100%;
+  padding: 0rem 2rem 0rem 2rem;
   display: flex;
-  align-items: center;
-  background: var(--color-bg);
-  font-family: "Inter", sans-serif;
+  flex-wrap: wrap;
   color: var(--color-text-primary);
 }
 
 .container {
   width: 100%;
-  max-width: var(--container-width);
   border-bottom: 1px solid var(--color-border-subtle);
   margin-inline: auto;
   display: flex;

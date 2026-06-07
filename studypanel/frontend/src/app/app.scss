@@ -1,7 +1,6 @@
 .app-container {
   display: flex;
   min-height: 100vh;
-  background-color: var(--color-bg);
 }
 
 .app-main {
@@ -18,7 +17,6 @@
 
 .app-content {
   flex: 1;
-  background-color: var(--color-surface);
   overflow-y: auto;
 }
 

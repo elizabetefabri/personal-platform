@@ -1,0 +1,120 @@
+.studyPage {
+  width: 100%;
+}
+
+.studyPage__header {
+  margin-bottom: 2rem;
+}
+
+.studyPage__eyebrow {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  color: var(--color-status-warning);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.08rem;
+  text-transform: uppercase;
+}
+
+.studyPage__title {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.1;
+}
+
+.studyPage__description {
+  max-width: 42rem;
+  margin-top: 0.75rem;
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.studyGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.studyCard {
+  overflow: hidden;
+  border: 0.0625rem solid rgba(0, 0, 0, 0.08);
+  border-radius: 1.25rem;
+  background: var(--color-surface, #fff);
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.06);
+}
+
+.studyCard__imageWrapper {
+  position: relative;
+  height: 10rem;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.studyCard__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.studyCard__icon {
+  position: absolute;
+  right: 1rem;
+  bottom: -1.25rem;
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border-radius: 999rem;
+  background: var(--color-sidebar-bg-dark);
+  color: var(--color-status-warning);
+  font-size: 1.25rem;
+  box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.18);
+}
+
+.studyCard__content {
+  display: flex;
+  min-height: 14rem;
+  flex-direction: column;
+  padding: 2rem 1rem 1rem;
+}
+
+.studyCard__title {
+  margin: 0.875rem 0 0.5rem;
+  color: var(--color-text-primary);
+  font-size: 1.15rem;
+  line-height: 1.3;
+}
+
+.studyCard__description {
+  flex: 1;
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.studyCard__button {
+  width: 100%;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+@media (min-width: 48rem) {
+  .studyGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 64rem) {
+  .studyGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 90rem) {
+  .studyGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

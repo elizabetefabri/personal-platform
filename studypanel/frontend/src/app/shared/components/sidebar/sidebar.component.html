@@ -6,8 +6,9 @@
   >
     <div class="content__logo" aria-label="Logo">
       <div class="logo">
-        <img src="assets/images/logo.png" alt="Logo" width="32" height="32" />
+        <img src="assets/images/logo.png" alt="Logo" />
       </div>
+
       @if (expanded) {
         <div class="brandTitle"></div>
       }
@@ -47,13 +48,36 @@
       >
         <i
           class="pi icon"
-          [ngClass]="[item.iconClass, { iconActive: item.key === activeItem }]"
+          [ngClass]="item.iconClass"
+          [class.iconActive]="item.key === activeItem"
           aria-hidden="true"
         ></i>
+
         @if (expanded) {
           <span class="label">{{ item.label }}</span>
         }
       </a>
     }
   </nav>
+
+  <div
+    class="sidebarFooter"
+    [class.sidebarFooterExpanded]="expanded"
+    [class.sidebarFooterCollapsed]="!expanded"
+  >
+    <button
+      type="button"
+      class="signOutButton"
+      [class.signOutButtonExpanded]="expanded"
+      [class.signOutButtonCollapsed]="!expanded"
+      (click)="signOut()"
+      aria-label="Sair"
+    >
+      <i class="pi pi-sign-out icon" aria-hidden="true"></i>
+
+      @if (expanded) {
+        <span class="label">Sair</span>
+      }
+    </button>
+  </div>
 </aside>

@@ -1,0 +1,179 @@
+<section class="detailPage">
+  <header class="detailHeader">
+    <div>
+      <span class="detailHeader__eyebrow">Detalhes do estudo</span>
+      <h1 class="detailHeader__title">{{ pageTitle }}</h1>
+      <p class="detailHeader__description">{{ pageDescription }}</p>
+    </div>
+
+    <button
+      pButton
+      type="button"
+      [label]="createButtonLabel"
+      icon="pi pi-plus"
+      (click)="openCreateModal()"
+    ></button>
+  </header>
+
+  <p-table
+    [value]="items"
+    [paginator]="true"
+    [rows]="5"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    [globalFilterFields]="['courseName', 'status', 'date']"
+    responsiveLayout="scroll"
+    styleClass="p-datatable-sm"
+  >
+    <ng-template pTemplate="caption">
+      <div class="tableCaption">
+        <span class="tableCaption__title">Cursos e conteúdos cadastrados</span>
+
+        <span class="tableCaption__hint">
+          Gerencie seus estudos, status, datas e links importantes.
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="courseName">
+          Nome do curso
+          <p-sortIcon field="courseName" />
+        </th>
+        <th>Ver</th>
+        <th pSortableColumn="status">
+          Status
+          <p-sortIcon field="status" />
+        </th>
+        <th pSortableColumn="date">
+          Data
+          <p-sortIcon field="date" />
+        </th>
+        <th>Editar</th>
+        <th>Excluir</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-item>
+      <tr>
+        <td>{{ item.courseName }}</td>
+
+        <td>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-eye"
+            severity="info"
+            rounded
+            text
+            (click)="viewItem(item)"
+          ></button>
+        </td>
+
+        <td>
+          <p-tag
+            [value]="item.status"
+            severity="warn"
+          ></p-tag>
+        </td>
+
+        <td>{{ item.date }}</td>
+
+        <td>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-pencil"
+            severity="warn"
+            rounded
+            text
+            (click)="editItem(item)"
+          ></button>
+        </td>
+
+        <td>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-trash"
+            severity="danger"
+            rounded
+            text
+            (click)="deleteItem(item)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-dialog
+    [(visible)]="modalVisible"
+    [modal]="true"
+    [style]="{ width: '32rem' }"
+    [draggable]="false"
+    [resizable]="false"
+    header="Cadastrar estudo"
+  >
+    <form class="form" (ngSubmit)="saveItem()">
+      <label class="field">
+        <span>Nome do curso</span>
+        <input
+          pInputText
+          type="text"
+          name="courseName"
+          [(ngModel)]="form.courseName"
+          placeholder="Ex: Angular Avançado"
+        />
+      </label>
+
+      <label class="field">
+        <span>Status</span>
+        <select name="status" [(ngModel)]="form.status">
+          <option value="Não iniciado">Não iniciado</option>
+          <option value="Em andamento">Em andamento</option>
+          <option value="Concluído">Concluído</option>
+          <option value="Pausado">Pausado</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Data</span>
+        <input
+          pInputText
+          type="date"
+          name="date"
+          [(ngModel)]="form.date"
+        />
+      </label>
+
+      <label class="field">
+        <span>Link</span>
+        <input
+          pInputText
+          type="url"
+          name="url"
+          [(ngModel)]="form.url"
+          placeholder="https://..."
+        />
+      </label>
+
+      <footer class="formActions">
+        <button
+          pButton
+          type="button"
+          label="Cancelar"
+          severity="secondary"
+          outlined
+          (click)="closeModal()"
+        ></button>
+
+        <button
+          pButton
+          type="submit"
+          label="Salvar"
+          icon="pi pi-check"
+        ></button>
+      </footer>
+    </form>
+  </p-dialog>
+</section>

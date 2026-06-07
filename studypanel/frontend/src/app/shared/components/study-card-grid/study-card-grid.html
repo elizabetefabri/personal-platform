@@ -1,0 +1,40 @@
+<section class="studyPage">
+  <header class="studyPage__header">
+    <span class="studyPage__eyebrow">StudyPanel</span>
+    <h1 class="studyPage__title">{{ pageTitle }}</h1>
+    <p class="studyPage__description">{{ pageDescription }}</p>
+  </header>
+
+  <div class="studyGrid" aria-label="Lista de estudos">
+    @for (item of items; track item.id) {
+      <article class="studyCard">
+        <div class="studyCard__imageWrapper">
+          <img class="studyCard__image" [src]="item.imageUrl" [alt]="item.title" />
+
+          <span class="studyCard__icon">
+            <i class="pi" [ngClass]="item.iconClass" aria-hidden="true"></i>
+          </span>
+        </div>
+
+        <div class="studyCard__content">
+          <p-tag [value]="item.skill" severity="info" />
+
+          <h2 class="studyCard__title">{{ item.title }}</h2>
+
+          <p class="studyCard__description">
+            {{ item.description }}
+          </p>
+
+          <a
+            pButton
+            [routerLink]="item.detailRoute"
+            label="Ver detalhes"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            class="studyCard__button"
+          ></a>
+        </div>
+      </article>
+    }
+  </div>
+</section>

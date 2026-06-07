@@ -35,16 +35,15 @@ $breakpoints: (
   --text-xs: 0.75rem;
 
   /* 🎨 Nova base */
-  --color-bg: #f3f1ee;
+  --color-bg: #f1f1f1;
   --color-surface: #fbfaf8;
   --color-border-subtle: #e2ded9;
-  --color-sidebar-bg: #4f7f8c;
   --color-sidebar-bg-dark: #201f25;
   --color-header-bg: #f3f1ee;
   --color-footer-bg: #edeae6;
 
   /* ✍️ Tipografia */
-  --color-text-primary: #4a4a45;
+  --color-text-primary: #4d4d47;
   --color-text-secondary: #6b6a64;
   --color-text-muted: #8a887f;
   --color-text-on-dark: #ffffff;
@@ -64,19 +63,32 @@ $breakpoints: (
   /* 🚦 Status */
   --color-status-success: #0f7a55;
   --color-status-info: #355f8c;
-  --color-status-warning: #c58b2a;
+  --color-status-warning: #ffb84d;
   --color-status-danger: #c23a3a;
   --color-status-neutral: #555b6e;
 
-    --header-height: 4rem;
-  --sidebar-width-collapsed: 70px;
-  --sidebar-width-expanded: 12.5rem;
+  --text: #fefefe;
+  --black: #000100;
+  --foreground: #0e0e11;
+  --color-amarelo: #ffb84d;
+  --color-amarelo-shadow: #ffcc70;
+  --color-rosa: #ea4c89;
+  --color-rose: #ff8899;
+  --color-rose-hover: #ff7086;
+  --color-roxo: #8f48eb;
+  --color-azul: #1da1f2;
+  --color-green-10: #ccffeb;
+  --color-green-50: #00ff88;
+
+  --header-height: 4rem;
+  // --sidebar-width-collapsed: 70px;
+  // --sidebar-width-expanded: 12.5rem;
 
   /* Sidebar width used by the main layout (updated at runtime) */
-  --sidebar-current-width: var(--sidebar-width-collapsed);
-  --logo-size: 2rem;
-  --layout-main-margin-left: calc(var(--sidebar-current-width) + 2rem);
-  --layout-main-margin-right: 2rem;
+  // --sidebar-current-width: var(--sidebar-width-collapsed);
+
+  // --layout-main-margin-left: calc(var(--sidebar-current-width) + 2rem);
+  // --layout-main-margin-right: 2rem;
 
   --text-xs: 0.75rem;
   --radius-md: 0.75rem;
@@ -110,7 +122,7 @@ $color-white: #ffffff;
 // Typography
 // ============================================================================
 
-$font-family-base: 'Open Sans', 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+$font-family-base: "Oswald", sans-serif;
 $font-size-base: 1rem;
 $font-size-lg: 1.25rem;
 $font-size-sm: 0.875rem;

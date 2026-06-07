@@ -7,41 +7,16 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'dashboard',
+    path: 'backend',
     loadComponent: () =>
-      import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      import('./pages/backend/backend.component').then((m) => m.BackendComponent),
   },
   {
-    path: 'active-releases',
+    path: 'banco-de-dados',
     loadComponent: () =>
-      import('./pages/active-releases/active-releases.component').then(
-        (m) => m.ActiveReleasesComponent,
+      import('./pages/banco-de-dados/banco-de-dados.component').then(
+        (m) => m.BancoDeDadosComponent,
       ),
-  },
-  {
-    path: 'rollouts',
-    loadComponent: () =>
-      import('./pages/rollouts/rollouts.component').then((m) => m.RolloutsComponent),
-  },
-  {
-    path: 'settings',
-    loadComponent: () =>
-      import('./pages/settings/settings.component').then((m) => m.SettingsComponent),
-  },
-  {
-    path: 'login',
-    loadComponent: () =>
-      import('./pages/login/login.component').then((m) => m.LoginComponent),
-  },
-  {
-    path: 'perfil',
-    loadComponent: () =>
-      import('./pages/perfil/perfil.component').then((m) => m.PerfilComponent),
-  },
-  {
-    path: 'cadastro',
-    loadComponent: () =>
-      import('./pages/cadastro/cadastro.component').then((m) => m.CadastroComponent),
   },
   {
     path: 'cloud',
@@ -49,9 +24,64 @@ export const routes: Routes = [
       import('./pages/cloud/cloud.component').then((m) => m.CloudComponent),
   },
   {
-    path: 'rollout',
+    path: 'containers-kubernetes',
     loadComponent: () =>
-      import('./pages/rollout/rollout.component').then((m) => m.RolloutComponent),
+      import('./pages/containers-kubernetes/containers-kubernetes.component').then(
+        (m) => m.ContainersKubernetesComponent,
+      ),
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+  },
+  {
+    path: 'devops',
+    loadComponent: () =>
+      import('./pages/devops/devops.component').then((m) => m.DevOpsComponent),
+  },
+  {
+    path: 'frontend',
+    loadComponent: () =>
+      import('./pages/frontend/frontend.component').then((m) => m.FrontendComponent),
+  },
+  {
+    path: 'inteligencia-artificial',
+    loadComponent: () =>
+      import('./pages/inteligencia-artificial/inteligencia-artificial.component').then(
+        (m) => m.InteligenciaArtificialComponent,
+      ),
+  },
+  {
+    path: 'observability',
+    loadComponent: () =>
+      import('./pages/observability/observability.component').then(
+        (m) => m.ObservabilityComponent,
+      ),
+  },
+  {
+    path: 'performance-engineering',
+    loadComponent: () =>
+      import('./pages/performance-engineering/performance-engineering.component').then(
+        (m) => m.PerformanceEngineeringComponent,
+      ),
+  },
+  {
+    path: 'projetos',
+    loadComponent: () =>
+      import('./pages/projetos/projetos.component').then((m) => m.ProjetosComponent),
+  },
+  {
+    path: 'rollout-service',
+    loadComponent: () =>
+      import('./pages/rollout-service/rollout-service.component').then(
+        (m) => m.RolloutServiceComponent,
+      ),
+  },
+  {
+    path: 'settings',
+    loadComponent: () =>
+      import('./pages/settings/settings.component').then((m) => m.SettingsComponent),
   },
   {
     path: '**',
