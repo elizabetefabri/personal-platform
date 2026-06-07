@@ -25,6 +25,7 @@ export class StudyDetailTemplate {
   @Input({ required: true }) pageDescription = '';
   @Input() createButtonLabel = 'Cadastrar item';
   @Input() items: StudyTableItem[] = [];
+  @Input() accentColor = '#4f46e5';
 
   modalVisible = false;
 
@@ -60,14 +61,13 @@ export class StudyDetailTemplate {
     console.log('Excluir item:', item);
   }
 
-  getStatusSeverity(status: StudyStatus): 'success' | 'info' | 'warning' | 'danger' {
-    const severityMap = {
+  getStatusSeverity(status: StudyStatus): 'success' | 'info' | 'warn' | 'danger' {
+    const map: Record<StudyStatus, 'success' | 'info' | 'warn' | 'danger'> = {
       'Concluído': 'success',
       'Em andamento': 'info',
-      'Não iniciado': 'warning',
-      Pausado: 'danger',
-    } as const;
-
-    return severityMap[status];
+      'Não iniciado': 'warn',
+      'Pausado': 'danger',
+    };
+    return map[status];
   }
 }

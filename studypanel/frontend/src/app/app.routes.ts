@@ -1,5 +1,13 @@
 import { Routes } from '@angular/router';
 
+const detailChild = {
+  path: ':topic',
+  loadComponent: () =>
+    import('./pages/study-detail-page/study-detail-page.component').then(
+      (m) => m.StudyDetailPageComponent,
+    ),
+};
+
 export const routes: Routes = [
   {
     path: '',
@@ -7,76 +15,142 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'backend',
-    loadComponent: () =>
-      import('./pages/backend/backend.component').then((m) => m.BackendComponent),
-  },
-  {
-    path: 'banco-de-dados',
-    loadComponent: () =>
-      import('./pages/banco-de-dados/banco-de-dados.component').then(
-        (m) => m.BancoDeDadosComponent,
-      ),
-  },
-  {
-    path: 'cloud',
-    loadComponent: () =>
-      import('./pages/cloud/cloud.component').then((m) => m.CloudComponent),
-  },
-  {
-    path: 'containers-kubernetes',
-    loadComponent: () =>
-      import('./pages/containers-kubernetes/containers-kubernetes.component').then(
-        (m) => m.ContainersKubernetesComponent,
-      ),
-  },
-  {
     path: 'dashboard',
     loadComponent: () =>
       import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
   },
   {
+    path: 'backend',
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/backend/backend.component').then((m) => m.BackendComponent),
+      },
+      detailChild,
+    ],
+  },
+  {
+    path: 'banco-de-dados',
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/banco-de-dados/banco-de-dados.component').then(
+            (m) => m.BancoDeDadosComponent,
+          ),
+      },
+      detailChild,
+    ],
+  },
+  {
+    path: 'cloud',
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/cloud/cloud.component').then((m) => m.CloudComponent),
+      },
+      detailChild,
+    ],
+  },
+  {
+    path: 'containers-kubernetes',
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/containers-kubernetes/containers-kubernetes.component').then(
+            (m) => m.ContainersKubernetesComponent,
+          ),
+      },
+      detailChild,
+    ],
+  },
+  {
     path: 'devops',
-    loadComponent: () =>
-      import('./pages/devops/devops.component').then((m) => m.DevOpsComponent),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/devops/devops.component').then((m) => m.DevOpsComponent),
+      },
+      detailChild,
+    ],
   },
   {
     path: 'frontend',
-    loadComponent: () =>
-      import('./pages/frontend/frontend.component').then((m) => m.FrontendComponent),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/frontend/frontend.component').then((m) => m.FrontendComponent),
+      },
+      detailChild,
+    ],
   },
   {
     path: 'inteligencia-artificial',
-    loadComponent: () =>
-      import('./pages/inteligencia-artificial/inteligencia-artificial.component').then(
-        (m) => m.InteligenciaArtificialComponent,
-      ),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/inteligencia-artificial/inteligencia-artificial.component').then(
+            (m) => m.InteligenciaArtificialComponent,
+          ),
+      },
+      detailChild,
+    ],
   },
   {
     path: 'observability',
-    loadComponent: () =>
-      import('./pages/observability/observability.component').then(
-        (m) => m.ObservabilityComponent,
-      ),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/observability/observability.component').then(
+            (m) => m.ObservabilityComponent,
+          ),
+      },
+      detailChild,
+    ],
   },
   {
     path: 'performance-engineering',
-    loadComponent: () =>
-      import('./pages/performance-engineering/performance-engineering.component').then(
-        (m) => m.PerformanceEngineeringComponent,
-      ),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/performance-engineering/performance-engineering.component').then(
+            (m) => m.PerformanceEngineeringComponent,
+          ),
+      },
+      detailChild,
+    ],
   },
   {
     path: 'projetos',
-    loadComponent: () =>
-      import('./pages/projetos/projetos.component').then((m) => m.ProjetosComponent),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/projetos/projetos.component').then((m) => m.ProjetosComponent),
+      },
+      detailChild,
+    ],
   },
   {
     path: 'rollout-service',
-    loadComponent: () =>
-      import('./pages/rollout-service/rollout-service.component').then(
-        (m) => m.RolloutServiceComponent,
-      ),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/rollout-service/rollout-service.component').then(
+            (m) => m.RolloutServiceComponent,
+          ),
+      },
+      detailChild,
+    ],
   },
   {
     path: 'settings',

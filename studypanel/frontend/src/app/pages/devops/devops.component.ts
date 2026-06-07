@@ -1,36 +1,28 @@
 import { Component } from '@angular/core';
-import { StudyTableItem } from '../../shared/interfaces/study-template.interface';
-import { StudyDetailTemplate } from '../../shared/components/study-detail-template/study-detail-template';
+import { StudyCardGrid } from '../../shared/components/study-card-grid/study-card-grid';
+import { StudyCardItem } from '../../shared/interfaces/study-template.interface';
+import { getSectionBySlug } from '../../core/constants/study-topics';
 
 @Component({
   selector: 'app-devops',
   standalone: true,
-  imports: [StudyDetailTemplate],
+  imports: [StudyCardGrid],
   templateUrl: './devops.component.html',
   styleUrl: './devops.component.scss',
 })
 export class DevOpsComponent {
-   readonly items: StudyTableItem[] = [
-    {
-      id: 1,
-      courseName: 'Angular v21 do Zero ao Avançado',
-      status: 'Em andamento',
-      date: '2026-06-07',
-      url: 'https://angular.dev',
-    },
-    {
-      id: 2,
-      courseName: 'Testes Unitários com Jest',
-      status: 'Não iniciado',
-      date: '2026-06-10',
-      url: 'https://jestjs.io',
-    },
-    {
-      id: 3,
-      courseName: 'SCSS com Design System',
-      status: 'Concluído',
-      date: '2026-06-15',
-      url: 'https://sass-lang.com',
-    },
-  ];
+  private readonly section = getSectionBySlug('devops')!;
+
+  readonly pageTitle = this.section.label;
+  readonly pageDescription = this.section.description;
+
+  readonly items: StudyCardItem[] = this.section.topics.map((topic, i) => ({
+    id: i + 1,
+    title: topic.label,
+    description: topic.description,
+    bannerColor: topic.bannerColor,
+    iconClass: topic.iconClass,
+    skill: topic.skill,
+    detailRoute: `/devops/${topic.slug}`,
+  }));
 }

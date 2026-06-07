@@ -4,7 +4,8 @@ export interface StudyCardItem {
   id: number;
   title: string;
   description: string;
-  imageUrl: string;
+  imageUrl?: string;
+  bannerColor?: string;
   iconClass: string;
   skill: string;
   detailRoute: string;

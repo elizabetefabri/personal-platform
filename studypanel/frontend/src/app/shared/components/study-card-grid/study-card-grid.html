@@ -7,9 +7,17 @@
 
   <div class="studyGrid" aria-label="Lista de estudos">
     @for (item of items; track item.id) {
-      <article class="studyCard">
-        <div class="studyCard__imageWrapper">
-          <img class="studyCard__image" [src]="item.imageUrl" [alt]="item.title" />
+      <article
+        class="studyCard"
+        [style.--card-accent]="getAccentColor(item)"
+      >
+        <div
+          class="studyCard__imageWrapper"
+          [style.background]="item.bannerColor || 'var(--color-border-subtle)'"
+        >
+          @if (item.imageUrl) {
+            <img class="studyCard__image" [src]="item.imageUrl" [alt]="item.title" />
+          }
 
           <span class="studyCard__icon">
             <i class="pi" [ngClass]="item.iconClass" aria-hidden="true"></i>
@@ -17,7 +25,7 @@
         </div>
 
         <div class="studyCard__content">
-          <p-tag [value]="item.skill" severity="info" />
+          <span class="studyCard__skill">{{ item.skill }}</span>
 
           <h2 class="studyCard__title">{{ item.title }}</h2>
 
@@ -28,8 +36,8 @@
           <a
             pButton
             [routerLink]="item.detailRoute"
+
             label="Ver detalhes"
-            icon="pi pi-arrow-right"
             iconPos="right"
             class="studyCard__button"
           ></a>

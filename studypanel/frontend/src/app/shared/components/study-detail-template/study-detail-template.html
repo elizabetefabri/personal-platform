@@ -1,4 +1,4 @@
-<section class="detailPage">
+<section class="detailPage" [style.--detail-accent]="accentColor">
   <header class="detailHeader">
     <div>
       <span class="detailHeader__eyebrow">Detalhes do estudo</span>
@@ -11,100 +11,108 @@
       type="button"
       [label]="createButtonLabel"
       icon="pi pi-plus"
+      class="detailHeader__btn"
       (click)="openCreateModal()"
     ></button>
   </header>
 
-  <p-table
-    [value]="items"
-    [paginator]="true"
-    [rows]="5"
-    [rowsPerPageOptions]="[5, 10, 20]"
-    [globalFilterFields]="['courseName', 'status', 'date']"
-    responsiveLayout="scroll"
-    styleClass="p-datatable-sm"
-  >
-    <ng-template pTemplate="caption">
-      <div class="tableCaption">
-        <span class="tableCaption__title">Cursos e conteúdos cadastrados</span>
+  <div class="tableWrapper">
+    <p-table
+      [value]="items"
+      [paginator]="true"
+      [rows]="5"
+      [rowsPerPageOptions]="[5, 10, 20]"
+      [globalFilterFields]="['courseName', 'status', 'date']"
+      [tableStyle]="{'min-width': '40rem'}"
+    >
+      <ng-template pTemplate="caption">
+        <div class="tableCaption">
+          <span class="tableCaption__title">Cursos e conteúdos cadastrados</span>
+          <span class="tableCaption__hint">
+            Gerencie seus estudos, status, datas e links importantes.
+          </span>
+        </div>
+      </ng-template>
 
-        <span class="tableCaption__hint">
-          Gerencie seus estudos, status, datas e links importantes.
-        </span>
-      </div>
-    </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="courseName">
+            Nome do curso <p-sortIcon field="courseName" />
+          </th>
+          <th style="width: 4rem; text-align: center;">Ver</th>
+          <th pSortableColumn="status" style="width: 10rem;">
+            Status <p-sortIcon field="status" />
+          </th>
+          <th pSortableColumn="date" style="width: 8rem;">
+            Data <p-sortIcon field="date" />
+          </th>
+          <th style="width: 4rem; text-align: center;">Editar</th>
+          <th style="width: 4rem; text-align: center;">Excluir</th>
+        </tr>
+      </ng-template>
 
-    <ng-template pTemplate="header">
-      <tr>
-        <th pSortableColumn="courseName">
-          Nome do curso
-          <p-sortIcon field="courseName" />
-        </th>
-        <th>Ver</th>
-        <th pSortableColumn="status">
-          Status
-          <p-sortIcon field="status" />
-        </th>
-        <th pSortableColumn="date">
-          Data
-          <p-sortIcon field="date" />
-        </th>
-        <th>Editar</th>
-        <th>Excluir</th>
-      </tr>
-    </ng-template>
+      <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+        <tr [class.row--odd]="rowIndex % 2 !== 0">
+          <td>{{ item.courseName }}</td>
 
-    <ng-template pTemplate="body" let-item>
-      <tr>
-        <td>{{ item.courseName }}</td>
+          <td style="text-align: center;">
+            <button
+              pButton
+              type="button"
+              icon="pi pi-eye"
+              class="tableAction"
+              rounded
+              text
+              (click)="viewItem(item)"
+            ></button>
+          </td>
 
-        <td>
-          <button
-            pButton
-            type="button"
-            icon="pi pi-eye"
-            severity="info"
-            rounded
-            text
-            (click)="viewItem(item)"
-          ></button>
-        </td>
+          <td>
+            <p-tag
+              [value]="item.status"
+              [severity]="getStatusSeverity(item.status)"
+            />
+          </td>
 
-        <td>
-          <p-tag
-            [value]="item.status"
-            severity="warn"
-          ></p-tag>
-        </td>
+          <td>{{ item.date }}</td>
 
-        <td>{{ item.date }}</td>
+          <td style="text-align: center;">
+            <button
+              pButton
+              type="button"
+              icon="pi pi-pencil"
+              class="tableAction tableAction--edit"
+              rounded
+              text
+              (click)="editItem(item)"
+            ></button>
+          </td>
 
-        <td>
-          <button
-            pButton
-            type="button"
-            icon="pi pi-pencil"
-            severity="warn"
-            rounded
-            text
-            (click)="editItem(item)"
-          ></button>
-        </td>
+          <td style="text-align: center;">
+            <button
+              pButton
+              type="button"
+              icon="pi pi-trash"
+              class="tableAction tableAction--delete"
+              severity="danger"
+              rounded
+              text
+              (click)="deleteItem(item)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
 
-        <td>
-          <button
-            pButton
-            type="button"
-            icon="pi pi-trash"
-            severity="danger"
-            rounded
-            text
-            (click)="deleteItem(item)"
-          ></button>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="emptyState">
+            <i class="pi pi-inbox emptyState__icon" aria-hidden="true"></i>
+            <p>Nenhum item cadastrado ainda.<br />Clique em "{{ createButtonLabel }}" para começar.</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 
   <p-dialog
     [(visible)]="modalVisible"
@@ -112,11 +120,12 @@
     [style]="{ width: '32rem' }"
     [draggable]="false"
     [resizable]="false"
-    header="Cadastrar estudo"
+    header="{{ createButtonLabel }}"
+    styleClass="studyModal"
   >
     <form class="form" (ngSubmit)="saveItem()">
       <label class="field">
-        <span>Nome do curso</span>
+        <span>Nome do curso / recurso</span>
         <input
           pInputText
           type="text"
@@ -128,7 +137,7 @@
 
       <label class="field">
         <span>Status</span>
-        <select name="status" [(ngModel)]="form.status">
+        <select name="status" [(ngModel)]="form.status" class="field__select">
           <option value="Não iniciado">Não iniciado</option>
           <option value="Em andamento">Em andamento</option>
           <option value="Concluído">Concluído</option>
@@ -172,6 +181,7 @@
           type="submit"
           label="Salvar"
           icon="pi pi-check"
+          class="formActions__save"
         ></button>
       </footer>
     </form>

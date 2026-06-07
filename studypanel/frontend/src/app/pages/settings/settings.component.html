@@ -1,4 +1,61 @@
-<div class="page-container">
-  <h1>Configurações</h1>
-  <p>Personalização das preferências do aplicativo.</p>
-</div>
+<section class="settingsPage">
+  <header class="settingsPage__header">
+    <span class="settingsPage__eyebrow">StudyPanel</span>
+    <h1 class="settingsPage__title">Configurações</h1>
+    <p class="settingsPage__description">Gerencie seu perfil e as preferências do aplicativo.</p>
+  </header>
+
+  <div class="settingsGrid">
+    <div class="settingsCard">
+      <h2 class="settingsCard__title">
+        <i class="pi pi-user" aria-hidden="true"></i>
+        Perfil
+      </h2>
+
+      <form class="settingsForm" (ngSubmit)="saveProfile()">
+        <label class="settingsField">
+          <span class="settingsField__label">Nome</span>
+          <input
+            pInputText
+            type="text"
+            name="name"
+            [(ngModel)]="profile.name"
+            placeholder="Seu nome"
+          />
+        </label>
+
+        <label class="settingsField">
+          <span class="settingsField__label">E-mail</span>
+          <input
+            pInputText
+            type="email"
+            name="email"
+            [(ngModel)]="profile.email"
+            placeholder="seu@email.com"
+          />
+        </label>
+
+        <footer class="settingsForm__actions">
+          <button pButton type="submit" label="Salvar perfil" icon="pi pi-check"></button>
+        </footer>
+      </form>
+    </div>
+
+    <div class="settingsCard">
+      <h2 class="settingsCard__title">
+        <i class="pi pi-sliders-h" aria-hidden="true"></i>
+        Preferências
+      </h2>
+
+      <div class="settingsToggleList">
+        <label class="settingsToggle">
+          <div>
+            <span class="settingsToggle__label">Notificações</span>
+            <span class="settingsToggle__hint">Receber lembretes de estudo</span>
+          </div>
+          <p-toggleswitch name="notifications" [(ngModel)]="preferences.notifications" />
+        </label>
+      </div>
+    </div>
+  </div>
+</section>

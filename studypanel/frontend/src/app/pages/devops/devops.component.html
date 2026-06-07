@@ -1,11 +1,7 @@
 <div class="page-container">
-  <h1>Devops</h1>
-  <p>Controle de lançamento de funcionalidades.</p>
-
-  <app-study-detail-template
-    pageTitle="Frontend"
-    pageDescription="Controle de cursos, conteúdos, práticas e materiais relacionados aos estudos de Frontend."
-    createButtonLabel="Cadastrar curso"
+  <app-study-card-grid
+    [pageTitle]="pageTitle"
+    [pageDescription]="pageDescription"
     [items]="items"
   />
 </div>

@@ -1,5 +1,14 @@
 .detailPage {
   width: 100%;
+
+  // Accent color cascades through PrimeNG button variables
+  --detail-accent: #4f46e5;
+  --p-button-primary-background: var(--detail-accent);
+  --p-button-primary-hover-background: var(--detail-accent);
+  --p-button-primary-active-background: var(--detail-accent);
+  --p-button-primary-border-color: var(--detail-accent);
+  --p-button-primary-hover-border-color: var(--detail-accent);
+  --p-button-primary-active-border-color: var(--detail-accent);
 }
 
 .detailHeader {
@@ -14,11 +23,12 @@
 .detailHeader__eyebrow {
   display: inline-block;
   margin-bottom: 0.5rem;
-  color: var(--color-status-warning);
   font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: 0.08rem;
   text-transform: uppercase;
+  color: var(--detail-accent);
+  opacity: 0.85;
 }
 
 .detailHeader__title {
@@ -36,21 +46,189 @@
   line-height: 1.6;
 }
 
+.detailHeader__btn {
+  transition: filter 0.2s ease !important;
+
+  &:hover {
+    filter: brightness(0.88);
+  }
+}
+
+// ─── Table wrapper ────────────────────────────────────────────────────────────
+
+.tableWrapper {
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 0.0625rem solid var(--color-border-subtle);
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.05);
+
+  ::ng-deep {
+    // Remove default PrimeNG outer borders
+    .p-datatable,
+    .p-datatable-table-container {
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    // Caption
+    .p-datatable-header {
+      background: var(--color-surface);
+      padding: 1rem 1.25rem;
+      border: none;
+      border-bottom: 0.0625rem solid var(--color-border-subtle);
+    }
+
+    // Header row
+    .p-datatable-thead > tr > th {
+      background: var(--color-bg);
+      color: var(--color-text-secondary);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      border: none;
+      border-bottom: 0.125rem solid var(--color-border-subtle);
+      padding: 0.875rem 1rem;
+
+      .p-sortable-column-icon {
+        font-size: 0.75rem;
+        opacity: 0.5;
+      }
+    }
+
+    // Body rows — zebra striping
+    .p-datatable-tbody > tr {
+      transition: background 0.15s ease;
+      border: none;
+
+      > td {
+        border: none;
+        border-bottom: 0.0625rem solid var(--color-border-subtle);
+        padding: 0.75rem 1rem;
+        color: var(--color-text-primary);
+        font-size: 0.9375rem;
+      }
+
+      &:nth-child(odd) {
+        background: var(--color-surface);
+      }
+
+      &:nth-child(even) {
+        background: var(--color-bg);
+      }
+
+      &:last-child > td {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.025) !important;
+      }
+    }
+
+    // Paginator
+    .p-paginator {
+      background: var(--color-surface);
+      border: none;
+      border-top: 0.0625rem solid var(--color-border-subtle);
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    // Sort icons active
+    .p-datatable-column-header-content .p-sortable-column-icon {
+      color: var(--detail-accent);
+    }
+
+    // Action icon buttons — inherit accent for view/edit
+    .tableAction {
+      color: var(--color-icon-default) !important;
+      transition: color 0.15s ease !important;
+
+      &:hover {
+        color: var(--detail-accent) !important;
+      }
+    }
+
+    .tableAction--delete:hover {
+      color: var(--color-status-danger) !important;
+    }
+  }
+}
+
+// ─── Empty state ──────────────────────────────────────────────────────────────
+
+.emptyState {
+  text-align: center;
+  padding: 3rem 1rem !important;
+  color: var(--color-text-muted);
+}
+
+.emptyState__icon {
+  display: block;
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+  opacity: 0.35;
+}
+
+// ─── Table caption ────────────────────────────────────────────────────────────
+
 .tableCaption {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.2rem;
 }
 
 .tableCaption__title {
   color: var(--color-text-primary);
   font-weight: 700;
+  font-size: 0.9375rem;
 }
 
 .tableCaption__hint {
   color: var(--color-text-secondary);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
 }
+
+// ─── Modal (via ng-deep targeting p-dialog) ───────────────────────────────────
+
+::ng-deep .studyModal {
+  border-radius: 1rem !important;
+  overflow: hidden;
+
+  .p-dialog-header {
+    background: var(--detail-accent, #4f46e5);
+    color: #fff;
+    padding: 1.125rem 1.5rem;
+    border-bottom: none;
+
+    .p-dialog-title {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .p-dialog-header-icon {
+      color: rgba(255, 255, 255, 0.75) !important;
+
+      &:hover {
+        color: #fff !important;
+        background: rgba(255, 255, 255, 0.12) !important;
+      }
+    }
+  }
+
+  .p-dialog-content {
+    padding: 1.5rem;
+    background: var(--color-surface, #fbfaf8);
+  }
+
+  .p-dialog-footer {
+    display: none; // footer is inside the form
+  }
+}
+
+// ─── Form (inside modal) ──────────────────────────────────────────────────────
 
 .form {
   display: grid;
@@ -64,17 +242,30 @@
   span {
     color: var(--color-text-primary);
     font-size: 0.875rem;
-    font-weight: 700;
+    font-weight: 600;
   }
 
-  input,
-  select {
+  input {
     width: 100%;
-    height: 2.75rem;
-    border: 0.0625rem solid rgba(0, 0, 0, 0.16);
-    border-radius: 0.75rem;
-    padding: 0 0.875rem;
-    font: inherit;
+  }
+}
+
+.field__select {
+  width: 100%;
+  height: 2.5rem;
+  border: 0.0625rem solid var(--color-border-subtle);
+  border-radius: 0.5rem;
+  padding: 0 0.875rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  outline: none;
+
+  &:focus {
+    border-color: var(--detail-accent);
+    box-shadow: 0 0 0 0.125rem rgba(79, 70, 229, 0.15);
   }
 }
 
@@ -82,7 +273,15 @@
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+}
+
+.formActions__save {
+  transition: filter 0.2s ease !important;
+
+  &:hover {
+    filter: brightness(0.88);
+  }
 }
 
 @media (min-width: 48rem) {
