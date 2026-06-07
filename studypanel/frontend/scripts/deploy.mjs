@@ -1,10 +1,15 @@
 import { Client } from 'basic-ftp';
 import * as path from 'path';
 import * as fs from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Load from .env.deployment or use default
 const loadConfig = () => {
-  const envPath = path.join(__dirname, '.env.deployment');
+  const envPath = path.join(__dirname, '..', '.env.deployment');
 
   if (fs.existsSync(envPath)) {
     const envContent = fs.readFileSync(envPath, 'utf-8');
@@ -23,7 +28,7 @@ const loadConfig = () => {
       password: env.FTP_PASSWORD || 'Elizabetefabri123*',
       port: parseInt(env.FTP_PORT || '21', 10),
       remotePath: env.FTP_REMOTE_PATH || '/public_html/studypanel/',
-      localPath: path.join(__dirname, 'dist', 'frontend', 'browser'),
+      localPath: path.join(__dirname, '..', 'dist', 'frontend', 'browser'),
     };
   }
 
