@@ -1,0 +1,59 @@
+<aside class="sidebar" [style.width]="sidebarWidth" aria-label="Sidebar">
+  <div
+    class="container__logo"
+    [class.container__logoExpanded]="expanded"
+    [class.container__logoCollapsed]="!expanded"
+  >
+    <div class="content__logo" aria-label="Logo">
+      <div class="logo">
+        <img src="assets/images/logo.png" alt="Logo" width="32" height="32" />
+      </div>
+      @if (expanded) {
+        <div class="brandTitle"></div>
+      }
+    </div>
+
+    <button
+      type="button"
+      class="toggleButton"
+      [class.toggleButtonExpanded]="expanded"
+      [class.toggleButtonCollapsed]="!expanded"
+      (click)="toggleExpanded.emit()"
+      [attr.aria-label]="expanded ? 'Fechar sidebar' : 'Abrir sidebar'"
+    >
+      <i
+        class="pi pi-chevron-left iconArrow"
+        [class.toggleIconExpanded]="expanded"
+        [class.toggleIconCollapsed]="!expanded"
+        aria-hidden="true"
+      ></i>
+    </button>
+  </div>
+
+  <nav
+    class="nav"
+    [class.navExpanded]="expanded"
+    [class.navCollapsed]="!expanded"
+    aria-label="Navegação"
+  >
+    @for (item of items; track item.key) {
+      <a
+        [routerLink]="item.href"
+        class="navItem"
+        [class.navItemExpanded]="expanded"
+        [class.navItemCollapsed]="!expanded"
+        [class.navItemActive]="item.key === activeItem"
+        [attr.aria-current]="item.key === activeItem ? 'page' : null"
+      >
+        <i
+          class="pi icon"
+          [ngClass]="[item.iconClass, { iconActive: item.key === activeItem }]"
+          aria-hidden="true"
+        ></i>
+        @if (expanded) {
+          <span class="label">{{ item.label }}</span>
+        }
+      </a>
+    }
+  </nav>
+</aside>

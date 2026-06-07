@@ -3,7 +3,8 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "analytics": "94d58dbd-c6cf-4f65-abc4-513de0ade7a6"
+    "analytics": "94d58dbd-c6cf-4f65-abc4-513de0ade7a6",
+    "schematicCollections": ["@ngrx/schematics"]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -30,9 +31,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ]
+            "styles": ["node_modules/primeicons/primeicons.css", "src/styles.scss"]
           },
           "configurations": {
             "production": {

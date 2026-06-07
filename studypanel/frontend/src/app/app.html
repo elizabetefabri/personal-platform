@@ -1,2 +1,17 @@
-<h1>Hello World</h1>
-<router-outlet></router-outlet>
+<div
+  class="app-container"
+  [class.sidebar-expanded]="sidebarExpanded()"
+  [class.sidebar-collapsed]="!sidebarExpanded()"
+>
+  <app-sidebar
+    [expanded]="sidebarExpanded()"
+    (toggleExpanded)="toggleSidebar()"
+  ></app-sidebar>
+  <div class="app-main">
+    <app-header></app-header>
+    <main class="app-content">
+      <router-outlet></router-outlet>
+    </main>
+    <app-footer></app-footer>
+  </div>
+</div>
