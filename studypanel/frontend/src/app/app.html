@@ -3,10 +3,19 @@
   [class.sidebar-expanded]="sidebarExpanded()"
   [class.sidebar-collapsed]="!sidebarExpanded()"
 >
+  <!-- Backdrop: visible only on mobile when sidebar is expanded -->
+  <div
+    class="app-backdrop"
+    [class.app-backdrop--visible]="sidebarExpanded()"
+    (click)="toggleSidebar()"
+    aria-hidden="true"
+  ></div>
+
   <app-sidebar
     [expanded]="sidebarExpanded()"
     (toggleExpanded)="toggleSidebar()"
   ></app-sidebar>
+
   <div class="app-main">
     <app-header></app-header>
     <main class="app-content">

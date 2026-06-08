@@ -11,6 +11,8 @@
   --p-button-primary-active-border-color: var(--detail-accent);
 }
 
+// ─── Header ───────────────────────────────────────────────────────────────────
+
 .detailHeader {
   display: flex;
   flex-direction: column;
@@ -34,7 +36,7 @@
 .detailHeader__title {
   margin: 0;
   color: var(--color-text-primary);
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(1.5rem, 4vw, 3rem);
   line-height: 1.1;
 }
 
@@ -47,6 +49,8 @@
 }
 
 .detailHeader__btn {
+  flex-shrink: 0;
+  align-self: flex-start;
   transition: filter 0.2s ease !important;
 
   &:hover {
@@ -58,7 +62,10 @@
 
 .tableWrapper {
   border-radius: 1rem;
-  overflow: hidden;
+  // overflow-x: auto allows horizontal scroll when table is wider than container
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
   border: 0.0625rem solid var(--color-border-subtle);
   box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.05);
 
@@ -68,6 +75,7 @@
     .p-datatable-table-container {
       border: none !important;
       box-shadow: none !important;
+      min-width: 0; // let our wrapper control scroll
     }
 
     // Caption
@@ -89,6 +97,7 @@
       border: none;
       border-bottom: 0.125rem solid var(--color-border-subtle);
       padding: 0.875rem 1rem;
+      white-space: nowrap;
 
       .p-sortable-column-icon {
         font-size: 0.75rem;
@@ -107,6 +116,13 @@
         padding: 0.75rem 1rem;
         color: var(--color-text-primary);
         font-size: 0.9375rem;
+        white-space: nowrap;
+      }
+
+      // Allow the course name column to wrap
+      > td:first-child {
+        white-space: normal;
+        min-width: 10rem;
       }
 
       &:nth-child(odd) {
@@ -133,6 +149,8 @@
       border-top: 0.0625rem solid var(--color-border-subtle);
       padding: 0.75rem 1rem;
       font-size: 0.875rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
 
     // Sort icons active
@@ -140,7 +158,7 @@
       color: var(--detail-accent);
     }
 
-    // Action icon buttons — inherit accent for view/edit
+    // Action icon buttons
     .tableAction {
       color: var(--color-icon-default) !important;
       transition: color 0.15s ease !important;
@@ -190,11 +208,12 @@
   font-size: 0.8125rem;
 }
 
-// ─── Modal (via ng-deep targeting p-dialog) ───────────────────────────────────
+// ─── Modal ────────────────────────────────────────────────────────────────────
 
 ::ng-deep .studyModal {
   border-radius: 1rem !important;
   overflow: hidden;
+  width: min(32rem, 95vw) !important; // responsive modal width
 
   .p-dialog-header {
     background: var(--detail-accent, #4f46e5);
@@ -221,14 +240,15 @@
   .p-dialog-content {
     padding: 1.5rem;
     background: var(--color-surface, #fbfaf8);
+    overflow-x: hidden;
   }
 
   .p-dialog-footer {
-    display: none; // footer is inside the form
+    display: none;
   }
 }
 
-// ─── Form (inside modal) ──────────────────────────────────────────────────────
+// ─── Form ─────────────────────────────────────────────────────────────────────
 
 .form {
   display: grid;
@@ -247,6 +267,7 @@
 
   input {
     width: 100%;
+    box-sizing: border-box;
   }
 }
 
@@ -262,10 +283,11 @@
   color: var(--color-text-primary);
   cursor: pointer;
   outline: none;
+  box-sizing: border-box;
 
   &:focus {
     border-color: var(--detail-accent);
-    box-shadow: 0 0 0 0.125rem rgba(79, 70, 229, 0.15);
+    box-shadow: 0 0 0 0.125rem color-mix(in srgb, var(--detail-accent) 20%, transparent);
   }
 }
 
@@ -284,10 +306,37 @@
   }
 }
 
+// ─── Responsive breakpoints ───────────────────────────────────────────────────
+
+// Medium+ screens: header row (title left, button right)
 @media (min-width: 48rem) {
   .detailHeader {
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
+  }
+}
+
+// Small screens: button full-width, formActions stacked
+@media (max-width: 47.9375rem) {
+  .detailHeader__btn {
+    width: 100%;
+    justify-content: center;
+    align-self: stretch;
+  }
+
+  .formActions {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+
+    > * {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  // Table caption wraps on small screens
+  .tableCaption__hint {
+    display: none; // too cluttered on mobile
   }
 }

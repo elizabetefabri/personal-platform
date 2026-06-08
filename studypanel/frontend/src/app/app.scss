@@ -1,14 +1,22 @@
+// ─── Root layout ──────────────────────────────────────────────────────────────
+
 .app-container {
   display: flex;
   min-height: 100vh;
 }
 
+// Main area shifts right to make room for the sidebar
 .app-main {
   flex: 1;
+  min-width: 0; // prevent flex children from overflowing
   margin-left: var(--sidebar-width-expanded);
   display: flex;
   flex-direction: column;
-  transition: margin-left 0.3s ease;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 .app-container.sidebar-collapsed .app-main {
@@ -25,12 +33,53 @@
   padding: 0.75rem 2rem 0;
 }
 
-@media (max-width: 768px) {
-  .app-container {
-    flex-direction: column;
+// ─── Backdrop — only active on mobile ─────────────────────────────────────────
+
+.app-backdrop {
+  display: none; // hidden by default on desktop
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 19; // just below sidebar (z-index: 20)
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
   }
 
+  &--visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+// ─── Mobile (< 768px) ─────────────────────────────────────────────────────────
+//
+// Sidebar is always an overlay on mobile — it never pushes the content.
+// The icon strip (4 rem) stays visible so the user can navigate and toggle.
+// When expanded, the wider sidebar overlays with a backdrop behind it.
+
+@media (max-width: 47.9375rem) {
+  .app-backdrop {
+    display: block;
+  }
+
+  // Content always next to the collapsed icon strip; sidebar never pushes it
+  .app-main,
+  .sidebar-expanded .app-main,
+  .sidebar-collapsed .app-main {
+    margin-left: var(--sidebar-width-collapsed) !important;
+  }
+}
+
+// ─── Tablet (768px–1023px) ────────────────────────────────────────────────────
+//
+// Sidebar can expand, but we keep content readable by capping the margin.
+
+@media (min-width: 48rem) and (max-width: 63.9375rem) {
   .app-main {
-    margin-left: 0 !important;
+    // sidebar-expanded is still 15 rem, which is fine on tablet
   }
 }

@@ -1,8 +1,5 @@
 .page-container {
-  padding: 2rem;
-  flex-direction: column;
-  display: flex;
-  flex-wrap: wrap;
+  padding: clamp(1rem, 3vw, 2rem);
 }
 
 h1 {

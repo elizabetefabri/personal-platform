@@ -1,4 +1,9 @@
-<aside class="sidebar" [style.width]="sidebarWidth" aria-label="Sidebar">
+<aside
+  class="sidebar"
+  [style.width]="sidebarWidth"
+  [class.sidebar--expanded]="expanded"
+  aria-label="Sidebar"
+>
   <div
     class="container__logo"
     [class.container__logoExpanded]="expanded"
@@ -8,10 +13,6 @@
       <div class="logo">
         <img src="assets/images/logo.png" alt="Logo" />
       </div>
-
-      @if (expanded) {
-        <div class="brandTitle"></div>
-      }
     </div>
 
     <button
@@ -52,10 +53,7 @@
           [class.iconActive]="item.key === activeItem"
           aria-hidden="true"
         ></i>
-
-        @if (expanded) {
-          <span class="label">{{ item.label }}</span>
-        }
+        <span class="label">{{ item.label }}</span>
       </a>
     }
   </nav>
@@ -74,10 +72,7 @@
       aria-label="Sair"
     >
       <i class="pi pi-sign-out icon" aria-hidden="true"></i>
-
-      @if (expanded) {
-        <span class="label">Sair</span>
-      }
+      <span class="label">Sair</span>
     </button>
   </div>
 </aside>
