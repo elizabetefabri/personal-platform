@@ -1,33 +1,48 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { StudyStatus, StudyTableItem } from '../../interfaces/study-template.interface';
+import { StudyItemService } from '../../../core/services/study-item.service';
+import {
+  CreateStudyItemDto,
+  StudyStatus,
+  StudyTableItem,
+  UpdateStudyItemDto,
+} from '../../interfaces/study-template.interface';
 
 @Component({
   selector: 'app-study-detail-template',
+  standalone: true,
   imports: [
     ButtonModule,
     DialogModule,
     FormsModule,
     InputTextModule,
+    RouterLink,
     TableModule,
     TagModule,
   ],
   templateUrl: './study-detail-template.html',
   styleUrl: './study-detail-template.scss',
 })
-export class StudyDetailTemplate {
+export class StudyDetailTemplate implements OnInit {
   @Input({ required: true }) pageTitle = '';
   @Input({ required: true }) pageDescription = '';
   @Input() createButtonLabel = 'Cadastrar item';
-  @Input() items: StudyTableItem[] = [];
   @Input() accentColor = '#4f46e5';
+  @Input({ required: true }) section = '';
+  @Input({ required: true }) topic = '';
+
+  items = signal<StudyTableItem[]>([]);
+  loading = signal(false);
+  saving = signal(false);
 
   modalVisible = false;
+  editingItem: StudyTableItem | null = null;
 
   form = {
     courseName: '',
@@ -36,37 +51,83 @@ export class StudyDetailTemplate {
     url: '',
   };
 
+  constructor(private studyItemService: StudyItemService) {}
+
+  ngOnInit(): void {
+    this.loadItems();
+  }
+
+  loadItems(): void {
+    if (!this.section || !this.topic) return;
+    this.loading.set(true);
+    this.studyItemService.list(this.section, this.topic).subscribe({
+      next: (data) => {
+        this.items.set(data);
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false),
+    });
+  }
+
   openCreateModal(): void {
+    this.editingItem = null;
+    this.form = { courseName: '', status: 'Não iniciado', date: '', url: '' };
+    this.modalVisible = true;
+  }
+
+  openEditModal(item: StudyTableItem): void {
+    this.editingItem = item;
+    this.form = { courseName: item.courseName, status: item.status, date: item.date, url: item.url };
     this.modalVisible = true;
   }
 
   closeModal(): void {
     this.modalVisible = false;
+    this.editingItem = null;
   }
 
   saveItem(): void {
-    console.log('Cadastro enviado:', this.form);
-    this.closeModal();
-  }
+    this.saving.set(true);
 
-  viewItem(item: StudyTableItem): void {
-    console.log('Visualizar item:', item);
-  }
-
-  editItem(item: StudyTableItem): void {
-    console.log('Editar item:', item);
+    if (this.editingItem) {
+      const dto: UpdateStudyItemDto = { ...this.form };
+      this.studyItemService.update(this.editingItem.id, dto).subscribe({
+        next: (updated) => {
+          this.items.update((list) => list.map((i) => (i.id === updated.id ? updated : i)));
+          this.saving.set(false);
+          this.closeModal();
+        },
+        error: () => this.saving.set(false),
+      });
+    } else {
+      const dto: CreateStudyItemDto = { section: this.section, topic: this.topic, ...this.form };
+      this.studyItemService.create(dto).subscribe({
+        next: (created) => {
+          this.items.update((list) => [...list, created]);
+          this.saving.set(false);
+          this.closeModal();
+        },
+        error: () => this.saving.set(false),
+      });
+    }
   }
 
   deleteItem(item: StudyTableItem): void {
-    console.log('Excluir item:', item);
+    this.studyItemService.delete(item.id).subscribe({
+      next: () => this.items.update((list) => list.filter((i) => i.id !== item.id)),
+    });
+  }
+
+  courseDetailRoute(item: StudyTableItem): string {
+    return `/${this.section}/${this.topic}/${item.id}`;
   }
 
   getStatusSeverity(status: StudyStatus): 'success' | 'info' | 'warn' | 'danger' {
     const map: Record<StudyStatus, 'success' | 'info' | 'warn' | 'danger'> = {
-      'Concluído': 'success',
+      Concluído: 'success',
       'Em andamento': 'info',
       'Não iniciado': 'warn',
-      'Pausado': 'danger',
+      Pausado: 'danger',
     };
     return map[status];
   }

@@ -1,0 +1,71 @@
+<div class="courseDetail">
+  @if (loading()) {
+    <div class="courseDetail__state">
+      <i class="pi pi-spin pi-spinner courseDetail__stateIcon" aria-hidden="true"></i>
+      <p>Carregando...</p>
+    </div>
+  } @else if (error() || !item()) {
+    <div class="courseDetail__state courseDetail__state--error">
+      <i class="pi pi-exclamation-triangle courseDetail__stateIcon" aria-hidden="true"></i>
+      <p>Curso não encontrado.</p>
+      <a class="courseDetail__back" [routerLink]="backRoute">
+        <i class="pi pi-arrow-left" aria-hidden="true"></i> Voltar
+      </a>
+    </div>
+  } @else {
+    <a class="courseDetail__back" [routerLink]="backRoute">
+      <i class="pi pi-arrow-left" aria-hidden="true"></i> Voltar para a lista
+    </a>
+
+    <header class="courseDetail__header">
+      <div class="courseDetail__meta">
+        <p-tag
+          [value]="item()!.status"
+          [severity]="getStatusSeverity(item()!.status)"
+          class="courseDetail__badge"
+        />
+        @if (item()!.date) {
+          <span class="courseDetail__date">
+            <i class="pi pi-calendar" aria-hidden="true"></i>
+            {{ item()!.date }}
+          </span>
+        }
+      </div>
+
+      <h1 class="courseDetail__title">{{ item()!.courseName }}</h1>
+      <p class="courseDetail__subtitle">
+        <span class="courseDetail__breadLabel">{{ sectionSlug }}</span>
+        <i class="pi pi-chevron-right courseDetail__sep" aria-hidden="true"></i>
+        <span class="courseDetail__breadLabel">{{ topicSlug }}</span>
+      </p>
+
+      @if (item()!.url) {
+        <a
+          class="courseDetail__link"
+          [href]="item()!.url"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i class="pi pi-external-link" aria-hidden="true"></i>
+          Acessar recurso
+        </a>
+      }
+    </header>
+
+    <main class="courseDetail__body">
+      <div class="courseDetail__card">
+        <h2 class="courseDetail__sectionTitle">Anotações</h2>
+        <p class="courseDetail__placeholder">
+          Em breve você poderá adicionar anotações e resumos sobre este curso aqui.
+        </p>
+      </div>
+
+      <div class="courseDetail__card">
+        <h2 class="courseDetail__sectionTitle">Progresso</h2>
+        <p class="courseDetail__placeholder">
+          Registre seu avanço, checkpoints e marcos de aprendizado.
+        </p>
+      </div>
+    </main>
+  }
+</div>

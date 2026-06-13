@@ -12,9 +12,33 @@ export interface StudyCardItem {
 }
 
 export interface StudyTableItem {
-  id: number;
+  id: string;
+  section: string;
+  topic: string;
   courseName: string;
   status: StudyStatus;
   date: string;
   url: string;
+  imageUrl?: string;
+  detailRoute: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CreateStudyItemDto {
+  section: string;
+  topic: string;
+  courseName: string;
+  status: StudyStatus;
+  date: string;
+  url: string;
+  imageUrl?: string;
+}
+
+export interface UpdateStudyItemDto {
+  courseName: string;
+  status: StudyStatus;
+  date: string;
+  url: string;
+  imageUrl?: string;
 }

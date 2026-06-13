@@ -2,10 +2,22 @@ import { Routes } from '@angular/router';
 
 const detailChild = {
   path: ':topic',
-  loadComponent: () =>
-    import('./pages/study-detail-page/study-detail-page.component').then(
-      (m) => m.StudyDetailPageComponent,
-    ),
+  children: [
+    {
+      path: '',
+      loadComponent: () =>
+        import('./pages/study-detail-page/study-detail-page.component').then(
+          (m) => m.StudyDetailPageComponent,
+        ),
+    },
+    {
+      path: ':itemId',
+      loadComponent: () =>
+        import('./pages/course-detail/course-detail.component').then(
+          (m) => m.CourseDetailComponent,
+        ),
+    },
+  ],
 };
 
 export const routes: Routes = [

@@ -1,12 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, computed, OnDestroy, OnInit } from '@angular/core';
 import { Router, NavigationEnd, RouterLink } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { getSectionBySlug, getTopicBySlug } from '../../../core/constants/study-topics';
+import { BreadcrumbItem, BreadcrumbService } from '../../../core/services/breadcrumb.service';
 
-export interface BreadcrumbItem {
-  label: string;
-  href?: string;
-}
+export type { BreadcrumbItem };
 
 const PAGE_LABELS: Record<string, string> = {
   settings: 'Configurações',
@@ -20,11 +18,19 @@ const PAGE_LABELS: Record<string, string> = {
   styleUrl: './breadcrumbs.component.scss',
 })
 export class BreadcrumbsComponent implements OnInit, OnDestroy {
-  items: BreadcrumbItem[] = [];
+  baseItems: BreadcrumbItem[] = [];
+
+  readonly items = computed<BreadcrumbItem[]>(() => {
+    const extra = this.breadcrumbService.extra();
+    return extra ? [...this.baseItems, extra] : this.baseItems;
+  });
 
   private sub = new Subscription();
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private breadcrumbService: BreadcrumbService,
+  ) {}
 
   ngOnInit(): void {
     this.build(this.router.url);
@@ -45,18 +51,17 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
     const segments = url.split('/').filter(Boolean);
 
     if (segments.length === 0 || segments[0] === 'dashboard') {
-      this.items = [];
+      this.baseItems = [];
       return;
     }
 
     const sectionSlug = segments[0];
     const section = getSectionBySlug(sectionSlug);
-
     const sectionLabel =
       section?.label ?? PAGE_LABELS[sectionSlug] ?? this.toLabel(sectionSlug);
 
     if (segments.length === 1) {
-      this.items = [
+      this.baseItems = [
         { label: 'Dashboard', href: '/dashboard' },
         { label: sectionLabel },
       ];
@@ -67,10 +72,20 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
     const topic = section ? getTopicBySlug(sectionSlug, topicSlug) : undefined;
     const topicLabel = topic?.label ?? this.toLabel(topicSlug);
 
-    this.items = [
+    if (segments.length === 2) {
+      this.baseItems = [
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: sectionLabel, href: `/${sectionSlug}` },
+        { label: topicLabel },
+      ];
+      return;
+    }
+
+    // 3+ segments: section/topic/itemId — extra label comes from BreadcrumbService
+    this.baseItems = [
       { label: 'Dashboard', href: '/dashboard' },
       { label: sectionLabel, href: `/${sectionSlug}` },
-      { label: topicLabel },
+      { label: topicLabel, href: `/${sectionSlug}/${topicSlug}` },
     ];
   }
 

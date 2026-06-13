@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { StudyDetailTemplate } from '../../shared/components/study-detail-template/study-detail-template';
 import { getSectionBySlug, getTopicBySlug, SectionConfig, TopicConfig } from '../../core/constants/study-topics';
 
@@ -13,13 +13,21 @@ import { getSectionBySlug, getTopicBySlug, SectionConfig, TopicConfig } from '..
 export class StudyDetailPageComponent implements OnInit {
   section: SectionConfig | undefined;
   topic: TopicConfig | undefined;
+  sectionSlug = '';
+  topicSlug = '';
 
-  constructor(private router: Router) {}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    const segments = this.router.url.split('?')[0].split('/').filter(Boolean);
-    this.section = getSectionBySlug(segments[0]);
-    this.topic = segments[1] ? getTopicBySlug(segments[0], segments[1]) : undefined;
+    const allSegments = this.route.snapshot.pathFromRoot
+      .flatMap((r) => r.url)
+      .map((s) => s.path)
+      .filter(Boolean);
+
+    this.sectionSlug = allSegments[0] ?? '';
+    this.topicSlug = allSegments[1] ?? '';
+    this.section = getSectionBySlug(this.sectionSlug);
+    this.topic = this.topicSlug ? getTopicBySlug(this.sectionSlug, this.topicSlug) : undefined;
   }
 
   get pageTitle(): string {

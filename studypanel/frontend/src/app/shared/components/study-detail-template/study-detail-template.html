@@ -18,7 +18,8 @@
 
   <div class="tableWrapper">
     <p-table
-      [value]="items"
+      [value]="items()"
+      [loading]="loading()"
       [paginator]="true"
       [rows]="5"
       [rowsPerPageOptions]="[5, 10, 20]"
@@ -39,7 +40,6 @@
           <th pSortableColumn="courseName">
             Nome do curso <p-sortIcon field="courseName" />
           </th>
-          <th style="width: 4rem; text-align: center;">Ver</th>
           <th pSortableColumn="status" style="width: 10rem;">
             Status <p-sortIcon field="status" />
           </th>
@@ -53,18 +53,10 @@
 
       <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
         <tr [class.row--odd]="rowIndex % 2 !== 0">
-          <td>{{ item.courseName }}</td>
-
-          <td style="text-align: center;">
-            <button
-              pButton
-              type="button"
-              icon="pi pi-eye"
-              class="tableAction"
-              rounded
-              text
-              (click)="viewItem(item)"
-            ></button>
+          <td>
+            <a class="courseLink" [routerLink]="courseDetailRoute(item)">
+              {{ item.courseName }}
+            </a>
           </td>
 
           <td>
@@ -84,7 +76,7 @@
               class="tableAction tableAction--edit"
               rounded
               text
-              (click)="editItem(item)"
+              (click)="openEditModal(item)"
             ></button>
           </td>
 
@@ -105,7 +97,7 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="6" class="emptyState">
+          <td colspan="5" class="emptyState">
             <i class="pi pi-inbox emptyState__icon" aria-hidden="true"></i>
             <p>Nenhum item cadastrado ainda.<br />Clique em "{{ createButtonLabel }}" para começar.</p>
           </td>
@@ -120,7 +112,7 @@
     [style]="{ width: '32rem' }"
     [draggable]="false"
     [resizable]="false"
-    header="{{ createButtonLabel }}"
+    [header]="editingItem ? 'Editar recurso' : createButtonLabel"
     styleClass="studyModal"
   >
     <form class="form" (ngSubmit)="saveItem()">
@@ -179,8 +171,9 @@
         <button
           pButton
           type="submit"
-          label="Salvar"
-          icon="pi pi-check"
+          [label]="editingItem ? 'Atualizar' : 'Salvar'"
+          [icon]="saving() ? 'pi pi-spin pi-spinner' : 'pi pi-check'"
+          [disabled]="saving()"
           class="formActions__save"
         ></button>
       </footer>

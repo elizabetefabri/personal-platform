@@ -1,0 +1,136 @@
+.courseDetail {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  max-width: 56rem;
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: var(--text-secondary, #6b7280);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: var(--primary-600, #4f46e5);
+    }
+  }
+
+  &__header {
+    margin-bottom: 2rem;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.875rem;
+    flex-wrap: wrap;
+  }
+
+  &__badge {
+    font-size: 0.75rem;
+  }
+
+  &__date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    color: var(--text-secondary, #6b7280);
+  }
+
+  &__title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--text-primary, #111827);
+    line-height: 1.25;
+    margin: 0 0 0.5rem;
+  }
+
+  &__subtitle {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary, #6b7280);
+    margin: 0 0 1.25rem;
+    text-transform: capitalize;
+  }
+
+  &__sep {
+    font-size: 0.625rem;
+    opacity: 0.5;
+  }
+
+  &__breadLabel {
+    letter-spacing: 0.01em;
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background: var(--primary-600, #4f46e5);
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: var(--primary-700, #4338ca);
+    }
+  }
+
+  &__body {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    gap: 1.25rem;
+  }
+
+  &__card {
+    background: var(--surface-card, #fff);
+    border: 1px solid var(--surface-border, #e5e7eb);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+  }
+
+  &__sectionTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary, #111827);
+    margin: 0 0 0.625rem;
+  }
+
+  &__placeholder {
+    font-size: 0.875rem;
+    color: var(--text-secondary, #6b7280);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  &__state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 16rem;
+    color: var(--text-secondary, #6b7280);
+    text-align: center;
+
+    &--error {
+      color: var(--red-500, #ef4444);
+    }
+  }
+
+  &__stateIcon {
+    font-size: 2.5rem;
+    opacity: 0.6;
+  }
+}
