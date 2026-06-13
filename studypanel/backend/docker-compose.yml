@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: studypanel-api
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+      - DB_NAME=studypanel
+      - SERVER_PORT=8080
+      - APP_ENV=development
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - studypanel-net
+
+  mongo:
+    image: mongo:7.0
+    container_name: studypanel-mongo
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=studypanel
+    volumes:
+      - mongo-data:/data/db
+      - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - studypanel-net
+
+  mongo-express:
+    image: mongo-express:1.0.2
+    container_name: studypanel-mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=studypanel123
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - studypanel-net
+
+volumes:
+  mongo-data:
+    driver: local
+
+networks:
+  studypanel-net:
+    driver: bridge
