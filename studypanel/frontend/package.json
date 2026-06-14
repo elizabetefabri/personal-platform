@@ -39,12 +39,18 @@
     "@angular/build": "^21.2.9",
     "@angular/cli": "^21.2.9",
     "@angular/compiler-cli": "^21.2.0",
+    "@jest/globals": "^30.4.1",
     "@ngrx/schematics": "^21.1.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^25.9.2",
     "basic-ftp": "^6.0.1",
     "eslint-plugin-simple-import-sort": "^13.0.0",
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1",
+    "jest-preset-angular": "^16.2.0",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
+    "ts-jest": "^29.4.11",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }
