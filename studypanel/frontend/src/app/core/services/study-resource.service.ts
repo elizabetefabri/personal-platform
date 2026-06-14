@@ -14,6 +14,9 @@ export interface CreateResourceDto {
   url: string;
   type: string;
   description?: string;
+  source?: string;
+  priority?: string;
+  resourceStatus?: string;
 }
 
 export interface UpdateResourceDto extends CreateResourceDto {}

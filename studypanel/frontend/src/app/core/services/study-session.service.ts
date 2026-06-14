@@ -17,6 +17,7 @@ export interface CreateSessionDto {
   notes?: string;
   rating: number;
   milestonesCompleted: number;
+  focus?: string;
 }
 
 @Injectable({ providedIn: 'root' })

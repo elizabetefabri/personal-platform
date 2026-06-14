@@ -27,6 +27,12 @@ export class StudyItemService {
       .pipe(map((res) => res.data ?? []));
   }
 
+  listAll(): Observable<StudyTableItem[]> {
+    return this.http
+      .get<ApiResponse<StudyTableItem[]>>(this.base)
+      .pipe(map((res) => res.data ?? []));
+  }
+
   getById(id: string): Observable<StudyTableItem> {
     return this.http
       .get<ApiResponse<StudyTableItem>>(`${this.base}/${id}`)

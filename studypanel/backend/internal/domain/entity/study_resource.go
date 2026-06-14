@@ -26,13 +26,32 @@ var ValidResourceTypes = map[ResourceType]bool{
 	ResourceTypeOther:   true,
 }
 
+type ResourcePriority string
+
+const (
+	PriorityHigh   ResourcePriority = "Alta"
+	PriorityMedium ResourcePriority = "Média"
+	PriorityLow    ResourcePriority = "Baixa"
+)
+
+type ResourceStatus string
+
+const (
+	ResourceStatusNotStarted ResourceStatus = "Não iniciado"
+	ResourceStatusInProgress ResourceStatus = "Em andamento"
+	ResourceStatusCompleted  ResourceStatus = "Concluído"
+)
+
 type StudyResource struct {
-	ID          primitive.ObjectID `bson:"_id,omitempty"          json:"id"`
-	StudyItemID string             `bson:"study_item_id"          json:"studyItemId"`
-	Title       string             `bson:"title"                  json:"title"`
-	URL         string             `bson:"url"                    json:"url"`
-	Type        ResourceType       `bson:"type"                   json:"type"`
-	Description string             `bson:"description,omitempty"  json:"description,omitempty"`
-	CreatedAt   time.Time          `bson:"created_at"             json:"createdAt"`
-	UpdatedAt   time.Time          `bson:"updated_at"             json:"updatedAt"`
+	ID             primitive.ObjectID `bson:"_id,omitempty"              json:"id"`
+	StudyItemID    string             `bson:"study_item_id"              json:"studyItemId"`
+	Title          string             `bson:"title"                      json:"title"`
+	URL            string             `bson:"url"                        json:"url"`
+	Type           ResourceType       `bson:"type"                       json:"type"`
+	Description    string             `bson:"description,omitempty"      json:"description,omitempty"`
+	Source         string             `bson:"source,omitempty"           json:"source,omitempty"`
+	Priority       ResourcePriority   `bson:"priority,omitempty"         json:"priority,omitempty"`
+	ResourceStatus ResourceStatus     `bson:"resource_status,omitempty"  json:"resourceStatus,omitempty"`
+	CreatedAt      time.Time          `bson:"created_at"                 json:"createdAt"`
+	UpdatedAt      time.Time          `bson:"updated_at"                 json:"updatedAt"`
 }

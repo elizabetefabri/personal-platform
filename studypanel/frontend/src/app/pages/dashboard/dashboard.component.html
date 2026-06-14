@@ -1,7 +1,187 @@
-<div class="page-container">
-  <app-study-card-grid
-    [pageTitle]="pageTitle"
-    [pageDescription]="pageDescription"
-    [items]="items"
-  />
+<div class="dashboard">
+
+  <!-- ── Hero Stats ─────────────────────────────────────────────────────── -->
+  <section class="heroStats">
+    <div class="statCard statCard--total">
+      <span class="statCard__icon"><i class="pi pi-book"></i></span>
+      <div class="statCard__body">
+        <span class="statCard__value">{{ totalItems }}</span>
+        <span class="statCard__label">Total de cursos</span>
+      </div>
+    </div>
+    <div class="statCard statCard--progress">
+      <span class="statCard__icon"><i class="pi pi-spin pi-spinner"></i></span>
+      <div class="statCard__body">
+        <span class="statCard__value">{{ inProgressItems }}</span>
+        <span class="statCard__label">Em andamento</span>
+      </div>
+    </div>
+    <div class="statCard statCard--done">
+      <span class="statCard__icon"><i class="pi pi-check-circle"></i></span>
+      <div class="statCard__body">
+        <span class="statCard__value">{{ completedItems }}</span>
+        <span class="statCard__label">Concluídos</span>
+      </div>
+    </div>
+    <div class="statCard statCard--sections">
+      <span class="statCard__icon"><i class="pi pi-th-large"></i></span>
+      <div class="statCard__body">
+        <span class="statCard__value">{{ activeSections }}</span>
+        <span class="statCard__label">Seções ativas</span>
+      </div>
+    </div>
+    <div class="statCard statCard--rate">
+      <span class="statCard__icon"><i class="pi pi-chart-pie"></i></span>
+      <div class="statCard__body">
+        <span class="statCard__value">{{ completionRate }}%</span>
+        <span class="statCard__label">Taxa de conclusão</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Main Grid ──────────────────────────────────────────────────────── -->
+  <div class="mainGrid">
+
+    <!-- Left column: sections -->
+    <div class="sectionsCol">
+      <div class="colHeader">
+        <h2 class="colHeader__title">Seções de estudo</h2>
+        <button pButton icon="pi pi-plus" label="Adicionar curso"
+          class="p-button-sm p-button-outlined"
+          (click)="openAddModal()"></button>
+      </div>
+
+      <div class="sectionCards">
+        @for (sec of sections; track sec.slug) {
+          <div class="sectionCard" (click)="navigateToSection(sec.slug)">
+            <div class="sectionCard__banner" [style.background]="getSectionAccent(sec)">
+              <i class="pi" [class]="sec.iconClass"></i>
+            </div>
+            <div class="sectionCard__body">
+              <span class="sectionCard__name">{{ sec.label }}</span>
+              <span class="sectionCard__count">
+                {{ getSectionItems(sec.slug).length }} curso{{ getSectionItems(sec.slug).length !== 1 ? 's' : '' }}
+              </span>
+              <p-progressBar
+                [value]="getSectionProgress(sec.slug)"
+                [showValue]="false"
+                [style.--bar-color]="getSectionAccent(sec)">
+              </p-progressBar>
+              <span class="sectionCard__progress">{{ getSectionProgress(sec.slug) }}% concluído</span>
+            </div>
+            <button pButton icon="pi pi-plus"
+              class="sectionCard__addBtn p-button-rounded p-button-text p-button-sm"
+              [style.color]="getSectionAccent(sec)"
+              (click)="$event.stopPropagation(); openAddModal(sec)"
+              title="Adicionar curso"></button>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Right column: charts -->
+    <div class="chartsCol">
+
+      <!-- Status doughnut -->
+      <div class="chartCard">
+        <h3 class="chartCard__title">Distribuição por status</h3>
+        @if (statusChartData) {
+          <div class="chartCard__wrap">
+            <p-chart type="doughnut"
+              [data]="statusChartData"
+              [options]="statusChartOptions"
+              height="240">
+            </p-chart>
+          </div>
+        } @else {
+          <div class="chartCard__empty">
+            <i class="pi pi-chart-pie"></i>
+            <span>Nenhum dado ainda</span>
+          </div>
+        }
+      </div>
+
+      <!-- Evolution line -->
+      <div class="chartCard">
+        <h3 class="chartCard__title">Evolução — últimos 6 meses</h3>
+        @if (evolutionChartData) {
+          <div class="chartCard__wrap">
+            <p-chart type="line"
+              [data]="evolutionChartData"
+              [options]="evolutionChartOptions"
+              height="200">
+            </p-chart>
+          </div>
+        } @else {
+          <div class="chartCard__empty">
+            <i class="pi pi-chart-bar"></i>
+            <span>Nenhum dado ainda</span>
+          </div>
+        }
+      </div>
+
+    </div>
+  </div>
+
 </div>
+
+<!-- ── Quick-add Modal ─────────────────────────────────────────────────── -->
+<p-dialog
+  [(visible)]="addModalVisible"
+  header="Adicionar curso"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="addModal"
+  [style]="{ width: '480px' }">
+
+  <div class="addForm">
+    <div class="addForm__field">
+      <label>Seção</label>
+      <select class="addForm__select" [(ngModel)]="addForm.section" (ngModelChange)="onSectionChange()">
+        <option value="">Selecione uma seção</option>
+        @for (sec of sections; track sec.slug) {
+          <option [value]="sec.slug">{{ sec.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="addForm__field">
+      <label>Tópico</label>
+      <select class="addForm__select" [(ngModel)]="addForm.topic" [disabled]="!availableTopics.length">
+        <option value="">Selecione um tópico</option>
+        @for (topic of availableTopics; track topic.slug) {
+          <option [value]="topic.slug">{{ topic.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="addForm__field">
+      <label>Nome do curso</label>
+      <input pInputText class="addForm__input" [(ngModel)]="addForm.courseName" placeholder="Ex: Redis Fundamentals" />
+    </div>
+
+    <div class="addForm__field">
+      <label>URL (opcional)</label>
+      <input pInputText class="addForm__input" [(ngModel)]="addForm.url" placeholder="https://..." />
+    </div>
+
+    <div class="addForm__field">
+      <label>Status</label>
+      <select class="addForm__select" [(ngModel)]="addForm.status">
+        @for (s of statusOptions; track s) {
+          <option [value]="s">{{ s }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button pButton label="Cancelar" class="p-button-text p-button-sm"
+      (click)="addModalVisible = false"></button>
+    <button pButton label="Salvar" icon="pi pi-check" class="p-button-sm"
+      [disabled]="!addForm.section || !addForm.topic || !addForm.courseName || saving()"
+      [loading]="saving()"
+      (click)="saveItem()"></button>
+  </ng-template>
+</p-dialog>

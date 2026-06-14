@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, signal } from '@angular/core';
 import { SlicePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +11,7 @@ import { SliderModule } from 'primeng/slider';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
+import { getSectionBySlug, getTopicBySlug } from '../../core/constants/study-topics';
 import { BreadcrumbService } from '../../core/services/breadcrumb.service';
 import { QuizQuestionService } from '../../core/services/quiz-question.service';
 import { StudyItemService } from '../../core/services/study-item.service';
@@ -19,9 +20,13 @@ import { StudyResourceService, CreateResourceDto } from '../../core/services/stu
 import { StudySessionService, CreateSessionDto } from '../../core/services/study-session.service';
 import {
   NoteStatus,
+  NoteType,
   QuizDifficulty,
   QuizQuestion,
+  ResourcePriority,
+  ResourceStatus,
   ResourceType,
+  SessionFocus,
   StudyMilestone,
   StudyNote,
   StudyResource,
@@ -62,22 +67,44 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
   sectionSlug = '';
   topicSlug = '';
   itemId = '';
+  sectionLabel = '';
+  topicLabel = '';
+  accentColor = '#4f46e5';
 
   // ── Anotações ──────────────────────────────────────────────────────────────
   notes = signal<StudyNote[]>([]);
   noteModalVisible = false;
   editingNote: StudyNote | null = null;
   savingNote = signal(false);
-  noteForm: CreateNoteDto = { date: '', title: '', description: '', progress: 0, status: 'Rascunho', link: '' };
+  noteForm: CreateNoteDto & { type: NoteType } = {
+    date: '',
+    title: '',
+    description: '',
+    progress: 0,
+    status: 'Rascunho',
+    type: 'Anotação',
+    link: '',
+  };
   readonly noteStatusOptions: NoteStatus[] = ['Rascunho', 'Revisado', 'Finalizado'];
+  readonly noteTypeOptions: NoteType[] = ['Anotação', 'Resumo', 'Dúvida', 'Ponto fraco', 'Erro de quiz', 'Revisão'];
 
   // ── Recursos ───────────────────────────────────────────────────────────────
   resources = signal<StudyResource[]>([]);
   resourceModalVisible = false;
   editingResource: StudyResource | null = null;
   savingResource = signal(false);
-  resourceForm: CreateResourceDto = { title: '', url: '', type: 'Documentação', description: '' };
+  resourceForm: CreateResourceDto & { priority: ResourcePriority; resourceStatus: ResourceStatus } = {
+    title: '',
+    url: '',
+    type: 'Documentação',
+    description: '',
+    source: '',
+    priority: 'Média',
+    resourceStatus: 'Não iniciado',
+  };
   readonly resourceTypeOptions: ResourceType[] = ['Documentação', 'Vídeo', 'Artigo', 'Ferramenta', 'Livro', 'Outro'];
+  readonly resourcePriorityOptions: ResourcePriority[] = ['Alta', 'Média', 'Baixa'];
+  readonly resourceStatusOptions: ResourceStatus[] = ['Não iniciado', 'Em andamento', 'Concluído'];
   readonly resourceTypeIcons: Record<ResourceType, string> = {
     'Documentação': 'pi-file-pdf',
     'Vídeo': 'pi-video',
@@ -123,10 +150,13 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
   savingSession = signal(false);
   sessionRating = 3;
   sessionNotes = '';
+  sessionFocus: SessionFocus = 'Médio';
   sessionElapsedSeconds = 0;
+  readonly focusOptions: SessionFocus[] = ['Baixo', 'Médio', 'Alto'];
   private sessionTimer: ReturnType<typeof setInterval> | null = null;
 
   constructor(
+    private el: ElementRef,
     private route: ActivatedRoute,
     private studyItemService: StudyItemService,
     private noteService: StudyNoteService,
@@ -146,6 +176,19 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
     this.topicSlug = allSegments[1] ?? '';
     this.itemId = allSegments[2] ?? '';
 
+    const section = getSectionBySlug(this.sectionSlug);
+    const topic = getTopicBySlug(this.sectionSlug, this.topicSlug);
+
+    this.sectionLabel = section?.label ?? this.toLabel(this.sectionSlug);
+    this.topicLabel = topic?.label ?? this.toLabel(this.topicSlug);
+
+    const bannerColor = topic?.bannerColor ?? section?.bannerColor ?? '';
+    const match = bannerColor.match(/#[0-9a-fA-F]{6}/);
+    this.accentColor = match?.[0] ?? '#4f46e5';
+
+    // CSS custom properties via ElementRef are reliable across all Angular versions
+    this.el.nativeElement.style.setProperty('--page-accent', this.accentColor);
+
     this.loadItem();
     this.startSession();
   }
@@ -153,7 +196,6 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.breadcrumbService.clear();
     this.stopSessionTimer();
-    // Sessão só salva via modal — não auto-salva no destroy
   }
 
   // ── Load ────────────────────────────────────────────────────────────────────
@@ -169,7 +211,6 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.item.set(data);
         this.breadcrumbService.set({ label: data.courseName });
-        this.breadcrumbService.setPageTitle(data.courseName);
         this.loading.set(false);
         this.loadAll();
       },
@@ -189,13 +230,41 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
 
   get backRoute(): string { return `/${this.sectionSlug}/${this.topicSlug}`; }
 
+  get totalStudySeconds(): number {
+    return this.sessions().reduce((sum, s) => sum + s.durationSeconds, 0);
+  }
+
+  get totalStudyTime(): string {
+    return this.formatDuration(this.totalStudySeconds);
+  }
+
+  private toLabel(slug: string): string {
+    return slug.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  }
+
   // ── Anotações ──────────────────────────────────────────────────────────────
 
   openNoteModal(note?: StudyNote): void {
     this.editingNote = note ?? null;
     this.noteForm = note
-      ? { date: note.date, title: note.title, description: note.description, progress: note.progress, status: note.status, link: note.link ?? '' }
-      : { date: new Date().toISOString().slice(0, 10), title: '', description: '', progress: 0, status: 'Rascunho', link: '' };
+      ? {
+          date: note.date,
+          title: note.title,
+          description: note.description,
+          progress: note.progress,
+          status: note.status,
+          type: (note.type as NoteType) ?? 'Anotação',
+          link: note.link ?? '',
+        }
+      : {
+          date: new Date().toISOString().slice(0, 10),
+          title: '',
+          description: '',
+          progress: 0,
+          status: 'Rascunho',
+          type: 'Anotação',
+          link: '',
+        };
     this.noteModalVisible = true;
   }
 
@@ -232,8 +301,24 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
   openResourceModal(res?: StudyResource): void {
     this.editingResource = res ?? null;
     this.resourceForm = res
-      ? { title: res.title, url: res.url, type: res.type, description: res.description ?? '' }
-      : { title: '', url: '', type: 'Documentação', description: '' };
+      ? {
+          title: res.title,
+          url: res.url,
+          type: res.type,
+          description: res.description ?? '',
+          source: res.source ?? '',
+          priority: (res.priority as ResourcePriority) ?? 'Média',
+          resourceStatus: (res.resourceStatus as ResourceStatus) ?? 'Não iniciado',
+        }
+      : {
+          title: '',
+          url: '',
+          type: 'Documentação',
+          description: '',
+          source: '',
+          priority: 'Média',
+          resourceStatus: 'Não iniciado',
+        };
     this.resourceModalVisible = true;
   }
 
@@ -314,6 +399,20 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
     return this.questions()[this.currentQuestionIndex] ?? null;
   }
 
+  get quizDifficultyLabel(): string {
+    const q = this.questions();
+    if (!q.length) return 'Variado';
+    const hard = q.filter((x) => x.difficulty === 'Difícil').length;
+    const med = q.filter((x) => x.difficulty === 'Médio').length;
+    if (hard > q.length / 2) return 'Avançado';
+    if (med >= q.length / 2) return 'Intermediário';
+    return 'Iniciante';
+  }
+
+  get quizEstimatedMinutes(): number {
+    return Math.max(1, Math.round(this.questions().length * 1.5));
+  }
+
   // ── Progresso & Metas ──────────────────────────────────────────────────────
 
   toggleMilestone(id: string): void {
@@ -355,6 +454,7 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
       notes: this.sessionNotes,
       rating: this.sessionRating,
       milestonesCompleted: this.milestones().filter((m) => m.completed).length,
+      focus: this.sessionFocus,
     };
 
     this.sessionService.create(this.itemId, dto).subscribe({
@@ -364,7 +464,7 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
         this.sessionModalVisible = false;
         this.sessionNotes = '';
         this.sessionRating = 3;
-        // reinicia timer para próxima sessão
+        this.sessionFocus = 'Médio';
         this.startSession();
       },
       error: () => this.savingSession.set(false),
@@ -408,11 +508,46 @@ export class CourseDetailComponent implements OnInit, OnDestroy {
     return map[status];
   }
 
+  getNoteTypeSeverity(type?: NoteType): 'success' | 'info' | 'warn' | 'secondary' | 'danger' {
+    const map: Record<NoteType, 'success' | 'info' | 'warn' | 'secondary' | 'danger'> = {
+      'Anotação': 'info',
+      'Resumo': 'success',
+      'Dúvida': 'warn',
+      'Ponto fraco': 'danger',
+      'Erro de quiz': 'danger',
+      'Revisão': 'secondary',
+    };
+    return type ? map[type] : 'secondary';
+  }
+
+  getResourcePrioritySeverity(p?: ResourcePriority): 'danger' | 'warn' | 'success' | 'secondary' {
+    if (p === 'Alta') return 'danger';
+    if (p === 'Baixa') return 'success';
+    return 'warn';
+  }
+
+  getResourceStatusSeverity(s?: ResourceStatus): 'success' | 'info' | 'secondary' {
+    if (s === 'Concluído') return 'success';
+    if (s === 'Em andamento') return 'info';
+    return 'secondary';
+  }
+
+  getFocusSeverity(f?: SessionFocus): 'success' | 'warn' | 'danger' | 'secondary' {
+    if (f === 'Alto') return 'success';
+    if (f === 'Médio') return 'warn';
+    if (f === 'Baixo') return 'danger';
+    return 'secondary';
+  }
+
   getDifficultyTag(d: QuizDifficulty): 'success' | 'warn' | 'danger' {
     return this.difficultyColors[d] as 'success' | 'warn' | 'danger';
   }
 
   ratingStars(rating: number): string {
     return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+  }
+
+  getResourceTypeIcon(type: string): string {
+    return this.resourceTypeIcons[type as ResourceType] ?? 'pi-link';
   }
 }

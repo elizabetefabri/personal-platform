@@ -1,6 +1,10 @@
 export type StudyStatus = 'Não iniciado' | 'Em andamento' | 'Concluído' | 'Pausado';
 export type NoteStatus = 'Rascunho' | 'Revisado' | 'Finalizado';
+export type NoteType = 'Anotação' | 'Resumo' | 'Dúvida' | 'Ponto fraco' | 'Erro de quiz' | 'Revisão';
 export type ResourceType = 'Documentação' | 'Vídeo' | 'Artigo' | 'Ferramenta' | 'Livro' | 'Outro';
+export type ResourcePriority = 'Alta' | 'Média' | 'Baixa';
+export type ResourceStatus = 'Não iniciado' | 'Em andamento' | 'Concluído';
+export type SessionFocus = 'Baixo' | 'Médio' | 'Alto';
 export type QuizDifficulty = 'Fácil' | 'Médio' | 'Difícil';
 
 // ─── Study Item ───────────────────────────────────────────────────────────────
@@ -58,6 +62,7 @@ export interface StudyNote {
   description: string;
   progress: number;
   status: NoteStatus;
+  type?: NoteType;
   link?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -72,6 +77,9 @@ export interface StudyResource {
   url: string;
   type: ResourceType;
   description?: string;
+  source?: string;
+  priority?: ResourcePriority;
+  resourceStatus?: ResourceStatus;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -102,6 +110,7 @@ export interface StudySession {
   notes?: string;
   rating: number;
   milestonesCompleted: number;
+  focus?: SessionFocus;
   createdAt?: string;
 }
 

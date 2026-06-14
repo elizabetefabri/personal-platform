@@ -1,4 +1,4 @@
-@if (items().length) {
+@if (!isHidden() && items().length) {
   <nav class="nav" aria-label="Breadcrumb">
     <ol class="list">
       @for (item of items(); track item.label; let index = $index; let isLast = $last) {

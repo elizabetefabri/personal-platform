@@ -15,6 +15,7 @@ export interface CreateNoteDto {
   description: string;
   progress: number;
   status: string;
+  type?: string;
   link?: string;
 }
 

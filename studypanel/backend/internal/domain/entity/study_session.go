@@ -6,6 +6,14 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+type SessionFocus string
+
+const (
+	FocusLow    SessionFocus = "Baixo"
+	FocusMedium SessionFocus = "Médio"
+	FocusHigh   SessionFocus = "Alto"
+)
+
 type StudySession struct {
 	ID                  primitive.ObjectID `bson:"_id,omitempty"           json:"id"`
 	StudyItemID         string             `bson:"study_item_id"           json:"studyItemId"`
@@ -16,5 +24,6 @@ type StudySession struct {
 	Notes               string             `bson:"notes,omitempty"         json:"notes,omitempty"`
 	Rating              int                `bson:"rating"                  json:"rating"`
 	MilestonesCompleted int                `bson:"milestones_completed"    json:"milestonesCompleted"`
+	Focus               SessionFocus       `bson:"focus,omitempty"         json:"focus,omitempty"`
 	CreatedAt           time.Time          `bson:"created_at"              json:"createdAt"`
 }

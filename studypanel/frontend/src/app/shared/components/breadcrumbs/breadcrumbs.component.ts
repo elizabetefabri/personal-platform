@@ -25,6 +25,8 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
     return extra ? [...this.baseItems, extra] : this.baseItems;
   });
 
+  readonly isHidden = computed(() => this.breadcrumbService.hidden());
+
   private sub = new Subscription();
 
   constructor(
