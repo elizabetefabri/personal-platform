@@ -2,7 +2,9 @@
   <div class="container">
     <div class="topRow">
       <div class="header__left">
-        <h1 class="header__title">StudyPanel</h1>
+        <h1 class="header__title">
+          {{ breadcrumbService.pageTitle() || 'StudyPanel' }}
+        </h1>
       </div>
     </div>
 

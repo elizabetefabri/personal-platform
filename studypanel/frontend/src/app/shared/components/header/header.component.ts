@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { BreadcrumbService } from '../../../core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-header',
@@ -8,5 +8,5 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  title = 'StudyPanel';
+  readonly breadcrumbService = inject(BreadcrumbService);
 }

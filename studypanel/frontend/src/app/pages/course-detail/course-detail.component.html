@@ -1,71 +1,270 @@
 <div class="courseDetail">
+
   @if (loading()) {
     <div class="courseDetail__state">
       <i class="pi pi-spin pi-spinner courseDetail__stateIcon" aria-hidden="true"></i>
       <p>Carregando...</p>
     </div>
+
   } @else if (error() || !item()) {
     <div class="courseDetail__state courseDetail__state--error">
       <i class="pi pi-exclamation-triangle courseDetail__stateIcon" aria-hidden="true"></i>
       <p>Curso não encontrado.</p>
-      <a class="courseDetail__back" [routerLink]="backRoute">
+      <a class="btn btn--back" [routerLink]="backRoute">
         <i class="pi pi-arrow-left" aria-hidden="true"></i> Voltar
       </a>
     </div>
+
   } @else {
-    <a class="courseDetail__back" [routerLink]="backRoute">
-      <i class="pi pi-arrow-left" aria-hidden="true"></i> Voltar para a lista
-    </a>
 
+    <!-- ─── Header ───────────────────────────────────────────────────────── -->
     <header class="courseDetail__header">
-      <div class="courseDetail__meta">
-        <p-tag
-          [value]="item()!.status"
-          [severity]="getStatusSeverity(item()!.status)"
-          class="courseDetail__badge"
-        />
-        @if (item()!.date) {
-          <span class="courseDetail__date">
-            <i class="pi pi-calendar" aria-hidden="true"></i>
-            {{ item()!.date }}
-          </span>
-        }
-      </div>
-
       <h1 class="courseDetail__title">{{ item()!.courseName }}</h1>
-      <p class="courseDetail__subtitle">
-        <span class="courseDetail__breadLabel">{{ sectionSlug }}</span>
-        <i class="pi pi-chevron-right courseDetail__sep" aria-hidden="true"></i>
-        <span class="courseDetail__breadLabel">{{ topicSlug }}</span>
-      </p>
 
-      @if (item()!.url) {
-        <a
-          class="courseDetail__link"
-          [href]="item()!.url"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <i class="pi pi-external-link" aria-hidden="true"></i>
-          Acessar recurso
-        </a>
-      }
+      <div class="courseDetail__metaRow">
+        @if (item()!.url) {
+          <a
+            class="btn btn--resource"
+            [href]="item()!.url"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i class="pi pi-external-link" aria-hidden="true"></i>
+            Acessar recurso
+          </a>
+        }
+
+        <div class="courseDetail__metaBadges">
+          <p-tag
+            [value]="item()!.status"
+            [severity]="getStatusSeverity(item()!.status)"
+          />
+          @if (item()!.date) {
+            <span class="courseDetail__date">
+              <i class="pi pi-calendar" aria-hidden="true"></i>
+              {{ item()!.date }}
+            </span>
+          }
+        </div>
+      </div>
     </header>
 
-    <main class="courseDetail__body">
-      <div class="courseDetail__card">
-        <h2 class="courseDetail__sectionTitle">Anotações</h2>
-        <p class="courseDetail__placeholder">
-          Em breve você poderá adicionar anotações e resumos sobre este curso aqui.
-        </p>
-      </div>
+    <!-- ─── Accordions ────────────────────────────────────────────────────── -->
+    <main class="courseDetail__main">
 
-      <div class="courseDetail__card">
-        <h2 class="courseDetail__sectionTitle">Progresso</h2>
-        <p class="courseDetail__placeholder">
-          Registre seu avanço, checkpoints e marcos de aprendizado.
-        </p>
-      </div>
+      <p-accordion [multiple]="true" [value]="['notes']">
+
+        <!-- 1 · Anotações e Resumos ─────────────────────────────────────── -->
+        <p-accordion-panel value="notes">
+          <p-accordion-header>
+            <span class="accordion__label">
+              <i class="pi pi-book" aria-hidden="true"></i>
+              Anotações e Resumos
+            </span>
+          </p-accordion-header>
+          <p-accordion-content>
+            <div class="accordion__body">
+              <p-table
+                [value]="notes()"
+                [sortMode]="'multiple'"
+                [paginator]="notes().length > 5"
+                [rows]="5"
+                [tableStyle]="{'min-width': '42rem'}"
+                class="p-datatable-sm"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th pSortableColumn="date" style="width:8rem">
+                      Data <p-sortIcon field="date" />
+                    </th>
+                    <th pSortableColumn="title">
+                      Título <p-sortIcon field="title" />
+                    </th>
+                    <th>Descrição</th>
+                    <th pSortableColumn="progress" style="width:8rem">
+                      Progresso <p-sortIcon field="progress" />
+                    </th>
+                    <th pSortableColumn="status" style="width:8rem">
+                      Status <p-sortIcon field="status" />
+                    </th>
+                    <th style="width:4rem;text-align:center">Link</th>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-note>
+                  <tr>
+                    <td>{{ note.date }}</td>
+                    <td>{{ note.title }}</td>
+                    <td class="notes__desc">{{ note.description }}</td>
+                    <td>
+                      <div class="notes__progress">
+                        <p-progressBar [value]="note.progress" [showValue]="false" class="notes__bar" />
+                        <span class="notes__pct">{{ note.progress }}%</span>
+                      </div>
+                    </td>
+                    <td>
+                      <p-tag [value]="note.status" [severity]="getNoteStatusSeverity(note.status)" />
+                    </td>
+                    <td style="text-align:center">
+                      @if (note.link) {
+                        <a [href]="note.link" target="_blank" rel="noopener noreferrer" class="notes__link">
+                          <i class="pi pi-external-link"></i>
+                        </a>
+                      } @else {
+                        <span class="notes__noLink">—</span>
+                      }
+                    </td>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="6" class="accordion__empty">
+                      <i class="pi pi-pencil" aria-hidden="true"></i>
+                      <p>Nenhuma anotação ainda.<br />Aqui você registrará seus resumos e pontos-chave do estudo.</p>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </p-accordion-content>
+        </p-accordion-panel>
+
+        <!-- 2 · Progresso e Metas ──────────────────────────────────────── -->
+        <p-accordion-panel value="progress">
+          <p-accordion-header>
+            <span class="accordion__label">
+              <i class="pi pi-chart-line" aria-hidden="true"></i>
+              Progresso e Metas
+            </span>
+          </p-accordion-header>
+          <p-accordion-content>
+            <div class="accordion__body">
+              <div class="progress__overview">
+                <div class="progress__bar">
+                  <span class="progress__label">Progresso geral</span>
+                  <p-progressBar [value]="overallProgress" [style]="{'height': '0.75rem'}" />
+                </div>
+                <span class="progress__pct">{{ overallProgress }}%</span>
+              </div>
+
+              <ul class="milestones">
+                @for (m of milestones(); track m.id) {
+                  <li class="milestone" [class.milestone--done]="m.completed">
+                    <button
+                      type="button"
+                      class="milestone__check"
+                      [attr.aria-label]="m.completed ? 'Desmarcar marco' : 'Marcar marco'"
+                      (click)="toggleMilestone(m.id)"
+                    >
+                      <i class="pi" [class.pi-check-circle]="m.completed" [class.pi-circle]="!m.completed" aria-hidden="true"></i>
+                    </button>
+                    <span class="milestone__text">{{ m.title }}</span>
+                    @if (m.date) {
+                      <span class="milestone__date">{{ m.date }}</span>
+                    }
+                  </li>
+                }
+              </ul>
+            </div>
+          </p-accordion-content>
+        </p-accordion-panel>
+
+        <!-- 3 · Recursos e Referências ─────────────────────────────────── -->
+        <p-accordion-panel value="resources">
+          <p-accordion-header>
+            <span class="accordion__label">
+              <i class="pi pi-link" aria-hidden="true"></i>
+              Recursos e Referências
+            </span>
+          </p-accordion-header>
+          <p-accordion-content>
+            <div class="accordion__body">
+              @if (item()!.url) {
+                <div class="resources">
+                  <a class="resource__card" [href]="item()!.url" target="_blank" rel="noopener noreferrer">
+                    <i class="pi pi-external-link resource__icon" aria-hidden="true"></i>
+                    <div>
+                      <span class="resource__title">Curso principal</span>
+                      <span class="resource__url">{{ item()!.url }}</span>
+                    </div>
+                  </a>
+                </div>
+              }
+              <p class="accordion__hint">
+                Em breve você poderá adicionar múltiplas referências: documentações, vídeos, PDFs e links de apoio.
+              </p>
+            </div>
+          </p-accordion-content>
+        </p-accordion-panel>
+
+        <!-- 4 · Quiz de Revisão ─────────────────────────────────────────── -->
+        <p-accordion-panel value="quiz">
+          <p-accordion-header>
+            <span class="accordion__label">
+              <i class="pi pi-question-circle" aria-hidden="true"></i>
+              Quiz de Revisão
+            </span>
+          </p-accordion-header>
+          <p-accordion-content>
+            <div class="accordion__body accordion__body--placeholder">
+              <i class="pi pi-question-circle accordion__placeholderIcon" aria-hidden="true"></i>
+              <p class="accordion__hint">
+                <strong>Em breve:</strong> Flashcards e questões de revisão no estilo da prova real.<br />
+                Você poderá registrar suas tentativas, ver o gabarito e acompanhar seu desempenho por tema.
+              </p>
+            </div>
+          </p-accordion-content>
+        </p-accordion-panel>
+
+        <!-- 5 · Histórico de Sessões ────────────────────────────────────── -->
+        <p-accordion-panel value="history">
+          <p-accordion-header>
+            <span class="accordion__label">
+              <i class="pi pi-history" aria-hidden="true"></i>
+              Histórico de Sessões
+            </span>
+          </p-accordion-header>
+          <p-accordion-content>
+            <div class="accordion__body">
+              <p-table
+                [value]="sessions()"
+                [tableStyle]="{'min-width': '36rem'}"
+                class="p-datatable-sm"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th pSortableColumn="date" style="width:8rem">Data <p-sortIcon field="date" /></th>
+                    <th style="width:6rem">Duração</th>
+                    <th pSortableColumn="topic">Tópico <p-sortIcon field="topic" /></th>
+                    <th>Observações</th>
+                    <th style="width:7rem;text-align:center">Avaliação</th>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="5" class="accordion__empty">
+                      <i class="pi pi-history" aria-hidden="true"></i>
+                      <p>Nenhuma sessão registrada.<br />Cada vez que estudar, registre aqui duração, tópico e sua auto-avaliação.</p>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </p-accordion-content>
+        </p-accordion-panel>
+
+      </p-accordion>
     </main>
+
+    <!-- ─── Footer / Voltar ───────────────────────────────────────────────── -->
+    <footer class="courseDetail__footer">
+      <a class="btn btn--back" [routerLink]="backRoute">
+        <i class="pi pi-arrow-left" aria-hidden="true"></i>
+        Voltar para a lista
+      </a>
+    </footer>
+
   }
 </div>
