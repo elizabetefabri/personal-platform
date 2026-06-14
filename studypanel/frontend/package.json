@@ -8,6 +8,9 @@
     "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "test:jest": "jest --config jest.config.ts",
+    "test:jest:watch": "jest --config jest.config.ts --watch",
+    "test:jest:coverage": "jest --config jest.config.ts --coverage",
     "deploy": "npm run build:prod && npx ts-node scripts/deploy.mjs",
     "deploy:prod": "npm run build:prod && npx ts-node scripts/deploy.mjs"
   },
