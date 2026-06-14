@@ -17,84 +17,71 @@
 
   } @else {
 
-    <!-- ─── Header ───────────────────────────────────────────────────────── -->
+    <!-- ─── Header ────────────────────────────────────────────────────────────── -->
     <header class="courseDetail__header">
       <h1 class="courseDetail__title">{{ item()!.courseName }}</h1>
 
       <div class="courseDetail__metaRow">
         @if (item()!.url) {
-          <a
-            class="btn btn--resource"
-            [href]="item()!.url"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a class="btn btn--resource" [href]="item()!.url" target="_blank" rel="noopener noreferrer">
             <i class="pi pi-external-link" aria-hidden="true"></i>
             Acessar recurso
           </a>
         }
-
         <div class="courseDetail__metaBadges">
-          <p-tag
-            [value]="item()!.status"
-            [severity]="getStatusSeverity(item()!.status)"
-          />
+          <p-tag [value]="item()!.status" [severity]="getStatusSeverity(item()!.status)" />
           @if (item()!.date) {
             <span class="courseDetail__date">
-              <i class="pi pi-calendar" aria-hidden="true"></i>
-              {{ item()!.date }}
+              <i class="pi pi-calendar" aria-hidden="true"></i>{{ item()!.date }}
             </span>
           }
+          <span class="session__timer" title="Tempo desta sessão">
+            <i class="pi pi-clock" aria-hidden="true"></i>{{ elapsedLabel }}
+          </span>
         </div>
       </div>
     </header>
 
-    <!-- ─── Accordions ────────────────────────────────────────────────────── -->
+    <!-- ─── Acordeões ─────────────────────────────────────────────────────────── -->
     <main class="courseDetail__main">
-
       <p-accordion [multiple]="true" [value]="['notes']">
 
-        <!-- 1 · Anotações e Resumos ─────────────────────────────────────── -->
+        <!-- ① Anotações e Resumos ─────────────────────────────────────────────── -->
         <p-accordion-panel value="notes">
           <p-accordion-header>
             <span class="accordion__label">
               <i class="pi pi-book" aria-hidden="true"></i>
               Anotações e Resumos
+              @if (notes().length) {
+                <span class="accordion__count">{{ notes().length }}</span>
+              }
             </span>
           </p-accordion-header>
           <p-accordion-content>
             <div class="accordion__body">
-              <p-table
-                [value]="notes()"
-                [sortMode]="'multiple'"
-                [paginator]="notes().length > 5"
-                [rows]="5"
-                [tableStyle]="{'min-width': '42rem'}"
-                class="p-datatable-sm"
-              >
+              <div class="accordion__toolbar">
+                <button pButton type="button" icon="pi pi-plus" label="Nova anotação"
+                  class="btn btn--add" (click)="openNoteModal()"></button>
+              </div>
+
+              <p-table [value]="notes()" [sortMode]="'multiple'"
+                [paginator]="notes().length > 5" [rows]="5"
+                [tableStyle]="{'min-width': '42rem'}">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th pSortableColumn="date" style="width:8rem">
-                      Data <p-sortIcon field="date" />
-                    </th>
-                    <th pSortableColumn="title">
-                      Título <p-sortIcon field="title" />
-                    </th>
+                    <th pSortableColumn="date" style="width:7rem">Data <p-sortIcon field="date" /></th>
+                    <th pSortableColumn="title">Título <p-sortIcon field="title" /></th>
                     <th>Descrição</th>
-                    <th pSortableColumn="progress" style="width:8rem">
-                      Progresso <p-sortIcon field="progress" />
-                    </th>
-                    <th pSortableColumn="status" style="width:8rem">
-                      Status <p-sortIcon field="status" />
-                    </th>
-                    <th style="width:4rem;text-align:center">Link</th>
+                    <th pSortableColumn="progress" style="width:9rem">Progresso <p-sortIcon field="progress" /></th>
+                    <th pSortableColumn="status" style="width:7.5rem">Status <p-sortIcon field="status" /></th>
+                    <th style="width:3.5rem;text-align:center">Link</th>
+                    <th style="width:6rem;text-align:center">Ações</th>
                   </tr>
                 </ng-template>
-
                 <ng-template pTemplate="body" let-note>
                   <tr>
                     <td>{{ note.date }}</td>
-                    <td>{{ note.title }}</td>
+                    <td class="notes__title">{{ note.title }}</td>
                     <td class="notes__desc">{{ note.description }}</td>
                     <td>
                       <div class="notes__progress">
@@ -102,40 +89,40 @@
                         <span class="notes__pct">{{ note.progress }}%</span>
                       </div>
                     </td>
-                    <td>
-                      <p-tag [value]="note.status" [severity]="getNoteStatusSeverity(note.status)" />
-                    </td>
+                    <td><p-tag [value]="note.status" [severity]="getNoteStatusSeverity(note.status)" /></td>
                     <td style="text-align:center">
                       @if (note.link) {
                         <a [href]="note.link" target="_blank" rel="noopener noreferrer" class="notes__link">
                           <i class="pi pi-external-link"></i>
                         </a>
-                      } @else {
-                        <span class="notes__noLink">—</span>
-                      }
+                      } @else { <span class="notes__noLink">—</span> }
+                    </td>
+                    <td style="text-align:center">
+                      <button pButton type="button" icon="pi pi-pencil" class="tableAction tableAction--edit"
+                        rounded text (click)="openNoteModal(note)"></button>
+                      <button pButton type="button" icon="pi pi-trash" severity="danger"
+                        class="tableAction" rounded text (click)="deleteNote(note)"></button>
                     </td>
                   </tr>
                 </ng-template>
-
                 <ng-template pTemplate="emptymessage">
-                  <tr>
-                    <td colspan="6" class="accordion__empty">
-                      <i class="pi pi-pencil" aria-hidden="true"></i>
-                      <p>Nenhuma anotação ainda.<br />Aqui você registrará seus resumos e pontos-chave do estudo.</p>
-                    </td>
-                  </tr>
+                  <tr><td colspan="7" class="accordion__empty">
+                    <i class="pi pi-pencil" aria-hidden="true"></i>
+                    <p>Nenhuma anotação ainda. Clique em "Nova anotação" para começar.</p>
+                  </td></tr>
                 </ng-template>
               </p-table>
             </div>
           </p-accordion-content>
         </p-accordion-panel>
 
-        <!-- 2 · Progresso e Metas ──────────────────────────────────────── -->
+        <!-- ② Progresso e Metas ───────────────────────────────────────────────── -->
         <p-accordion-panel value="progress">
           <p-accordion-header>
             <span class="accordion__label">
               <i class="pi pi-chart-line" aria-hidden="true"></i>
               Progresso e Metas
+              <span class="accordion__pctBadge">{{ overallProgress }}%</span>
             </span>
           </p-accordion-header>
           <p-accordion-content>
@@ -147,22 +134,17 @@
                 </div>
                 <span class="progress__pct">{{ overallProgress }}%</span>
               </div>
-
               <ul class="milestones">
                 @for (m of milestones(); track m.id) {
                   <li class="milestone" [class.milestone--done]="m.completed">
-                    <button
-                      type="button"
-                      class="milestone__check"
-                      [attr.aria-label]="m.completed ? 'Desmarcar marco' : 'Marcar marco'"
-                      (click)="toggleMilestone(m.id)"
-                    >
-                      <i class="pi" [class.pi-check-circle]="m.completed" [class.pi-circle]="!m.completed" aria-hidden="true"></i>
+                    <button type="button" class="milestone__check"
+                      [attr.aria-label]="m.completed ? 'Desmarcar' : 'Marcar como concluído'"
+                      (click)="toggleMilestone(m.id)">
+                      <i class="pi"
+                        [class.pi-check-circle]="m.completed"
+                        [class.pi-circle]="!m.completed" aria-hidden="true"></i>
                     </button>
                     <span class="milestone__text">{{ m.title }}</span>
-                    @if (m.date) {
-                      <span class="milestone__date">{{ m.date }}</span>
-                    }
                   </li>
                 }
               </ul>
@@ -170,85 +152,218 @@
           </p-accordion-content>
         </p-accordion-panel>
 
-        <!-- 3 · Recursos e Referências ─────────────────────────────────── -->
+        <!-- ③ Recursos e Referências ──────────────────────────────────────────── -->
         <p-accordion-panel value="resources">
           <p-accordion-header>
             <span class="accordion__label">
               <i class="pi pi-link" aria-hidden="true"></i>
               Recursos e Referências
+              @if (resources().length) {
+                <span class="accordion__count">{{ resources().length }}</span>
+              }
             </span>
           </p-accordion-header>
           <p-accordion-content>
             <div class="accordion__body">
-              @if (item()!.url) {
+              <div class="accordion__toolbar">
+                <button pButton type="button" icon="pi pi-plus" label="Adicionar recurso"
+                  class="btn btn--add" (click)="openResourceModal()"></button>
+              </div>
+
+              @if (resources().length) {
                 <div class="resources">
-                  <a class="resource__card" [href]="item()!.url" target="_blank" rel="noopener noreferrer">
-                    <i class="pi pi-external-link resource__icon" aria-hidden="true"></i>
-                    <div>
-                      <span class="resource__title">Curso principal</span>
-                      <span class="resource__url">{{ item()!.url }}</span>
+                  @for (res of resources(); track res.id) {
+                    <div class="resource__card">
+                      <i class="pi {{ resourceTypeIcons[res.type] }} resource__icon" aria-hidden="true"></i>
+                      <div class="resource__info">
+                        <span class="resource__title">{{ res.title }}</span>
+                        <span class="resource__type">{{ res.type }}</span>
+                        @if (res.description) {
+                          <span class="resource__desc">{{ res.description }}</span>
+                        }
+                        <a [href]="res.url" target="_blank" rel="noopener noreferrer" class="resource__url">
+                          {{ res.url }}
+                        </a>
+                      </div>
+                      <div class="resource__actions">
+                        <button pButton type="button" icon="pi pi-pencil" rounded text
+                          class="tableAction tableAction--edit" (click)="openResourceModal(res)"></button>
+                        <button pButton type="button" icon="pi pi-trash" rounded text severity="danger"
+                          class="tableAction" (click)="deleteResource(res)"></button>
+                      </div>
                     </div>
-                  </a>
+                  }
+                </div>
+              } @else {
+                <div class="accordion__empty accordion__empty--inline">
+                  <i class="pi pi-link" aria-hidden="true"></i>
+                  <p>Nenhum recurso ainda. Adicione documentações, vídeos, artigos e ferramentas úteis.</p>
                 </div>
               }
-              <p class="accordion__hint">
-                Em breve você poderá adicionar múltiplas referências: documentações, vídeos, PDFs e links de apoio.
-              </p>
             </div>
           </p-accordion-content>
         </p-accordion-panel>
 
-        <!-- 4 · Quiz de Revisão ─────────────────────────────────────────── -->
+        <!-- ④ Quiz de Revisão (Flashcards) ───────────────────────────────────── -->
         <p-accordion-panel value="quiz">
           <p-accordion-header>
             <span class="accordion__label">
               <i class="pi pi-question-circle" aria-hidden="true"></i>
               Quiz de Revisão
+              @if (questions().length) {
+                <span class="accordion__count">{{ questions().length }} questões</span>
+              }
             </span>
           </p-accordion-header>
           <p-accordion-content>
-            <div class="accordion__body accordion__body--placeholder">
-              <i class="pi pi-question-circle accordion__placeholderIcon" aria-hidden="true"></i>
-              <p class="accordion__hint">
-                <strong>Em breve:</strong> Flashcards e questões de revisão no estilo da prova real.<br />
-                Você poderá registrar suas tentativas, ver o gabarito e acompanhar seu desempenho por tema.
-              </p>
+            <div class="accordion__body">
+
+              @if (!questions().length) {
+                <div class="accordion__empty accordion__empty--inline">
+                  <i class="pi pi-question-circle" aria-hidden="true"></i>
+                  <p>Nenhuma questão cadastrada para este tópico ainda.</p>
+                </div>
+
+              } @else if (!quizStarted) {
+                <!-- Tela inicial do quiz -->
+                <div class="quiz__start">
+                  <div class="quiz__startInfo">
+                    <span class="quiz__startCount">{{ questions().length }}</span>
+                    <span class="quiz__startLabel">questões disponíveis</span>
+                  </div>
+                  <button pButton type="button" icon="pi pi-play" label="Iniciar Quiz"
+                    class="btn btn--resource" (click)="startQuiz()"></button>
+                </div>
+
+              } @else if (quizFinished) {
+                <!-- Resultado final -->
+                <div class="quiz__result">
+                  <div class="quiz__scoreCircle" [class.quiz__scoreCircle--pass]="quizScore >= 70">
+                    <span class="quiz__scoreNum">{{ quizScore }}%</span>
+                    <span class="quiz__scoreLabel">{{ quizScore >= 70 ? '✓ Aprovado' : '✗ Revisar' }}</span>
+                  </div>
+                  <div class="quiz__resultStats">
+                    <span class="quiz__stat quiz__stat--correct">
+                      <i class="pi pi-check" aria-hidden="true"></i> {{ correctCount }} acertos
+                    </span>
+                    <span class="quiz__stat quiz__stat--wrong">
+                      <i class="pi pi-times" aria-hidden="true"></i> {{ incorrectCount }} erros
+                    </span>
+                  </div>
+                  <button pButton type="button" icon="pi pi-refresh" label="Refazer Quiz"
+                    severity="secondary" outlined (click)="restartQuiz()"></button>
+                </div>
+
+              } @else if (currentQuestion) {
+                <!-- Flashcard ativo -->
+                <div class="quiz__progress">
+                  <p-progressBar [value]="(currentQuestionIndex / questions().length) * 100"
+                    [showValue]="false" [style]="{'height': '0.375rem'}" />
+                  <span class="quiz__progressLabel">
+                    {{ currentQuestionIndex + 1 }} / {{ questions().length }}
+                  </span>
+                </div>
+
+                <div class="flashcard" [class.flashcard--revealed]="revealed">
+                  <div class="flashcard__front">
+                    <div class="flashcard__meta">
+                      <p-tag [value]="currentQuestion.difficulty"
+                        [severity]="getDifficultyTag(currentQuestion.difficulty)" />
+                      @for (tag of currentQuestion.tags; track tag) {
+                        <span class="flashcard__tag">{{ tag }}</span>
+                      }
+                    </div>
+                    <p class="flashcard__question">{{ currentQuestion.question }}</p>
+                    @if (!revealed) {
+                      <button pButton type="button" label="Revelar Resposta" icon="pi pi-eye"
+                        severity="secondary" outlined class="flashcard__revealBtn"
+                        (click)="revealAnswer()"></button>
+                    }
+                  </div>
+
+                  @if (revealed) {
+                    <div class="flashcard__answer">
+                      <span class="flashcard__answerLabel">Resposta</span>
+                      <p class="flashcard__answerText">{{ currentQuestion.answer }}</p>
+                      @if (currentQuestion.explanation) {
+                        <div class="flashcard__explanation">
+                          <i class="pi pi-info-circle" aria-hidden="true"></i>
+                          {{ currentQuestion.explanation }}
+                        </div>
+                      }
+                      <div class="flashcard__actions">
+                        <button pButton type="button" icon="pi pi-times" label="Errei"
+                          severity="danger" outlined class="flashcard__wrong"
+                          (click)="answerQuiz(false)"></button>
+                        <button pButton type="button" icon="pi pi-check" label="Acertei"
+                          severity="success" class="flashcard__correct"
+                          (click)="answerQuiz(true)"></button>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+
             </div>
           </p-accordion-content>
         </p-accordion-panel>
 
-        <!-- 5 · Histórico de Sessões ────────────────────────────────────── -->
+        <!-- ⑤ Histórico de Sessões ────────────────────────────────────────────── -->
         <p-accordion-panel value="history">
           <p-accordion-header>
             <span class="accordion__label">
               <i class="pi pi-history" aria-hidden="true"></i>
               Histórico de Sessões
+              @if (sessions().length) {
+                <span class="accordion__count">{{ sessions().length }}</span>
+              }
             </span>
           </p-accordion-header>
           <p-accordion-content>
             <div class="accordion__body">
-              <p-table
-                [value]="sessions()"
-                [tableStyle]="{'min-width': '36rem'}"
-                class="p-datatable-sm"
-              >
+              <div class="accordion__toolbar">
+                <button pButton type="button" icon="pi pi-stop-circle" label="Encerrar sessão atual"
+                  severity="secondary" outlined (click)="openSessionModal()"></button>
+                <span class="session__elapsed">
+                  <i class="pi pi-clock" aria-hidden="true"></i>
+                  Sessão em andamento: <strong>{{ elapsedLabel }}</strong>
+                </span>
+              </div>
+
+              <p-table [value]="sessions()" [paginator]="sessions().length > 5" [rows]="5"
+                [tableStyle]="{'min-width': '36rem'}">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th pSortableColumn="date" style="width:8rem">Data <p-sortIcon field="date" /></th>
-                    <th style="width:6rem">Duração</th>
+                    <th pSortableColumn="createdAt" style="width:8rem">Data <p-sortIcon field="createdAt" /></th>
+                    <th style="width:6.5rem">Duração</th>
                     <th pSortableColumn="topic">Tópico <p-sortIcon field="topic" /></th>
                     <th>Observações</th>
-                    <th style="width:7rem;text-align:center">Avaliação</th>
+                    <th style="width:7.5rem;text-align:center">Avaliação</th>
+                    <th style="width:5rem;text-align:center">Tendência</th>
                   </tr>
                 </ng-template>
-
-                <ng-template pTemplate="emptymessage">
+                <ng-template pTemplate="body" let-session let-rowIndex="rowIndex">
                   <tr>
-                    <td colspan="5" class="accordion__empty">
-                      <i class="pi pi-history" aria-hidden="true"></i>
-                      <p>Nenhuma sessão registrada.<br />Cada vez que estudar, registre aqui duração, tópico e sua auto-avaliação.</p>
+                    <td>{{ session.createdAt | slice:0:10 }}</td>
+                    <td>{{ formatDuration(session.durationSeconds) }}</td>
+                    <td>{{ session.topic }}</td>
+                    <td class="notes__desc">{{ session.notes || '—' }}</td>
+                    <td style="text-align:center" class="session__stars">{{ ratingStars(session.rating) }}</td>
+                    <td style="text-align:center">
+                      @let trend = sessionTrend(rowIndex);
+                      @if (trend) {
+                        <span class="trend {{ trend.cls }}" [title]="trend.label">
+                          <i class="pi {{ trend.icon }}" aria-hidden="true"></i>
+                        </span>
+                      }
                     </td>
                   </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr><td colspan="6" class="accordion__empty">
+                    <i class="pi pi-history" aria-hidden="true"></i>
+                    <p>Nenhuma sessão registrada. Clique em "Encerrar sessão atual" ao terminar de estudar.</p>
+                  </td></tr>
                 </ng-template>
               </p-table>
             </div>
@@ -258,7 +373,7 @@
       </p-accordion>
     </main>
 
-    <!-- ─── Footer / Voltar ───────────────────────────────────────────────── -->
+    <!-- ─── Footer / Voltar ────────────────────────────────────────────────────── -->
     <footer class="courseDetail__footer">
       <a class="btn btn--back" [routerLink]="backRoute">
         <i class="pi pi-arrow-left" aria-hidden="true"></i>
@@ -268,3 +383,128 @@
 
   }
 </div>
+
+<!-- ── Modal: Nova / Editar Anotação ────────────────────────────────────────── -->
+<p-dialog [(visible)]="noteModalVisible" [modal]="true" [draggable]="false" [resizable]="false"
+  [style]="{'width': '34rem'}" [header]="editingNote ? 'Editar anotação' : 'Nova anotação'"
+  styleClass="studyModal">
+  <form class="form" (ngSubmit)="saveNote()">
+    <div class="form__row">
+      <label class="field">
+        <span>Data</span>
+        <input pInputText type="date" [(ngModel)]="noteForm.date" name="date" />
+      </label>
+      <label class="field">
+        <span>Progresso</span>
+        <div class="field__slider">
+          <p-slider [(ngModel)]="noteForm.progress" name="progress" [min]="0" [max]="100" />
+          <span class="field__sliderVal">{{ noteForm.progress }}%</span>
+        </div>
+      </label>
+    </div>
+    <label class="field">
+      <span>Título</span>
+      <input pInputText type="text" [(ngModel)]="noteForm.title" name="title" placeholder="Ex: Tipos de instâncias EC2" />
+    </label>
+    <label class="field">
+      <span>Descrição / Resumo</span>
+      <textarea pTextarea [autoResize]="true" rows="4" [(ngModel)]="noteForm.description"
+        name="description" placeholder="Seus pontos-chave e resumo desta sessão..."></textarea>
+    </label>
+    <div class="form__row">
+      <label class="field">
+        <span>Status</span>
+        <select class="field__select" [(ngModel)]="noteForm.status" name="status">
+          @for (s of noteStatusOptions; track s) {
+            <option [value]="s">{{ s }}</option>
+          }
+        </select>
+      </label>
+      <label class="field">
+        <span>Link de referência</span>
+        <input pInputText type="url" [(ngModel)]="noteForm.link" name="link" placeholder="https://..." />
+      </label>
+    </div>
+    <footer class="formActions">
+      <button pButton type="button" label="Cancelar" severity="secondary" outlined (click)="noteModalVisible = false"></button>
+      <button pButton type="submit" [label]="editingNote ? 'Atualizar' : 'Salvar'"
+        [icon]="savingNote() ? 'pi pi-spin pi-spinner' : 'pi pi-check'"
+        [disabled]="savingNote()"></button>
+    </footer>
+  </form>
+</p-dialog>
+
+<!-- ── Modal: Novo / Editar Recurso ─────────────────────────────────────────── -->
+<p-dialog [(visible)]="resourceModalVisible" [modal]="true" [draggable]="false" [resizable]="false"
+  [style]="{'width': '34rem'}" [header]="editingResource ? 'Editar recurso' : 'Adicionar recurso'"
+  styleClass="studyModal">
+  <form class="form" (ngSubmit)="saveResource()">
+    <div class="form__row">
+      <label class="field">
+        <span>Tipo</span>
+        <select class="field__select" [(ngModel)]="resourceForm.type" name="type">
+          @for (t of resourceTypeOptions; track t) {
+            <option [value]="t">{{ t }}</option>
+          }
+        </select>
+      </label>
+      <label class="field field--grow">
+        <span>Título</span>
+        <input pInputText type="text" [(ngModel)]="resourceForm.title" name="title" placeholder="Ex: Documentação oficial AWS EC2" />
+      </label>
+    </div>
+    <label class="field">
+      <span>URL</span>
+      <input pInputText type="url" [(ngModel)]="resourceForm.url" name="url" placeholder="https://..." />
+    </label>
+    <label class="field">
+      <span>Descrição (opcional)</span>
+      <input pInputText type="text" [(ngModel)]="resourceForm.description" name="description" placeholder="Ex: Guia completo sobre tipos de instâncias" />
+    </label>
+    <footer class="formActions">
+      <button pButton type="button" label="Cancelar" severity="secondary" outlined (click)="resourceModalVisible = false"></button>
+      <button pButton type="submit" [label]="editingResource ? 'Atualizar' : 'Salvar'"
+        [icon]="savingResource() ? 'pi pi-spin pi-spinner' : 'pi pi-check'"
+        [disabled]="savingResource()"></button>
+    </footer>
+  </form>
+</p-dialog>
+
+<!-- ── Modal: Encerrar Sessão ────────────────────────────────────────────────── -->
+<p-dialog [(visible)]="sessionModalVisible" [modal]="true" [draggable]="false" [resizable]="false"
+  [style]="{'width': '28rem'}" header="Encerrar sessão de estudo" styleClass="studyModal">
+  <form class="form" (ngSubmit)="saveSession()">
+    <div class="session__summaryBox">
+      <i class="pi pi-clock" aria-hidden="true"></i>
+      <div>
+        <span class="session__summaryLabel">Duração da sessão</span>
+        <span class="session__summaryValue">{{ elapsedLabel }}</span>
+      </div>
+      <div>
+        <span class="session__summaryLabel">Marcos concluídos</span>
+        <span class="session__summaryValue">{{ milestones().filter(m => m.completed).length }} / {{ milestones().length }}</span>
+      </div>
+    </div>
+    <label class="field">
+      <span>Como foi a sessão? <small>(1–5 ⭐)</small></span>
+      <div class="session__ratingRow">
+        @for (star of [1,2,3,4,5]; track star) {
+          <button type="button" class="session__star"
+            [class.session__star--active]="star <= sessionRating"
+            (click)="sessionRating = star">★</button>
+        }
+      </div>
+    </label>
+    <label class="field">
+      <span>Observações (opcional)</span>
+      <textarea pTextarea [autoResize]="true" rows="3" [(ngModel)]="sessionNotes"
+        name="notes" placeholder="O que você aprendeu? Onde teve dificuldade?"></textarea>
+    </label>
+    <footer class="formActions">
+      <button pButton type="button" label="Cancelar" severity="secondary" outlined (click)="sessionModalVisible = false; startSession()"></button>
+      <button pButton type="submit" label="Salvar sessão"
+        [icon]="savingSession() ? 'pi pi-spin pi-spinner' : 'pi pi-check'"
+        [disabled]="savingSession()"></button>
+    </footer>
+  </form>
+</p-dialog>
