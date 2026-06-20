@@ -166,9 +166,15 @@
 
 .projectCard__actions {
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
-  flex-wrap: wrap;
   margin-top: 0.25rem;
+}
+
+.projectCard__actionsTop {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
 }
 
 .projectCard__btn {
@@ -179,6 +185,10 @@
   &:hover {
     filter: brightness(0.88);
   }
+}
+
+.projectCard__btn--full {
+  width: 100%;
 }
 
 .projectCard__btn--secondary {

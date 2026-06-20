@@ -58,6 +58,34 @@
           </div>
 
           <div class="projectCard__actions">
+            @if (item.repoUrl || item.deployUrl) {
+              <div class="projectCard__actionsTop">
+                @if (item.repoUrl) {
+                  <button
+                    pButton
+                    type="button"
+                    label="GitHub"
+                    icon="pi pi-github"
+                    class="projectCard__btn projectCard__btn--secondary"
+                    pTooltip="Abrir repositório no GitHub"
+                    tooltipPosition="bottom"
+                    (click)="openUrl(item.repoUrl)"
+                  ></button>
+                }
+                @if (item.deployUrl) {
+                  <button
+                    pButton
+                    type="button"
+                    label="Deploy"
+                    icon="pi pi-external-link"
+                    class="projectCard__btn projectCard__btn--secondary"
+                    pTooltip="Abrir projeto publicado"
+                    tooltipPosition="bottom"
+                    (click)="openUrl(item.deployUrl)"
+                  ></button>
+                }
+              </div>
+            }
             @if (item.detailRoute) {
               <a
                 pButton
@@ -65,36 +93,10 @@
                 label="Ver Detalhes"
                 icon="pi pi-arrow-right"
                 iconPos="right"
-                class="projectCard__btn projectCard__btn--detail"
+                class="projectCard__btn projectCard__btn--secondary projectCard__btn--full"
                 pTooltip="Ver detalhes do projeto"
                 tooltipPosition="bottom"
               ></a>
-            }
-            @if (item.repoUrl) {
-              <button
-                pButton
-                type="button"
-                label="GitHub"
-                icon="pi pi-github"
-                severity="secondary"
-                class="projectCard__btn projectCard__btn--secondary"
-                pTooltip="Abrir repositório no GitHub"
-                tooltipPosition="bottom"
-                (click)="openUrl(item.repoUrl)"
-              ></button>
-            }
-            @if (item.deployUrl) {
-              <button
-                pButton
-                type="button"
-                label="Deploy"
-                icon="pi pi-external-link"
-                severity="secondary"
-                class="projectCard__btn projectCard__btn--secondary"
-                pTooltip="Abrir projeto publicado"
-                tooltipPosition="bottom"
-                (click)="openUrl(item.deployUrl)"
-              ></button>
             }
           </div>
         </div>
