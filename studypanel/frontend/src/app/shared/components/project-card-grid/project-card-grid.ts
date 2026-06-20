@@ -12,6 +12,7 @@ export interface ProjectItem {
   description: string;
   tags: string[];
   iconClass: string;
+  iconUrl?: string;
   bannerColor: string;
   imageUrl?: string;
   imageAlt?: string;
@@ -44,6 +45,10 @@ export class ProjectCardGrid {
   }
 
   onImageError(event: Event): void {
+    (event.target as HTMLImageElement).style.display = 'none';
+  }
+
+  onIconError(event: Event): void {
     (event.target as HTMLImageElement).style.display = 'none';
   }
 

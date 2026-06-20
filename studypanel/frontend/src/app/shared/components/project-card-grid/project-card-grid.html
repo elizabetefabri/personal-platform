@@ -29,7 +29,16 @@
             />
           }
           <span class="projectCard__icon">
-            <i class="pi" [ngClass]="item.iconClass" aria-hidden="true"></i>
+            @if (item.iconUrl) {
+              <img
+                class="projectCard__iconImg"
+                [src]="item.iconUrl"
+                [alt]="item.title"
+                (error)="onIconError($event)"
+              />
+            } @else {
+              <i class="pi" [ngClass]="item.iconClass" aria-hidden="true"></i>
+            }
           </span>
 
           @if (item.apiId) {

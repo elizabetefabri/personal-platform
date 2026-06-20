@@ -17,6 +17,7 @@ export interface StudyCardItem {
   imageUrl?: string;
   bannerColor?: string;
   iconClass: string;
+  iconUrl?: string;
   skill: string;
   detailRoute: string;
   buttonLabel?: string;

@@ -28,6 +28,10 @@ export class StudyCardGrid {
     (event.target as HTMLImageElement).style.display = 'none';
   }
 
+  onIconError(event: Event): void {
+    (event.target as HTMLImageElement).style.display = 'none';
+  }
+
   requestDelete(item: StudyCardItem, event: Event): void {
     event.stopPropagation();
     this.deleteRequest.emit(item);

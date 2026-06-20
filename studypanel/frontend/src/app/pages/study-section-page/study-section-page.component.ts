@@ -82,6 +82,7 @@ export class StudySectionPageComponent implements OnInit {
       description: t.description,
       bannerColor: t.bannerColor,
       iconClass: t.iconClass,
+      iconUrl: `/assets/images/estudos-labs/${this.sectionSlug}/${t.slug}.svg`,
       skill: t.skill,
       detailRoute: `/${this.sectionSlug}/${t.slug}`,
       imageUrl: t.imageUrl,
@@ -97,6 +98,7 @@ export class StudySectionPageComponent implements OnInit {
       description: t.description,
       bannerColor: t.bannerColor,
       iconClass: t.iconClass,
+      iconUrl: `/assets/images/estudos-labs/${this.sectionSlug}/${t.slug}.svg`,
       skill: t.skill,
       detailRoute: `/${this.sectionSlug}/${t.slug}`,
     }));
