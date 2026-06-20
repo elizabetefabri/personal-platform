@@ -79,11 +79,24 @@
   place-items: center;
   cursor: pointer;
   z-index: 21;
-  transition: background 0.2s ease;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: #2a2930;
+    // box-shadow: 0 0 0 0.0625rem rgba(255, 255, 255, 0.08);
   }
+
+  // &:active {
+  //   background: #18171c;
+  // }
+
+  // &:focus-visible {
+  //   outline: 0.125rem solid #f5a623;
+  //   outline-offset: 0.125rem;
+  // }
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;

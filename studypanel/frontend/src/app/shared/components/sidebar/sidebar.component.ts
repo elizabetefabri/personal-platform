@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 
-export type SidebarItemKey = 'dashboard' | 'estudos-labs' | 'projetos';
+export type SidebarItemKey = 'dashboard' | 'estudos-labs' | 'projetos' | 'vida-criativa' | 'painel-financeiro';
 
 export interface SidebarItem {
   key: SidebarItemKey;
@@ -46,6 +46,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { key: 'dashboard', label: 'Dashboard', href: '/dashboard', iconClass: 'pi-th-large' },
     { key: 'estudos-labs', label: 'Estudos e Labs', href: '/estudos-labs', iconClass: 'pi-book' },
     { key: 'projetos', label: 'Projetos', href: '/projetos', iconClass: 'pi-folder' },
+    { key: 'vida-criativa', label: 'Vida Criativa', href: '/vida-criativa', iconClass: 'pi-palette' },
+    { key: 'painel-financeiro', label: 'Painel Financeiro', href: '/painel-financeiro', iconClass: 'pi-chart-bar' },
   ];
 
   constructor(private router: Router) {}
@@ -73,6 +75,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
     if (PROJETOS_PREFIXES.includes(firstSegment)) {
       this.activeItem = 'projetos';
+      return;
+    }
+    if (firstSegment === '/vida-criativa') {
+      this.activeItem = 'vida-criativa';
+      return;
+    }
+    if (firstSegment === '/painel-financeiro') {
+      this.activeItem = 'painel-financeiro';
       return;
     }
     this.activeItem = 'dashboard';

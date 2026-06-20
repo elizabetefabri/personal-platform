@@ -1,5 +1,13 @@
 import { Routes } from '@angular/router';
 
+const sectionChild = {
+  path: '',
+  loadComponent: () =>
+    import('./pages/study-section-page/study-section-page.component').then(
+      (m) => m.StudySectionPageComponent,
+    ),
+};
+
 const detailChild = {
   path: ':topic',
   children: [
@@ -21,125 +29,21 @@ const detailChild = {
 };
 
 export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: '/dashboard',
-    pathMatch: 'full',
-  },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   {
     path: 'dashboard',
     loadComponent: () =>
       import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
   },
-  {
-    path: 'backend',
-    children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./pages/backend/backend.component').then((m) => m.BackendComponent),
-      },
-      detailChild,
-    ],
-  },
-  {
-    path: 'banco-de-dados',
-    children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./pages/banco-de-dados/banco-de-dados.component').then(
-            (m) => m.BancoDeDadosComponent,
-          ),
-      },
-      detailChild,
-    ],
-  },
-  {
-    path: 'cloud',
-    children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./pages/cloud/cloud.component').then((m) => m.CloudComponent),
-      },
-      detailChild,
-    ],
-  },
-  {
-    path: 'containers-kubernetes',
-    children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./pages/containers-kubernetes/containers-kubernetes.component').then(
-            (m) => m.ContainersKubernetesComponent,
-          ),
-      },
-      detailChild,
-    ],
-  },
-  {
-    path: 'devops',
-    children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./pages/devops/devops.component').then((m) => m.DevOpsComponent),
-      },
-      detailChild,
-    ],
-  },
-  {
-    path: 'frontend',
-    children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./pages/frontend/frontend.component').then((m) => m.FrontendComponent),
-      },
-      detailChild,
-    ],
-  },
-  {
-    path: 'inteligencia-artificial',
-    children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./pages/inteligencia-artificial/inteligencia-artificial.component').then(
-            (m) => m.InteligenciaArtificialComponent,
-          ),
-      },
-      detailChild,
-    ],
-  },
-  {
-    path: 'observability',
-    children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./pages/observability/observability.component').then(
-            (m) => m.ObservabilityComponent,
-          ),
-      },
-      detailChild,
-    ],
-  },
-  {
-    path: 'performance-engineering',
-    children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./pages/performance-engineering/performance-engineering.component').then(
-            (m) => m.PerformanceEngineeringComponent,
-          ),
-      },
-      detailChild,
-    ],
-  },
+  { path: 'backend', children: [sectionChild, detailChild] },
+  { path: 'banco-de-dados', children: [sectionChild, detailChild] },
+  { path: 'cloud', children: [sectionChild, detailChild] },
+  { path: 'containers-kubernetes', children: [sectionChild, detailChild] },
+  { path: 'devops', children: [sectionChild, detailChild] },
+  { path: 'frontend', children: [sectionChild, detailChild] },
+  { path: 'inteligencia-artificial', children: [sectionChild, detailChild] },
+  { path: 'observability', children: [sectionChild, detailChild] },
+  { path: 'performance-engineering', children: [sectionChild, detailChild] },
   {
     path: 'estudos-labs',
     loadComponent: () =>
@@ -171,24 +75,24 @@ export const routes: Routes = [
   },
   {
     path: 'rollout-service',
-    children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./pages/rollout-service/rollout-service.component').then(
-            (m) => m.RolloutServiceComponent,
-          ),
-      },
-      detailChild,
-    ],
+    children: [sectionChild, detailChild],
+  },
+  {
+    path: 'vida-criativa',
+    loadComponent: () =>
+      import('./pages/vida-criativa/vida-criativa.component').then((m) => m.VidaCriativaComponent),
+  },
+  {
+    path: 'painel-financeiro',
+    loadComponent: () =>
+      import('./pages/painel-financeiro/painel-financeiro.component').then(
+        (m) => m.PainelFinanceiroComponent,
+      ),
   },
   {
     path: 'settings',
     loadComponent: () =>
       import('./pages/settings/settings.component').then((m) => m.SettingsComponent),
   },
-  {
-    path: '**',
-    redirectTo: '/dashboard',
-  },
+  { path: '**', redirectTo: '/dashboard' },
 ];

@@ -8,6 +8,8 @@ export type { BreadcrumbItem };
 
 const PAGE_LABELS: Record<string, string> = {
   settings: 'Configurações',
+  'vida-criativa': 'Vida Criativa',
+  'painel-financeiro': 'Painel Financeiro',
 };
 
 const STUDY_SECTION_SLUGS = new Set([

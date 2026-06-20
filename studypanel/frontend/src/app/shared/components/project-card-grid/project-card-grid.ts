@@ -1,11 +1,13 @@
 import { NgClass } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 import { BackButtonComponent } from '../back-button/back-button';
 
 export interface ProjectItem {
   id: number;
+  apiId?: string;
   title: string;
   description: string;
   tags: string[];
@@ -21,7 +23,7 @@ export interface ProjectItem {
 @Component({
   selector: 'app-project-card-grid',
   standalone: true,
-  imports: [ButtonModule, NgClass, RouterLink, BackButtonComponent],
+  imports: [ButtonModule, NgClass, RouterLink, TooltipModule, BackButtonComponent],
   templateUrl: './project-card-grid.html',
   styleUrl: './project-card-grid.scss',
 })
@@ -29,6 +31,7 @@ export class ProjectCardGrid {
   @Input({ required: true }) pageTitle = '';
   @Input({ required: true }) pageDescription = '';
   @Input({ required: true }) items: ProjectItem[] = [];
+  @Output() deleteRequest = new EventEmitter<ProjectItem>();
 
   getAccentColor(item: ProjectItem): string {
     const match = (item.bannerColor ?? '').match(/#[0-9a-fA-F]{6}/);
@@ -41,5 +44,10 @@ export class ProjectCardGrid {
 
   onImageError(event: Event): void {
     (event.target as HTMLImageElement).style.display = 'none';
+  }
+
+  requestDelete(item: ProjectItem, event: Event): void {
+    event.stopPropagation();
+    this.deleteRequest.emit(item);
   }
 }

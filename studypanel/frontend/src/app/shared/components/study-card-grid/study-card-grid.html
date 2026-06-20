@@ -1,11 +1,13 @@
 <section class="studyPage">
   <header class="studyPage__header">
     <div class="studyPage__topRow">
-      <span class="studyPage__eyebrow">StudyPanel</span>
       <app-back-button></app-back-button>
+      <ng-content select="[slot='header-actions']"></ng-content>
     </div>
-    <h1 class="studyPage__title">{{ pageTitle }}</h1>
-    <p class="studyPage__description">{{ pageDescription }}</p>
+    <div class="studyPage__headerBottom">
+      <h1 class="studyPage__title">{{ pageTitle }}</h1>
+      <p class="studyPage__description">{{ pageDescription }}</p>
+    </div>
   </header>
 
   <div class="studyGrid" aria-label="Lista de estudos">
@@ -30,6 +32,19 @@
           <span class="studyCard__icon">
             <i class="pi" [ngClass]="item.iconClass" aria-hidden="true"></i>
           </span>
+
+          @if (item.apiId) {
+            <button
+              class="studyCard__deleteBtn"
+              type="button"
+              pTooltip="Excluir item"
+              tooltipPosition="top"
+              (click)="requestDelete(item, $event)"
+              aria-label="Excluir {{ item.title }}"
+            >
+              <i class="pi pi-trash"></i>
+            </button>
+          }
         </div>
 
         <div class="studyCard__content">
@@ -44,7 +59,7 @@
           <a
             pButton
             [routerLink]="item.detailRoute"
-            [label]="item.buttonLabel ?? 'Abrir Trilha ⭐'"
+            [label]="item.buttonLabel ?? 'Abrir Trilha'"
             iconPos="right"
             class="studyCard__button"
           ></a>

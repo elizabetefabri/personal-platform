@@ -80,12 +80,42 @@ func main() {
 	sessionDeleteUC := usecase.NewDeleteStudySessionUseCase(sessionRepo)
 	sessionHandler := handler.NewStudySessionHandler(sessionCreateUC, sessionListUC, sessionUpdateUC, sessionDeleteUC)
 
+	// CourseSection
+	sectionRepo := mongoRepo.NewCourseSectionRepository(db)
+	sectionCreateUC := usecase.NewCreateCourseSectionUseCase(sectionRepo)
+	sectionListUC := usecase.NewListCourseSectionsUseCase(sectionRepo)
+	sectionGetUC := usecase.NewGetCourseSectionUseCase(sectionRepo)
+	sectionUpdateUC := usecase.NewUpdateCourseSectionUseCase(sectionRepo)
+	sectionDeleteUC := usecase.NewDeleteCourseSectionUseCase(sectionRepo)
+	sectionHandler := handler.NewCourseSectionHandler(sectionCreateUC, sectionListUC, sectionGetUC, sectionUpdateUC, sectionDeleteUC)
+
+	// CourseTopic
+	topicRepo := mongoRepo.NewCourseTopicRepository(db)
+	topicCreateUC := usecase.NewCreateCourseTopicUseCase(topicRepo)
+	topicListUC := usecase.NewListCourseTopicsUseCase(topicRepo)
+	topicGetUC := usecase.NewGetCourseTopicUseCase(topicRepo)
+	topicUpdateUC := usecase.NewUpdateCourseTopicUseCase(topicRepo)
+	topicDeleteUC := usecase.NewDeleteCourseTopicUseCase(topicRepo)
+	topicHandler := handler.NewCourseTopicHandler(topicCreateUC, topicListUC, topicGetUC, topicUpdateUC, topicDeleteUC)
+
+	// Project
+	projectRepo := mongoRepo.NewProjectRepository(db)
+	projectCreateUC := usecase.NewCreateProjectUseCase(projectRepo)
+	projectListUC := usecase.NewListProjectsUseCase(projectRepo)
+	projectGetUC := usecase.NewGetProjectUseCase(projectRepo)
+	projectUpdateUC := usecase.NewUpdateProjectUseCase(projectRepo)
+	projectDeleteUC := usecase.NewDeleteProjectUseCase(projectRepo)
+	projectHandler := handler.NewProjectHandler(projectCreateUC, projectListUC, projectGetUC, projectUpdateUC, projectDeleteUC)
+
 	mux := http.NewServeMux()
 	h.RegisterRoutes(mux)
 	noteHandler.RegisterRoutes(mux)
 	resourceHandler.RegisterRoutes(mux)
 	quizHandler.RegisterRoutes(mux)
 	sessionHandler.RegisterRoutes(mux)
+	sectionHandler.RegisterRoutes(mux)
+	topicHandler.RegisterRoutes(mux)
+	projectHandler.RegisterRoutes(mux)
 
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")

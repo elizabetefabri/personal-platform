@@ -11,6 +11,7 @@ export type QuizDifficulty = 'Fácil' | 'Médio' | 'Difícil';
 
 export interface StudyCardItem {
   id: number;
+  apiId?: string;
   title: string;
   description: string;
   imageUrl?: string;

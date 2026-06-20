@@ -2,6 +2,97 @@
   <app-project-card-grid
     [pageTitle]="pageTitle"
     [pageDescription]="pageDescription"
-    [items]="items"
-  />
+    [items]="items()"
+    (deleteRequest)="onDeleteRequest($event)"
+  >
+    <div slot="header-actions" class="projects__actions">
+      <p-button
+        label="Cadastrar Projeto Pessoal"
+        icon="pi pi-plus"
+        [outlined]="true"
+        size="small"
+        styleClass="btn-accent-outline"
+        pTooltip="Cadastrar novo projeto pessoal"
+        tooltipPosition="bottom"
+        (onClick)="openCreateModal()"
+      />
+    </div>
+  </app-project-card-grid>
 </div>
+
+<!-- Modal: Cadastrar -->
+<p-dialog
+  [(visible)]="modalVisible"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '540px' }"
+  header="Cadastrar Projeto Pessoal"
+  (onHide)="cancelModal()"
+>
+  <div class="modal-form">
+    @if (errorMessage) {
+      <div class="modal-form__error">{{ errorMessage }}</div>
+    }
+    <div class="modal-form__field">
+      <label>Nome *</label>
+      <input pInputText [(ngModel)]="form.name" placeholder="Ex: Comanda Flow" />
+    </div>
+    <div class="modal-form__field">
+      <label>Slug</label>
+      <input pInputText [(ngModel)]="form.slug" placeholder="Ex: comanda-flow" />
+    </div>
+    <div class="modal-form__field">
+      <label>Descrição</label>
+      <input pInputText [(ngModel)]="form.description" placeholder="Descrição curta do projeto" />
+    </div>
+    <div class="modal-form__field">
+      <label>Tags (separadas por vírgula)</label>
+      <input pInputText [(ngModel)]="tagsInput" placeholder="Angular, TypeScript, ..." />
+    </div>
+    <div class="modal-form__field">
+      <label>URL do Repositório</label>
+      <input pInputText [(ngModel)]="form.repoUrl" placeholder="https://github.com/..." />
+    </div>
+    <div class="modal-form__field">
+      <label>URL do Deploy</label>
+      <input pInputText [(ngModel)]="form.deployUrl" placeholder="https://..." />
+    </div>
+    <div class="modal-form__field">
+      <label>Cor do card</label>
+      <input pInputText [(ngModel)]="form.bannerColor" placeholder="linear-gradient(...)" />
+    </div>
+    <div class="modal-form__field">
+      <label>URL da imagem</label>
+      <input pInputText [(ngModel)]="form.imageUrl" placeholder="/assets/images/..." />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="cancelModal()" />
+    <p-button label="Cadastrar" icon="pi pi-check" [loading]="saving()" (onClick)="saveProject()" />
+  </ng-template>
+</p-dialog>
+
+<!-- Modal: Confirmar exclusão -->
+<p-dialog
+  [(visible)]="deleteModalVisible"
+  [modal]="true"
+  [closable]="false"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '440px' }"
+  header="Confirmar exclusão"
+>
+  <div class="delete-confirm">
+    <i class="pi pi-exclamation-triangle delete-confirm__icon"></i>
+    <p class="delete-confirm__text">
+      Tem certeza que deseja excluir <strong>{{ deleteTargetName }}</strong>?
+      <br /><span class="delete-confirm__hint">Esta ação não pode ser desfeita.</span>
+    </p>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="cancelDelete()" />
+    <p-button label="Confirmar exclusão" icon="pi pi-trash" severity="danger" (onClick)="confirmDelete()" />
+  </ng-template>
+</p-dialog>

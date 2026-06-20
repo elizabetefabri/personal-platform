@@ -1,11 +1,13 @@
 <section class="projectPage">
   <header class="projectPage__header">
     <div class="projectPage__topRow">
-      <span class="projectPage__eyebrow">StudyPanel</span>
       <app-back-button></app-back-button>
+      <ng-content select="[slot='header-actions']"></ng-content>
     </div>
-    <h1 class="projectPage__title">{{ pageTitle }}</h1>
-    <p class="projectPage__description">{{ pageDescription }}</p>
+    <div class="projectPage__headerBottom">
+      <h1 class="projectPage__title">{{ pageTitle }}</h1>
+      <p class="projectPage__description">{{ pageDescription }}</p>
+    </div>
   </header>
 
   <div class="projectGrid" aria-label="Lista de projetos">
@@ -29,6 +31,19 @@
           <span class="projectCard__icon">
             <i class="pi" [ngClass]="item.iconClass" aria-hidden="true"></i>
           </span>
+
+          @if (item.apiId) {
+            <button
+              class="projectCard__deleteBtn"
+              type="button"
+              pTooltip="Excluir projeto"
+              tooltipPosition="top"
+              (click)="requestDelete(item, $event)"
+              aria-label="Excluir {{ item.title }}"
+            >
+              <i class="pi pi-trash"></i>
+            </button>
+          }
         </div>
 
         <div class="projectCard__content">
@@ -43,13 +58,28 @@
           </div>
 
           <div class="projectCard__actions">
+            @if (item.detailRoute) {
+              <a
+                pButton
+                [routerLink]="item.detailRoute"
+                label="Ver Detalhes"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                class="projectCard__btn projectCard__btn--detail"
+                pTooltip="Ver detalhes do projeto"
+                tooltipPosition="bottom"
+              ></a>
+            }
             @if (item.repoUrl) {
               <button
                 pButton
                 type="button"
-                label="Repositório"
+                label="GitHub"
                 icon="pi pi-github"
+                severity="secondary"
                 class="projectCard__btn projectCard__btn--secondary"
+                pTooltip="Abrir repositório no GitHub"
+                tooltipPosition="bottom"
                 (click)="openUrl(item.repoUrl)"
               ></button>
             }
@@ -59,19 +89,12 @@
                 type="button"
                 label="Deploy"
                 icon="pi pi-external-link"
-                class="projectCard__btn"
+                severity="secondary"
+                class="projectCard__btn projectCard__btn--secondary"
+                pTooltip="Abrir projeto publicado"
+                tooltipPosition="bottom"
                 (click)="openUrl(item.deployUrl)"
               ></button>
-            }
-            @if (!item.repoUrl && !item.deployUrl && item.detailRoute) {
-              <a
-                pButton
-                [routerLink]="item.detailRoute"
-                label="Ver Detalhes"
-                icon="pi pi-arrow-right"
-                iconPos="right"
-                class="projectCard__btn"
-              ></a>
             }
           </div>
         </div>

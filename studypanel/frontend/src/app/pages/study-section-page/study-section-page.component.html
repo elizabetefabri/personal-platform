@@ -1,34 +1,34 @@
 <div class="page-container">
-  <app-project-card-grid
+  <app-study-card-grid
     [pageTitle]="pageTitle"
     [pageDescription]="pageDescription"
     [items]="items()"
     (deleteRequest)="onDeleteRequest($event)"
   >
-    <div slot="header-actions" class="projects__actions">
+    <div slot="header-actions" class="section-page__actions">
       <p-button
-        label="Cadastrar Projeto Profissional"
+        label="Cadastrar Item da Trilha"
         icon="pi pi-plus"
         [outlined]="true"
         size="small"
         styleClass="btn-accent-outline"
-        pTooltip="Cadastrar novo projeto profissional"
+        pTooltip="Cadastrar novo item nesta trilha"
         tooltipPosition="bottom"
         (onClick)="openCreateModal()"
       />
     </div>
-  </app-project-card-grid>
+  </app-study-card-grid>
 </div>
 
-<!-- Modal: Cadastrar -->
+<!-- Modal: Cadastrar / Editar -->
 <p-dialog
   [(visible)]="modalVisible"
   [modal]="true"
   [closable]="true"
   [draggable]="false"
   [resizable]="false"
-  [style]="{ width: '540px' }"
-  header="Cadastrar Projeto Profissional"
+  [style]="{ width: '520px' }"
+  [header]="editingTopic ? 'Editar Item da Trilha' : 'Cadastrar Item da Trilha'"
   (onHide)="cancelModal()"
 >
   <div class="modal-form">
@@ -36,41 +36,41 @@
       <div class="modal-form__error">{{ errorMessage }}</div>
     }
     <div class="modal-form__field">
-      <label>Nome *</label>
-      <input pInputText [(ngModel)]="form.name" placeholder="Ex: Rollout Service" />
+      <label for="topic-label">Nome *</label>
+      <input pInputText id="topic-label" [(ngModel)]="form.label" placeholder="Ex: Node.js" />
     </div>
     <div class="modal-form__field">
-      <label>Slug</label>
-      <input pInputText [(ngModel)]="form.slug" placeholder="Ex: rollout-service" />
+      <label for="topic-slug">Slug *</label>
+      <input pInputText id="topic-slug" [(ngModel)]="form.slug" placeholder="Ex: nodejs" [disabled]="!!editingTopic" />
     </div>
     <div class="modal-form__field">
-      <label>Descrição</label>
-      <input pInputText [(ngModel)]="form.description" placeholder="Descrição curta do projeto" />
+      <label for="topic-desc">Descrição</label>
+      <input pInputText id="topic-desc" [(ngModel)]="form.description" placeholder="Descrição curta do tópico" />
     </div>
     <div class="modal-form__field">
-      <label>Tags (separadas por vírgula)</label>
-      <input pInputText [(ngModel)]="tagsInput" placeholder="Go, Angular, ..." />
+      <label for="topic-skill">Tag / Skill</label>
+      <input pInputText id="topic-skill" [(ngModel)]="form.skill" placeholder="Ex: Runtime" />
     </div>
     <div class="modal-form__field">
-      <label>Rota interna (Ver Detalhes)</label>
-      <input pInputText [(ngModel)]="form.detailRoute" placeholder="/rollout-service" />
+      <label for="topic-color">Cor do card</label>
+      <input pInputText id="topic-color" [(ngModel)]="form.bannerColor" placeholder="linear-gradient(...)" />
     </div>
     <div class="modal-form__field">
-      <label>URL do Repositório</label>
-      <input pInputText [(ngModel)]="form.repoUrl" placeholder="https://github.com/..." />
+      <label for="topic-icon">Ícone (PrimeIcons)</label>
+      <input pInputText id="topic-icon" [(ngModel)]="form.iconClass" placeholder="pi-code" />
     </div>
     <div class="modal-form__field">
-      <label>Cor do card</label>
-      <input pInputText [(ngModel)]="form.bannerColor" placeholder="linear-gradient(...)" />
+      <label for="topic-image">URL da imagem</label>
+      <input pInputText id="topic-image" [(ngModel)]="form.imageUrl" placeholder="/assets/images/..." />
     </div>
     <div class="modal-form__field">
-      <label>URL da imagem</label>
-      <input pInputText [(ngModel)]="form.imageUrl" placeholder="/assets/images/..." />
+      <label for="topic-order">Ordem</label>
+      <input pInputText id="topic-order" type="number" [(ngModel)]="form.order" />
     </div>
   </div>
   <ng-template pTemplate="footer">
     <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="cancelModal()" />
-    <p-button label="Cadastrar" icon="pi pi-check" [loading]="saving()" (onClick)="saveProject()" />
+    <p-button [label]="editingTopic ? 'Salvar alterações' : 'Cadastrar'" icon="pi pi-check" [loading]="saving()" (onClick)="saveTopic()" />
   </ng-template>
 </p-dialog>
 
