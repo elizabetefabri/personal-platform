@@ -4,6 +4,7 @@
     [pageDescription]="pageDescription"
     [items]="items()"
     (deleteRequest)="onDeleteRequest($event)"
+    (editRequest)="onEditRequest($event)"
   >
     <div slot="header-actions" class="section-page__actions">
       <p-button

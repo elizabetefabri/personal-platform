@@ -51,6 +51,8 @@ export class EstudosLabsComponent implements OnInit {
   modalVisible = false;
   editingSection: CourseSection | null = null;
 
+  private rawSections: CourseSection[] = [];
+
   deleteModalVisible = false;
   deleteTargetId = '';
   deleteTargetName = '';
@@ -71,6 +73,7 @@ export class EstudosLabsComponent implements OnInit {
     this.loading.set(true);
     this.sectionService.list().subscribe({
       next: (sections) => {
+        this.rawSections = sections;
         this.items.set(sections.length > 0 ? this.toCards(sections) : this.fallbackCards());
         this.loading.set(false);
       },
@@ -144,6 +147,11 @@ export class EstudosLabsComponent implements OnInit {
   }
 
   cancelModal(): void { this.modalVisible = false; this.errorMessage = ''; }
+
+  onEditRequest(item: StudyCardItem): void {
+    const section = this.rawSections.find((s) => s.id === item.apiId);
+    if (section) this.openEditModal(section);
+  }
 
   onDeleteRequest(item: StudyCardItem): void {
     this.deleteTargetId = item.apiId ?? '';

@@ -44,6 +44,16 @@
             >
               <i class="pi pi-trash"></i>
             </button>
+            <button
+              class="studyCard__editBtn"
+              type="button"
+              pTooltip="Editar item"
+              tooltipPosition="top"
+              (click)="requestEdit(item, $event)"
+              aria-label="Editar {{ item.title }}"
+            >
+              <i class="pi pi-pencil"></i>
+            </button>
           }
         </div>
 

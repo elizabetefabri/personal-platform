@@ -17,6 +17,7 @@ export class StudyCardGrid {
   @Input({ required: true }) pageDescription = '';
   @Input({ required: true }) items: StudyCardItem[] = [];
   @Output() deleteRequest = new EventEmitter<StudyCardItem>();
+  @Output() editRequest = new EventEmitter<StudyCardItem>();
 
   getAccentColor(item: StudyCardItem): string {
     const match = (item.bannerColor ?? '').match(/#[0-9a-fA-F]{6}/);
@@ -30,5 +31,10 @@ export class StudyCardGrid {
   requestDelete(item: StudyCardItem, event: Event): void {
     event.stopPropagation();
     this.deleteRequest.emit(item);
+  }
+
+  requestEdit(item: StudyCardItem, event: Event): void {
+    event.stopPropagation();
+    this.editRequest.emit(item);
   }
 }

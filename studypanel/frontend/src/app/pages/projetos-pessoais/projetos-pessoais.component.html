@@ -4,6 +4,7 @@
     [pageDescription]="pageDescription"
     [items]="items()"
     (deleteRequest)="onDeleteRequest($event)"
+    (editRequest)="onEditRequest($event)"
   >
     <div slot="header-actions" class="projects__actions">
       <p-button
@@ -27,7 +28,7 @@
   [draggable]="false"
   [resizable]="false"
   [style]="{ width: '540px' }"
-  header="Cadastrar Projeto Pessoal"
+  [header]="editingProject ? 'Editar Projeto Pessoal' : 'Cadastrar Projeto Pessoal'"
   (onHide)="cancelModal()"
 >
   <div class="modal-form">
@@ -69,7 +70,7 @@
   </div>
   <ng-template pTemplate="footer">
     <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="cancelModal()" />
-    <p-button label="Cadastrar" icon="pi pi-check" [loading]="saving()" (onClick)="saveProject()" />
+    <p-button [label]="editingProject ? 'Salvar alterações' : 'Cadastrar'" icon="pi pi-check" [loading]="saving()" (onClick)="saveProject()" />
   </ng-template>
 </p-dialog>
 

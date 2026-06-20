@@ -80,6 +80,8 @@ export class ProjetosPessoaisComponent implements OnInit {
   modalVisible = false;
   editingProject: Project | null = null;
 
+  private rawProjects: Project[] = [];
+
   deleteModalVisible = false;
   deleteTargetId = '';
   deleteTargetName = '';
@@ -98,7 +100,10 @@ export class ProjetosPessoaisComponent implements OnInit {
 
   private loadProjects(): void {
     this.projectService.list('pessoal').subscribe({
-      next: (projects) => { this.items.set(projects.length > 0 ? this.toCards(projects) : FALLBACK); },
+      next: (projects) => {
+        this.rawProjects = projects;
+        this.items.set(projects.length > 0 ? this.toCards(projects) : FALLBACK);
+      },
       error: () => this.items.set(FALLBACK),
     });
   }
@@ -131,6 +136,26 @@ export class ProjetosPessoaisComponent implements OnInit {
     this.tagsInput = '';
     this.errorMessage = '';
     this.modalVisible = true;
+  }
+
+  openEditModal(project: Project): void {
+    this.editingProject = project;
+    this.form = {
+      name: project.name, type: project.type, description: project.description,
+      tags: project.tags ?? [], repoUrl: project.repoUrl ?? '',
+      deployUrl: project.deployUrl ?? '', slug: project.slug,
+      bannerColor: project.bannerColor, imageUrl: project.imageUrl ?? '',
+      imageAlt: project.imageAlt ?? '', detailRoute: project.detailRoute ?? '',
+      active: project.active, order: project.order,
+    };
+    this.tagsInput = (project.tags ?? []).join(', ');
+    this.errorMessage = '';
+    this.modalVisible = true;
+  }
+
+  onEditRequest(item: ProjectItem): void {
+    const project = this.rawProjects.find((p) => p.id === item.apiId);
+    if (project) this.openEditModal(project);
   }
 
   saveProject(): void {

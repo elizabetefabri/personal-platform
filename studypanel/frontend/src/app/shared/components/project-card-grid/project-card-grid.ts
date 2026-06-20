@@ -32,6 +32,7 @@ export class ProjectCardGrid {
   @Input({ required: true }) pageDescription = '';
   @Input({ required: true }) items: ProjectItem[] = [];
   @Output() deleteRequest = new EventEmitter<ProjectItem>();
+  @Output() editRequest = new EventEmitter<ProjectItem>();
 
   getAccentColor(item: ProjectItem): string {
     const match = (item.bannerColor ?? '').match(/#[0-9a-fA-F]{6}/);
@@ -49,5 +50,10 @@ export class ProjectCardGrid {
   requestDelete(item: ProjectItem, event: Event): void {
     event.stopPropagation();
     this.deleteRequest.emit(item);
+  }
+
+  requestEdit(item: ProjectItem, event: Event): void {
+    event.stopPropagation();
+    this.editRequest.emit(item);
   }
 }

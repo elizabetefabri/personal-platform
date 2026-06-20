@@ -36,6 +36,8 @@ export class StudySectionPageComponent implements OnInit {
   modalVisible = false;
   editingTopic: CourseTopic | null = null;
 
+  private rawTopics: CourseTopic[] = [];
+
   deleteModalVisible = false;
   deleteTargetId = '';
   deleteTargetName = '';
@@ -64,6 +66,7 @@ export class StudySectionPageComponent implements OnInit {
     this.loading.set(true);
     this.topicService.list(this.sectionSlug).subscribe({
       next: (topics) => {
+        this.rawTopics = topics;
         this.items.set(topics.length > 0 ? this.toCards(topics) : this.fallbackCards());
         this.loading.set(false);
       },
@@ -136,6 +139,11 @@ export class StudySectionPageComponent implements OnInit {
   }
 
   cancelModal(): void { this.modalVisible = false; this.errorMessage = ''; }
+
+  onEditRequest(item: StudyCardItem): void {
+    const topic = this.rawTopics.find((t) => t.id === item.apiId);
+    if (topic) this.openEditModal(topic);
+  }
 
   onDeleteRequest(item: StudyCardItem): void {
     this.deleteTargetId = item.apiId ?? '';
