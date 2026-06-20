@@ -4,7 +4,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 
-const ROOT_ROUTES = new Set(['/dashboard', '/estudos-labs', '/projetos']);
+const ROOT_ROUTES = new Set(['/dashboard']);
 
 @Component({
   selector: 'app-back-button',
