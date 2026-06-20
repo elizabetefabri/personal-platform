@@ -6,6 +6,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { BackButtonComponent } from '../back-button/back-button';
 import { StudyItemService } from '../../../core/services/study-item.service';
 import {
   CreateStudyItemDto,
@@ -18,6 +19,7 @@ import {
   selector: 'app-study-detail-template',
   standalone: true,
   imports: [
+    BackButtonComponent,
     ButtonModule,
     DialogModule,
     FormsModule,

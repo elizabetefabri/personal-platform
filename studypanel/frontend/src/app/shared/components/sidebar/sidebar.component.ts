@@ -3,19 +3,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 
-export type SidebarItemKey =
-  | 'backend'
-  | 'cloud'
-  | 'containers-kubernetes'
-  | 'dashboard'
-  | 'database'
-  | 'devops'
-  | 'frontend'
-  | 'artificial-intelligence'
-  | 'observability'
-  | 'performance-engineering'
-  | 'projects'
-  | 'rollout-service';
+export type SidebarItemKey = 'dashboard' | 'estudos-labs' | 'projetos';
 
 export interface SidebarItem {
   key: SidebarItemKey;
@@ -23,6 +11,21 @@ export interface SidebarItem {
   href: string;
   iconClass: string;
 }
+
+const ESTUDOS_PREFIXES = [
+  '/estudos-labs',
+  '/backend',
+  '/banco-de-dados',
+  '/cloud',
+  '/containers-kubernetes',
+  '/devops',
+  '/frontend',
+  '/inteligencia-artificial',
+  '/observability',
+  '/performance-engineering',
+];
+
+const PROJETOS_PREFIXES = ['/projetos', '/rollout-service'];
 
 @Component({
   selector: 'app-sidebar',
@@ -41,17 +44,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   readonly items: SidebarItem[] = [
     { key: 'dashboard', label: 'Dashboard', href: '/dashboard', iconClass: 'pi-th-large' },
-    { key: 'backend', label: 'Backend', href: '/backend', iconClass: 'pi-server' },
-    { key: 'database', label: 'Banco de Dados', href: '/banco-de-dados', iconClass: 'pi-database' },
-    { key: 'cloud', label: 'Cloud Computing', href: '/cloud', iconClass: 'pi-cloud' },
-    { key: 'containers-kubernetes', label: 'Containers e Kubernetes', href: '/containers-kubernetes', iconClass: 'pi-box' },
-    { key: 'devops', label: 'DevOps', href: '/devops', iconClass: 'pi-cog' },
-    { key: 'frontend', label: 'Frontend', href: '/frontend', iconClass: 'pi-desktop' },
-    { key: 'artificial-intelligence', label: 'Inteligência Artificial', href: '/inteligencia-artificial', iconClass: 'pi-sparkles' },
-    { key: 'observability', label: 'Observability', href: '/observability', iconClass: 'pi-eye' },
-    { key: 'performance-engineering', label: 'Performance Engineering', href: '/performance-engineering', iconClass: 'pi-chart-line' },
-    { key: 'projects', label: 'Projetos', href: '/projetos', iconClass: 'pi-folder' },
-    { key: 'rollout-service', label: 'Rollout Service', href: '/rollout-service', iconClass: 'pi-clone' },
+    { key: 'estudos-labs', label: 'Estudos e Labs', href: '/estudos-labs', iconClass: 'pi-book' },
+    { key: 'projetos', label: 'Projetos', href: '/projetos', iconClass: 'pi-folder' },
   ];
 
   constructor(private router: Router) {}
@@ -72,8 +66,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   private updateActive(url: string): void {
     const firstSegment = '/' + (url.split('?')[0].split('/').filter(Boolean)[0] ?? '');
-    const match = this.items.find((item) => item.href === firstSegment);
-    this.activeItem = match?.key ?? 'dashboard';
+
+    if (ESTUDOS_PREFIXES.includes(firstSegment)) {
+      this.activeItem = 'estudos-labs';
+      return;
+    }
+    if (PROJETOS_PREFIXES.includes(firstSegment)) {
+      this.activeItem = 'projetos';
+      return;
+    }
+    this.activeItem = 'dashboard';
   }
 
   get sidebarWidth(): string {

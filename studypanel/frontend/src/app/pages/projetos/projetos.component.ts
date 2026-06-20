@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { StudyCardGrid } from '../../shared/components/study-card-grid/study-card-grid';
 import { StudyCardItem } from '../../shared/interfaces/study-template.interface';
-import { getSectionBySlug } from '../../core/constants/study-topics';
 
 @Component({
   selector: 'app-projetos',
@@ -11,18 +10,32 @@ import { getSectionBySlug } from '../../core/constants/study-topics';
   styleUrl: './projetos.component.scss',
 })
 export class ProjetosComponent {
-  private readonly section = getSectionBySlug('projetos')!;
+  readonly pageTitle = 'Projetos';
+  readonly pageDescription =
+    'Explore os projetos pessoais e profissionais desenvolvidos ao longo da jornada técnica.';
 
-  readonly pageTitle = this.section.label;
-  readonly pageDescription = this.section.description;
-
-  readonly items: StudyCardItem[] = this.section.topics.map((topic, i) => ({
-    id: i + 1,
-    title: topic.label,
-    description: topic.description,
-    bannerColor: topic.bannerColor,
-    iconClass: topic.iconClass,
-    skill: topic.skill,
-    detailRoute: `/projetos/${topic.slug}`,
-  }));
+  readonly items: StudyCardItem[] = [
+    {
+      id: 1,
+      title: 'Projetos Pessoais',
+      description:
+        'Projetos criados para estudo, portfólio, prática técnica e evolução profissional.',
+      bannerColor: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+      iconClass: 'pi-user',
+      skill: 'Portfólio',
+      detailRoute: '/projetos/pessoais',
+      buttonLabel: 'Abrir Projetos',
+    },
+    {
+      id: 2,
+      title: 'Projetos Profissionais',
+      description:
+        'Projetos relacionados à atuação profissional, plataforma, engenharia, automações e observabilidade.',
+      bannerColor: 'linear-gradient(135deg, #047857, #059669)',
+      iconClass: 'pi-briefcase',
+      skill: 'Profissional',
+      detailRoute: '/projetos/profissionais',
+      buttonLabel: 'Abrir Projetos',
+    },
+  ];
 }

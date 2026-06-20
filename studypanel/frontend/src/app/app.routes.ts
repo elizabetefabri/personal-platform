@@ -141,6 +141,11 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'estudos-labs',
+    loadComponent: () =>
+      import('./pages/estudos-labs/estudos-labs.component').then((m) => m.EstudosLabsComponent),
+  },
+  {
     path: 'projetos',
     children: [
       {
@@ -148,7 +153,20 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/projetos/projetos.component').then((m) => m.ProjetosComponent),
       },
-      detailChild,
+      {
+        path: 'pessoais',
+        loadComponent: () =>
+          import('./pages/projetos-pessoais/projetos-pessoais.component').then(
+            (m) => m.ProjetosPessoaisComponent,
+          ),
+      },
+      {
+        path: 'profissionais',
+        loadComponent: () =>
+          import('./pages/projetos-profissionais/projetos-profissionais.component').then(
+            (m) => m.ProjetosProfissionaisComponent,
+          ),
+      },
     ],
   },
   {

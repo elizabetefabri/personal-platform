@@ -20,12 +20,17 @@ describe('SidebarComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have 4 navigation items', () => {
-    expect(component.items.length).toBe(4);
+  it('should have 3 navigation items', () => {
+    expect(component.items.length).toBe(3);
+  });
+
+  it('should have correct item keys', () => {
+    const keys = component.items.map((i) => i.key);
+    expect(keys).toEqual(['dashboard', 'estudos-labs', 'projetos']);
   });
 
   it('should default to expanded', () => {
-    expect(component.expanded).toBeTrue();
+    expect(component.expanded).toBe(true);
   });
 
   it('should default activeItem to dashboard', () => {
@@ -42,10 +47,40 @@ describe('SidebarComponent', () => {
     expect(component.sidebarWidth).toBe('var(--sidebar-width-collapsed)');
   });
 
-  it('should emit toggleExpanded when button is clicked', () => {
-    const spy = spyOn(component.toggleExpanded, 'emit');
+  it('should emit toggleExpanded when toggle button is clicked', () => {
+    const spy = jest.spyOn(component.toggleExpanded, 'emit');
     const button = fixture.nativeElement.querySelector('.toggleButton') as HTMLButtonElement;
     button.click();
     expect(spy).toHaveBeenCalled();
+  });
+
+  it('should activate estudos-labs for /backend', () => {
+    (component as any).updateActive('/backend');
+    expect(component.activeItem).toBe('estudos-labs');
+  });
+
+  it('should activate estudos-labs for /devops', () => {
+    (component as any).updateActive('/devops');
+    expect(component.activeItem).toBe('estudos-labs');
+  });
+
+  it('should activate estudos-labs for /estudos-labs', () => {
+    (component as any).updateActive('/estudos-labs');
+    expect(component.activeItem).toBe('estudos-labs');
+  });
+
+  it('should activate projetos for /projetos/pessoais URL', () => {
+    (component as any).updateActive('/projetos/pessoais');
+    expect(component.activeItem).toBe('projetos');
+  });
+
+  it('should activate projetos for /rollout-service', () => {
+    (component as any).updateActive('/rollout-service');
+    expect(component.activeItem).toBe('projetos');
+  });
+
+  it('should activate dashboard for /dashboard', () => {
+    (component as any).updateActive('/dashboard');
+    expect(component.activeItem).toBe('dashboard');
   });
 });

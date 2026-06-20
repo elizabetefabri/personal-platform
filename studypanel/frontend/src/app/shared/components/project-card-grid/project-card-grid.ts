@@ -3,22 +3,40 @@ import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { BackButtonComponent } from '../back-button/back-button';
-import { StudyCardItem } from '../../interfaces/study-template.interface';
+
+export interface ProjectItem {
+  id: number;
+  title: string;
+  description: string;
+  tags: string[];
+  iconClass: string;
+  bannerColor: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  repoUrl?: string;
+  deployUrl?: string;
+  detailRoute?: string;
+}
 
 @Component({
-  selector: 'app-study-card-grid',
+  selector: 'app-project-card-grid',
+  standalone: true,
   imports: [ButtonModule, NgClass, RouterLink, BackButtonComponent],
-  templateUrl: './study-card-grid.html',
-  styleUrl: './study-card-grid.scss',
+  templateUrl: './project-card-grid.html',
+  styleUrl: './project-card-grid.scss',
 })
-export class StudyCardGrid {
+export class ProjectCardGrid {
   @Input({ required: true }) pageTitle = '';
   @Input({ required: true }) pageDescription = '';
-  @Input({ required: true }) items: StudyCardItem[] = [];
+  @Input({ required: true }) items: ProjectItem[] = [];
 
-  getAccentColor(item: StudyCardItem): string {
+  getAccentColor(item: ProjectItem): string {
     const match = (item.bannerColor ?? '').match(/#[0-9a-fA-F]{6}/);
     return match?.[0] ?? '#4f46e5';
+  }
+
+  openUrl(url: string): void {
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   onImageError(event: Event): void {

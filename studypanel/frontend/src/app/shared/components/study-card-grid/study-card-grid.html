@@ -1,6 +1,9 @@
 <section class="studyPage">
   <header class="studyPage__header">
-    <span class="studyPage__eyebrow">StudyPanel</span>
+    <div class="studyPage__topRow">
+      <span class="studyPage__eyebrow">StudyPanel</span>
+      <app-back-button></app-back-button>
+    </div>
     <h1 class="studyPage__title">{{ pageTitle }}</h1>
     <p class="studyPage__description">{{ pageDescription }}</p>
   </header>
@@ -16,7 +19,12 @@
           [style.background]="item.bannerColor || 'var(--color-border-subtle)'"
         >
           @if (item.imageUrl) {
-            <img class="studyCard__image" [src]="item.imageUrl" [alt]="item.title" />
+            <img
+              class="studyCard__image"
+              [src]="item.imageUrl"
+              [alt]="item.title"
+              (error)="onImageError($event)"
+            />
           }
 
           <span class="studyCard__icon">
@@ -36,7 +44,7 @@
           <a
             pButton
             [routerLink]="item.detailRoute"
-            label="Abrir Trilha ⭐"
+            [label]="item.buttonLabel ?? 'Abrir Trilha ⭐'"
             iconPos="right"
             class="studyCard__button"
           ></a>

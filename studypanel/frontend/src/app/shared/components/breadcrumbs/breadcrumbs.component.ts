@@ -10,6 +10,23 @@ const PAGE_LABELS: Record<string, string> = {
   settings: 'Configurações',
 };
 
+const STUDY_SECTION_SLUGS = new Set([
+  'backend',
+  'banco-de-dados',
+  'cloud',
+  'containers-kubernetes',
+  'devops',
+  'frontend',
+  'inteligencia-artificial',
+  'observability',
+  'performance-engineering',
+]);
+
+const PROJETOS_SUB_LABELS: Record<string, string> = {
+  pessoais: 'Projetos Pessoais',
+  profissionais: 'Projetos Profissionais',
+};
+
 @Component({
   selector: 'app-breadcrumbs',
   standalone: true,
@@ -58,9 +75,88 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
     }
 
     const sectionSlug = segments[0];
+
+    // /estudos-labs
+    if (sectionSlug === 'estudos-labs') {
+      this.baseItems = [
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Estudos e Labs' },
+      ];
+      return;
+    }
+
+    // Study section pages: /backend, /banco-de-dados, etc.
+    if (STUDY_SECTION_SLUGS.has(sectionSlug)) {
+      const section = getSectionBySlug(sectionSlug);
+      const sectionLabel = section?.label ?? this.toLabel(sectionSlug);
+
+      if (segments.length === 1) {
+        this.baseItems = [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Estudos e Labs', href: '/estudos-labs' },
+          { label: sectionLabel },
+        ];
+        return;
+      }
+
+      const topicSlug = segments[1];
+      const topic = section ? getTopicBySlug(sectionSlug, topicSlug) : undefined;
+      const topicLabel = topic?.label ?? this.toLabel(topicSlug);
+
+      if (segments.length === 2) {
+        this.baseItems = [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Estudos e Labs', href: '/estudos-labs' },
+          { label: sectionLabel, href: `/${sectionSlug}` },
+          { label: topicLabel },
+        ];
+        return;
+      }
+
+      // 3+ segments: section/topic/itemId
+      this.baseItems = [
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Estudos e Labs', href: '/estudos-labs' },
+        { label: sectionLabel, href: `/${sectionSlug}` },
+        { label: topicLabel, href: `/${sectionSlug}/${topicSlug}` },
+      ];
+      return;
+    }
+
+    // /projetos and sub-paths
+    if (sectionSlug === 'projetos') {
+      if (segments.length === 1) {
+        this.baseItems = [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Projetos' },
+        ];
+        return;
+      }
+
+      const subSlug = segments[1];
+      const subLabel = PROJETOS_SUB_LABELS[subSlug] ?? this.toLabel(subSlug);
+
+      if (segments.length === 2) {
+        this.baseItems = [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Projetos', href: '/projetos' },
+          { label: subLabel },
+        ];
+        return;
+      }
+
+      // 3+ segments (e.g. future project detail pages)
+      this.baseItems = [
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Projetos', href: '/projetos' },
+        { label: subLabel, href: `/projetos/${subSlug}` },
+      ];
+      return;
+    }
+
+    // Catch-all: rollout-service, settings, etc.
     const section = getSectionBySlug(sectionSlug);
-    const sectionLabel =
-      section?.label ?? PAGE_LABELS[sectionSlug] ?? this.toLabel(sectionSlug);
+    const sectionLabel = section?.label ?? PAGE_LABELS[sectionSlug] ?? this.toLabel(sectionSlug);
 
     if (segments.length === 1) {
       this.baseItems = [
@@ -83,7 +179,6 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // 3+ segments: section/topic/itemId — extra label comes from BreadcrumbService
     this.baseItems = [
       { label: 'Dashboard', href: '/dashboard' },
       { label: sectionLabel, href: `/${sectionSlug}` },

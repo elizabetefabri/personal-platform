@@ -18,6 +18,7 @@ export interface StudyCardItem {
   iconClass: string;
   skill: string;
   detailRoute: string;
+  buttonLabel?: string;
 }
 
 export interface StudyTableItem {

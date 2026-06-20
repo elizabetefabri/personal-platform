@@ -1,0 +1,81 @@
+<section class="projectPage">
+  <header class="projectPage__header">
+    <div class="projectPage__topRow">
+      <span class="projectPage__eyebrow">StudyPanel</span>
+      <app-back-button></app-back-button>
+    </div>
+    <h1 class="projectPage__title">{{ pageTitle }}</h1>
+    <p class="projectPage__description">{{ pageDescription }}</p>
+  </header>
+
+  <div class="projectGrid" aria-label="Lista de projetos">
+    @for (item of items; track item.id) {
+      <article
+        class="projectCard"
+        [style.--card-accent]="getAccentColor(item)"
+      >
+        <div
+          class="projectCard__banner"
+          [style.background]="item.bannerColor"
+        >
+          @if (item.imageUrl) {
+            <img
+              class="projectCard__image"
+              [src]="item.imageUrl"
+              [alt]="item.imageAlt ?? item.title"
+              (error)="onImageError($event)"
+            />
+          }
+          <span class="projectCard__icon">
+            <i class="pi" [ngClass]="item.iconClass" aria-hidden="true"></i>
+          </span>
+        </div>
+
+        <div class="projectCard__content">
+          <h2 class="projectCard__title">{{ item.title }}</h2>
+
+          <p class="projectCard__description">{{ item.description }}</p>
+
+          <div class="projectCard__tags" aria-label="Tags do projeto">
+            @for (tag of item.tags; track tag) {
+              <span class="projectCard__tag">{{ tag }}</span>
+            }
+          </div>
+
+          <div class="projectCard__actions">
+            @if (item.repoUrl) {
+              <button
+                pButton
+                type="button"
+                label="Repositório"
+                icon="pi pi-github"
+                class="projectCard__btn projectCard__btn--secondary"
+                (click)="openUrl(item.repoUrl)"
+              ></button>
+            }
+            @if (item.deployUrl) {
+              <button
+                pButton
+                type="button"
+                label="Deploy"
+                icon="pi pi-external-link"
+                class="projectCard__btn"
+                (click)="openUrl(item.deployUrl)"
+              ></button>
+            }
+            @if (!item.repoUrl && !item.deployUrl && item.detailRoute) {
+              <a
+                pButton
+                [routerLink]="item.detailRoute"
+                label="Ver Detalhes"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                class="projectCard__btn"
+              ></a>
+            }
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+</section>

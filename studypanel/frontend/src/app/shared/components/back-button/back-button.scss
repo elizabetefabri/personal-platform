@@ -1,0 +1,11 @@
+.backBtn {
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+    transform: translateX(-2px);
+  }
+}
