@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
 import { RolloutServiceComponent } from './rollout-service.component';
 
 describe('RolloutServiceComponent', () => {
@@ -7,7 +8,7 @@ describe('RolloutServiceComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RolloutServiceComponent],
+      imports: [RolloutServiceComponent, RouterModule.forRoot([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RolloutServiceComponent);
@@ -20,7 +21,7 @@ describe('RolloutServiceComponent', () => {
   });
 
   it('should render rollout service heading', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Rollout Service');
+    const h1 = fixture.nativeElement.querySelector('h1');
+    expect(h1?.textContent).toContain('Rollout Service');
   });
 });

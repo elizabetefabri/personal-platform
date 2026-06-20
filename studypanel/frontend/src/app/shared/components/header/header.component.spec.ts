@@ -20,12 +20,12 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have correct title', () => {
-    expect(component.title).toBe('StudyPanel');
+  it('should render the app title in template', () => {
+    const title = fixture.nativeElement.querySelector('.header__title');
+    expect(title?.textContent).toContain('StudyPanel');
   });
 
-  it('should render title in template', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.header__title')?.textContent).toContain('StudyPanel');
+  it('should have BreadcrumbService injected', () => {
+    expect(component.breadcrumbService).toBeTruthy();
   });
 });
