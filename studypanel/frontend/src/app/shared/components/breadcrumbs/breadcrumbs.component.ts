@@ -1,4 +1,4 @@
-import { Component, computed, OnDestroy, OnInit } from '@angular/core';
+import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router, NavigationEnd, RouterLink } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { getSectionBySlug, getTopicBySlug } from '../../../core/constants/study-topics';
@@ -37,11 +37,12 @@ const PROJETOS_SUB_LABELS: Record<string, string> = {
   styleUrl: './breadcrumbs.component.scss',
 })
 export class BreadcrumbsComponent implements OnInit, OnDestroy {
-  baseItems: BreadcrumbItem[] = [];
+  private readonly baseItems = signal<BreadcrumbItem[]>([]);
 
   readonly items = computed<BreadcrumbItem[]>(() => {
+    const base = this.baseItems();
     const extra = this.breadcrumbService.extra();
-    return extra ? [...this.baseItems, extra] : this.baseItems;
+    return extra ? [...base, extra] : base;
   });
 
   readonly isHidden = computed(() => this.breadcrumbService.hidden());
@@ -72,7 +73,7 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
     const segments = url.split('/').filter(Boolean);
 
     if (segments.length === 0 || segments[0] === 'dashboard') {
-      this.baseItems = [];
+      this.baseItems.set([]);
       return;
     }
 
@@ -80,10 +81,10 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
 
     // /estudos-labs
     if (sectionSlug === 'estudos-labs') {
-      this.baseItems = [
+      this.baseItems.set([
         { label: 'Dashboard', href: '/dashboard' },
         { label: 'Estudos e Labs' },
-      ];
+      ]);
       return;
     }
 
@@ -93,11 +94,11 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
       const sectionLabel = section?.label ?? this.toLabel(sectionSlug);
 
       if (segments.length === 1) {
-        this.baseItems = [
+        this.baseItems.set([
           { label: 'Dashboard', href: '/dashboard' },
           { label: 'Estudos e Labs', href: '/estudos-labs' },
           { label: sectionLabel },
-        ];
+        ]);
         return;
       }
 
@@ -106,32 +107,32 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
       const topicLabel = topic?.label ?? this.toLabel(topicSlug);
 
       if (segments.length === 2) {
-        this.baseItems = [
+        this.baseItems.set([
           { label: 'Dashboard', href: '/dashboard' },
           { label: 'Estudos e Labs', href: '/estudos-labs' },
           { label: sectionLabel, href: `/${sectionSlug}` },
           { label: topicLabel },
-        ];
+        ]);
         return;
       }
 
       // 3+ segments: section/topic/itemId
-      this.baseItems = [
+      this.baseItems.set([
         { label: 'Dashboard', href: '/dashboard' },
         { label: 'Estudos e Labs', href: '/estudos-labs' },
         { label: sectionLabel, href: `/${sectionSlug}` },
         { label: topicLabel, href: `/${sectionSlug}/${topicSlug}` },
-      ];
+      ]);
       return;
     }
 
     // /projetos and sub-paths
     if (sectionSlug === 'projetos') {
       if (segments.length === 1) {
-        this.baseItems = [
+        this.baseItems.set([
           { label: 'Dashboard', href: '/dashboard' },
           { label: 'Projetos' },
-        ];
+        ]);
         return;
       }
 
@@ -139,20 +140,20 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
       const subLabel = PROJETOS_SUB_LABELS[subSlug] ?? this.toLabel(subSlug);
 
       if (segments.length === 2) {
-        this.baseItems = [
+        this.baseItems.set([
           { label: 'Dashboard', href: '/dashboard' },
           { label: 'Projetos', href: '/projetos' },
           { label: subLabel },
-        ];
+        ]);
         return;
       }
 
       // 3+ segments (e.g. future project detail pages)
-      this.baseItems = [
+      this.baseItems.set([
         { label: 'Dashboard', href: '/dashboard' },
         { label: 'Projetos', href: '/projetos' },
         { label: subLabel, href: `/projetos/${subSlug}` },
-      ];
+      ]);
       return;
     }
 
@@ -161,10 +162,10 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
     const sectionLabel = section?.label ?? PAGE_LABELS[sectionSlug] ?? this.toLabel(sectionSlug);
 
     if (segments.length === 1) {
-      this.baseItems = [
+      this.baseItems.set([
         { label: 'Dashboard', href: '/dashboard' },
         { label: sectionLabel },
-      ];
+      ]);
       return;
     }
 
@@ -173,19 +174,19 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
     const topicLabel = topic?.label ?? this.toLabel(topicSlug);
 
     if (segments.length === 2) {
-      this.baseItems = [
+      this.baseItems.set([
         { label: 'Dashboard', href: '/dashboard' },
         { label: sectionLabel, href: `/${sectionSlug}` },
         { label: topicLabel },
-      ];
+      ]);
       return;
     }
 
-    this.baseItems = [
+    this.baseItems.set([
       { label: 'Dashboard', href: '/dashboard' },
       { label: sectionLabel, href: `/${sectionSlug}` },
       { label: topicLabel, href: `/${sectionSlug}/${topicSlug}` },
-    ];
+    ]);
   }
 
   private toLabel(slug: string): string {

@@ -193,16 +193,16 @@
 
 .projectCard__btn--secondary {
   --p-button-primary-background: transparent;
-  --p-button-primary-hover-background: rgba(0, 0, 0, 0.05);
-  --p-button-primary-active-background: rgba(0, 0, 0, 0.08);
-  --p-button-primary-border-color: var(--card-accent);
-  --p-button-primary-hover-border-color: var(--card-accent);
-  --p-button-primary-active-border-color: var(--card-accent);
-  color: var(--card-accent) !important;
+  --p-button-primary-hover-background: rgba(255, 184, 77, 0.08);
+  --p-button-primary-active-background: rgba(255, 184, 77, 0.12);
+  --p-button-primary-border-color: rgba(255, 184, 77, 0.45);
+  --p-button-primary-hover-border-color: #ffb84d;
+  --p-button-primary-active-border-color: #ffb84d;
+  color: #ffb84d !important;
 
   .p-button-label,
   .p-button-icon {
-    color: var(--card-accent) !important;
+    color: #ffb84d !important;
   }
 }
 
