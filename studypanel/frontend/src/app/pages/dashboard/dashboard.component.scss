@@ -246,6 +246,6 @@
     outline: none;
     transition: border-color 0.15s;
 
-    &:focus { border-color: #4f46e5; }
+    &:focus { border-color: #201F25; box-shadow: 0 0 0 0.15rem rgba(32, 31, 37, 0.15); }
   }
 }

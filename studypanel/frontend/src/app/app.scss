@@ -34,34 +34,6 @@
 }
 
 
-// ─── Accent outline button utility (Cadastrar buttons) ───────────────────────
-// Applied via styleClass="btn-accent-outline" on p-button components.
-// Uses #ffb84d (sidebar accent color) with outlined style.
-
-.btn-accent-outline,
-.btn-accent-outline.p-button {
-  background: transparent !important;
-  border: 1px solid rgba(255, 184, 77, 0.45) !important;
-  border-radius: 0.75rem !important;
-  color: #ffb84d !important;
-  font-size: 0.875rem !important;
-
-  .p-button-icon,
-  .p-button-label {
-    color: #ffb84d !important;
-  }
-
-  &:hover {
-    background: rgba(255, 184, 77, 0.08) !important;
-    border-color: #ffb84d !important;
-  }
-
-  &:focus-visible {
-    outline: 2px solid rgba(255, 184, 77, 0.6);
-    outline-offset: 2px;
-  }
-}
-
 // ─── Backdrop — only active on mobile ─────────────────────────────────────────
 
 .app-backdrop {

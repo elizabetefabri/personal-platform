@@ -32,11 +32,19 @@
           <span class="studyCard__icon">
             @if (item.iconUrl) {
               <img
+                #iconImg
                 class="studyCard__iconImg"
                 [src]="item.iconUrl"
                 [alt]="item.title"
-                (error)="onIconError($event)"
+                (error)="iconImg.style.display='none'; iconFallback.style.display='flex'"
               />
+              <i
+                #iconFallback
+                class="pi"
+                [ngClass]="item.iconClass"
+                aria-hidden="true"
+                style="display:none"
+              ></i>
             } @else {
               <i class="pi" [ngClass]="item.iconClass" aria-hidden="true"></i>
             }

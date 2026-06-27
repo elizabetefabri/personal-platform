@@ -1,19 +1,19 @@
 .backBtn {
-  border-radius: 0.75rem !important;
-  font-size: 0.875rem;
-  background: transparent !important;
+  border-radius: 0.4rem !important;
+  font-size: 1rem;
+  background: rgba(255, 184, 77, 0.08) !important;
   border-color: rgba(255, 184, 77, 0.45) !important;
-  color: #ffb84d !important;
+  color: #f59e0b !important;
   transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease !important;
 
   .p-button-icon,
   .p-button-label {
-    color: #ffb84d !important;
+    color: #f59e0b !important;
   }
 
   &:hover {
     background: rgba(255, 184, 77, 0.08) !important;
-    border-color: #ffb84d !important;
+    border-color: #f59e0b !important;
     transform: translateX(-2px);
   }
 }

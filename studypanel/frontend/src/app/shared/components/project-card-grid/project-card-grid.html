@@ -31,11 +31,19 @@
           <span class="projectCard__icon">
             @if (item.iconUrl) {
               <img
+                #projIconImg
                 class="projectCard__iconImg"
                 [src]="item.iconUrl"
                 [alt]="item.title"
-                (error)="onIconError($event)"
+                (error)="projIconImg.style.display='none'; projIconFallback.style.display='flex'"
               />
+              <i
+                #projIconFallback
+                class="pi"
+                [ngClass]="item.iconClass"
+                aria-hidden="true"
+                style="display:none"
+              ></i>
             } @else {
               <i class="pi" [ngClass]="item.iconClass" aria-hidden="true"></i>
             }

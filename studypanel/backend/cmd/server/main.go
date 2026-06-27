@@ -107,6 +107,33 @@ func main() {
 	projectDeleteUC := usecase.NewDeleteProjectUseCase(projectRepo)
 	projectHandler := handler.NewProjectHandler(projectCreateUC, projectListUC, projectGetUC, projectUpdateUC, projectDeleteUC)
 
+	// VidaCriativa
+	vidaCriativaRepo := mongoRepo.NewVidaCriativaRepository(db)
+	vidaCriativaCreateUC := usecase.NewCreateVidaCriativaUseCase(vidaCriativaRepo)
+	vidaCriativaListUC := usecase.NewListVidaCriativaUseCase(vidaCriativaRepo)
+	vidaCriativaGetUC := usecase.NewGetVidaCriativaUseCase(vidaCriativaRepo)
+	vidaCriativaUpdateUC := usecase.NewUpdateVidaCriativaUseCase(vidaCriativaRepo)
+	vidaCriativaDeleteUC := usecase.NewDeleteVidaCriativaUseCase(vidaCriativaRepo)
+	vidaCriativaHandler := handler.NewVidaCriativaHandler(vidaCriativaCreateUC, vidaCriativaListUC, vidaCriativaGetUC, vidaCriativaUpdateUC, vidaCriativaDeleteUC)
+
+	// FinancialRecord
+	financialRepo := mongoRepo.NewFinancialRecordRepository(db)
+	financialCreateUC := usecase.NewCreateFinancialRecordUseCase(financialRepo)
+	financialListUC := usecase.NewListFinancialRecordsUseCase(financialRepo)
+	financialGetUC := usecase.NewGetFinancialRecordUseCase(financialRepo)
+	financialUpdateUC := usecase.NewUpdateFinancialRecordUseCase(financialRepo)
+	financialDeleteUC := usecase.NewDeleteFinancialRecordUseCase(financialRepo)
+	financialHandler := handler.NewFinancialRecordHandler(financialCreateUC, financialListUC, financialGetUC, financialUpdateUC, financialDeleteUC)
+
+	// CulinariaRecipe
+	culinariaRepo := mongoRepo.NewCulinariaRecipeRepository(db)
+	culinariaCreateUC := usecase.NewCreateCulinariaRecipeUseCase(culinariaRepo)
+	culinariaListUC := usecase.NewListCulinariaRecipesUseCase(culinariaRepo)
+	culinariaGetUC := usecase.NewGetCulinariaRecipeUseCase(culinariaRepo)
+	culinariaUpdateUC := usecase.NewUpdateCulinariaRecipeUseCase(culinariaRepo)
+	culinariaDeleteUC := usecase.NewDeleteCulinariaRecipeUseCase(culinariaRepo)
+	culinariaHandler := handler.NewCulinariaRecipeHandler(culinariaCreateUC, culinariaListUC, culinariaGetUC, culinariaUpdateUC, culinariaDeleteUC)
+
 	mux := http.NewServeMux()
 	h.RegisterRoutes(mux)
 	noteHandler.RegisterRoutes(mux)
@@ -116,6 +143,9 @@ func main() {
 	sectionHandler.RegisterRoutes(mux)
 	topicHandler.RegisterRoutes(mux)
 	projectHandler.RegisterRoutes(mux)
+	vidaCriativaHandler.RegisterRoutes(mux)
+	financialHandler.RegisterRoutes(mux)
+	culinariaHandler.RegisterRoutes(mux)
 
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")

@@ -14,7 +14,7 @@
       type="button"
       [label]="createButtonLabel"
       icon="pi pi-plus"
-      class="detailHeader__btn"
+      class="detailHeader__btn btn-accent-outline"
       (click)="openCreateModal()"
     ></button>
   </header>
@@ -166,8 +166,7 @@
           pButton
           type="button"
           label="Cancelar"
-          severity="secondary"
-          outlined
+          class="btn-cancel"
           (click)="closeModal()"
         ></button>
 
@@ -177,7 +176,7 @@
           [label]="editingItem ? 'Atualizar' : 'Salvar'"
           [icon]="saving() ? 'pi pi-spin pi-spinner' : 'pi pi-check'"
           [disabled]="saving()"
-          class="formActions__save"
+          class="btn-primary"
         ></button>
       </footer>
     </form>

@@ -47,7 +47,7 @@
       <div class="colHeader">
         <h2 class="colHeader__title">Seções de estudo</h2>
         <button pButton icon="pi pi-plus" label="Adicionar curso"
-          class="p-button-sm p-button-outlined"
+          class="btn-accent-outline"
           (click)="openAddModal()"></button>
       </div>
 
@@ -177,9 +177,9 @@
   </div>
 
   <ng-template pTemplate="footer">
-    <button pButton label="Cancelar" class="p-button-text p-button-sm"
+    <button pButton label="Cancelar" class="btn-cancel"
       (click)="addModalVisible = false"></button>
-    <button pButton label="Salvar" icon="pi pi-check" class="p-button-sm"
+    <button pButton label="Salvar" icon="pi pi-check" class="btn-primary"
       [disabled]="!addForm.section || !addForm.topic || !addForm.courseName || saving()"
       [loading]="saving()"
       (click)="saveItem()"></button>

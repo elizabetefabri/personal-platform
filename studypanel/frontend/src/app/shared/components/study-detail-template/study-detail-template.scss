@@ -58,11 +58,6 @@
 .detailHeader__btn {
   flex-shrink: 0;
   align-self: flex-start;
-  transition: filter 0.2s ease !important;
-
-  &:hover {
-    filter: brightness(0.88);
-  }
 }
 
 // ─── Table wrapper ────────────────────────────────────────────────────────────
@@ -307,23 +302,18 @@
   box-sizing: border-box;
 
   &:focus {
-    border-color: var(--detail-accent);
-    box-shadow: 0 0 0 0.125rem color-mix(in srgb, var(--detail-accent) 20%, transparent);
+    border-color: #201F25;
+    box-shadow: 0 0 0 0.15rem rgba(32, 31, 37, 0.15);
   }
 }
 
 .formActions {
   display: flex;
-  justify-content: flex-end;
   gap: 0.75rem;
   margin-top: 0.5rem;
-}
 
-.formActions__save {
-  transition: filter 0.2s ease !important;
-
-  &:hover {
-    filter: brightness(0.88);
+  .p-button {
+    flex: 1;
   }
 }
 
@@ -350,7 +340,7 @@
     flex-direction: column-reverse;
     gap: 0.5rem;
 
-    > * {
+    .p-button {
       width: 100%;
       justify-content: center;
     }

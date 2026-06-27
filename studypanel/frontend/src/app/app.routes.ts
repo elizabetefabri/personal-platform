@@ -89,6 +89,13 @@ export const routes: Routes = [
         (m) => m.PainelFinanceiroComponent,
       ),
   },
+    {
+    path: 'culinaria',
+    loadComponent: () =>
+      import('./pages/culinaria/culinaria').then(
+        (m) => m.Culinaria,
+      ),
+  },
   {
     path: 'settings',
     loadComponent: () =>

@@ -28,7 +28,7 @@
   [draggable]="false"
   [resizable]="false"
   [style]="{ width: '520px' }"
-  [header]="editingSection ? 'Editar Tipo de Curso' : 'Cadastrar Tipo de Curso'"
+  [header]="editingSection ? 'Editar Tipo de Curso' : 'Cadastrar Novo Curso'"
   (onHide)="cancelModal()"
 >
   <div class="modal-form">
@@ -65,8 +65,9 @@
     </div>
   </div>
   <ng-template pTemplate="footer">
-    <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="cancelModal()" />
-    <p-button [label]="editingSection ? 'Salvar alterações' : 'Cadastrar'" icon="pi pi-check" [loading]="saving()" (onClick)="saveSection()" />
+    <button pButton label="Cancelar" severity="contrast" [outlined]="true" (onClick)="cancelModal()"></button>
+
+    <button pButton [label]="editingSection ? 'Salvar alterações' : 'Cadastrar'" [loading]="saving()" severity="contrast" (onClick)="saveSection()" ></button>
   </ng-template>
 </p-dialog>
 
@@ -88,7 +89,7 @@
     </p>
   </div>
   <ng-template pTemplate="footer">
-    <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="cancelDelete()" />
-    <p-button label="Confirmar exclusão" icon="pi pi-trash" severity="danger" (onClick)="confirmDelete()" />
+    <button pButton label="Cancelar" severity="secondary" [outlined]="true" (onClick)="cancelDelete()" ></button>
+    <button pButton label="Confirmar exclusão" icon="pi pi-trash" severity="danger" (onClick)="confirmDelete()" ></button>
   </ng-template>
 </p-dialog>
