@@ -15,27 +15,6 @@ import {
   UpdateProjectDto,
 } from '../../core/services/project.service';
 
-const FALLBACK: ProjectItem[] = [
-  {
-    id: 1, title: 'Rollout Service',
-    description: 'Plataforma para estudo e implementação de rollout gradual, score, agendamentos e instrumentação.',
-    tags: ['Angular', 'Backend', 'Datadog', 'Feature Rollout'],
-    iconClass: 'pi-sliders-h',
-    bannerColor: 'linear-gradient(135deg, #CD3F7B, #8b043d)',
-    imageUrl: '/assets/images/projetos/projetos-profissionais/rollout-service/cover.png',
-    detailRoute: '/rollout-service',
-  },
-  {
-    id: 2, title: 'IUDev',
-    description: 'Ferramenta interna para apoiar fluxos de desenvolvimento, automações e produtividade.',
-    tags: ['Go', 'Angular', 'CLI', 'DevTools'],
-    iconClass: 'pi-wrench',
-    bannerColor: 'linear-gradient(135deg, #F7670F, #a0440c)',
-    imageUrl: '/assets/images/projetos/projetos-profissionais/iudev/cover.png',
-    detailRoute: '/iudev',
-  },
-];
-
 @Component({
   selector: 'app-projetos-profissionais',
   standalone: true,
@@ -75,9 +54,9 @@ export class ProjetosProfissionaisComponent implements OnInit {
     this.projectService.list('profissional').subscribe({
       next: (projects) => {
         this.rawProjects = projects;
-        this.items.set(projects.length > 0 ? this.toCards(projects) : FALLBACK);
+        this.items.set(this.toCards(projects));
       },
-      error: () => this.items.set(FALLBACK),
+      error: () => this.items.set([]),
     });
   }
 

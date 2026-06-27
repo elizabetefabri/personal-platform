@@ -281,3 +281,32 @@
     grid-template-columns: repeat(6, 1fr);
   }
 }
+
+.projectGrid__empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.projectGrid__emptyIcon {
+  font-size: 3rem;
+  opacity: 0.3;
+  margin-bottom: 1rem;
+  color: var(--color-text-muted);
+}
+
+.projectGrid__emptyText {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.projectGrid__emptyHint {
+  margin: 0.35rem 0 0;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}

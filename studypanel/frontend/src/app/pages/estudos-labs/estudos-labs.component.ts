@@ -12,24 +12,6 @@ import {
   CreateCourseSectionDto,
   UpdateCourseSectionDto,
 } from '../../core/services/course-section.service';
-import { getSectionBySlug, STUDY_SECTIONS } from '../../core/constants/study-topics';
-
-const IMAGE_MAP: Record<string, string> = {
-  backend: '/assets/images/estudos-labs/backend/cover.png',
-  'banco-de-dados': '/assets/images/estudos-labs/banco-de-dados/cover.png',
-  cloud: '/assets/images/estudos-labs/cloud-computing/cover.png',
-  'containers-kubernetes': '/assets/images/estudos-labs/containers-kubernetes/cover.png',
-  devops: '/assets/images/estudos-labs/devops/cover.png',
-  frontend: '/assets/images/estudos-labs/frontend/cover.png',
-  'inteligencia-artificial': '/assets/images/estudos-labs/inteligencia-artificial/cover.png',
-  observability: '/assets/images/estudos-labs/observability/cover.png',
-  'performance-engineering': '/assets/images/estudos-labs/performance-engineering/cover.png',
-};
-
-const FALLBACK_SLUGS = [
-  'backend', 'banco-de-dados', 'cloud', 'containers-kubernetes', 'devops',
-  'frontend', 'inteligencia-artificial', 'observability', 'performance-engineering',
-];
 
 @Component({
   selector: 'app-estudos-labs',
@@ -74,11 +56,11 @@ export class EstudosLabsComponent implements OnInit {
     this.sectionService.list().subscribe({
       next: (sections) => {
         this.rawSections = sections;
-        this.items.set(sections.length > 0 ? this.toCards(sections) : this.fallbackCards());
+        this.items.set(this.toCards(sections));
         this.loading.set(false);
       },
       error: () => {
-        this.items.set(this.fallbackCards());
+        this.items.set([]);
         this.loading.set(false);
       },
     });
@@ -92,24 +74,10 @@ export class EstudosLabsComponent implements OnInit {
       description: s.description,
       bannerColor: s.bannerColor,
       iconClass: s.iconClass,
-      iconUrl: `/assets/images/estudos-labs/${s.slug}/icon.svg`,
+      iconUrl: s.imageUrl ? undefined : undefined,
       skill: s.name,
       detailRoute: `/${s.slug}`,
-      imageUrl: s.imageUrl || IMAGE_MAP[s.slug],
-    }));
-  }
-
-  private fallbackCards(): StudyCardItem[] {
-    return STUDY_SECTIONS.filter((s) => FALLBACK_SLUGS.includes(s.slug)).map((s, i) => ({
-      id: i + 1,
-      title: s.label,
-      description: s.description,
-      bannerColor: s.bannerColor,
-      iconClass: s.iconClass,
-      iconUrl: `/assets/images/estudos-labs/${s.slug}/icon.svg`,
-      skill: s.label,
-      detailRoute: `/${s.slug}`,
-      imageUrl: IMAGE_MAP[s.slug],
+      imageUrl: s.imageUrl || undefined,
     }));
   }
 
