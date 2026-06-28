@@ -1,5 +1,5 @@
 .page-container {
-      padding: clamp(1rem, 3vw, 2rem);
+  padding: 16px clamp(1rem, 3vw, 2rem);
 }
 
 .projects__actions {
@@ -58,5 +58,14 @@
   &__hint {
     font-size: 0.8125rem;
     color: var(--color-text-secondary, #6b7280);
+  }
+}
+
+.formActions {
+  display: flex;
+  justify-content: space-between;
+
+  .p-button {
+    width: 100%;
   }
 }

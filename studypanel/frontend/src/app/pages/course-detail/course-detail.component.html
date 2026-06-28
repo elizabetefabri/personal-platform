@@ -557,9 +557,9 @@
 
     <!-- ─── Footer / Voltar ────────────────────────────────────────────────────── -->
     <footer class="courseDetail__footer">
-      <a class="btn btn--back" [routerLink]="backRoute">
+      <a class="btn btn--back" [routerLink]="backRoute" styleClass="btn-accent-outline">
         <i class="pi pi-arrow-left" aria-hidden="true"></i>
-        Voltar para trilha {{ topicLabel }}
+        Voltar para {{ topicLabel }}
       </a>
     </footer>
 
@@ -618,7 +618,7 @@
     <footer class="formActions">
       <button pButton type="button" label="Cancelar" severity="secondary" outlined (click)="noteModalVisible = false"></button>
       <button pButton type="submit" [label]="editingNote ? 'Atualizar' : 'Salvar'"
-        [icon]="savingNote() ? 'pi pi-spin pi-spinner' : 'pi pi-check'"
+        [icon]="savingNote() ? 'pi pi-spin pi-spinner' : 'pi pi-check'" styleClass="btn-accent-outline"
         [disabled]="savingNote()"></button>
     </footer>
   </form>
@@ -677,7 +677,7 @@
     </div>
     <footer class="formActions">
       <button pButton type="button" label="Cancelar" severity="secondary" outlined (click)="resourceModalVisible = false"></button>
-      <button pButton type="submit" [label]="editingResource ? 'Atualizar' : 'Salvar'"
+      <button pButton type="submit" [label]="editingResource ? 'Atualizar' : 'Salvar'" styleClass="btn-accent-outline"
         [icon]="savingResource() ? 'pi pi-spin pi-spinner' : 'pi pi-check'"
         [disabled]="savingResource()"></button>
     </footer>
@@ -726,7 +726,7 @@
     </label>
     <footer class="formActions">
       <button pButton type="button" label="Cancelar" severity="secondary" outlined (click)="sessionModalVisible = false; startSession()"></button>
-      <button pButton type="submit" label="Salvar sessão"
+      <button pButton type="submit" label="Salvar sessão" styleClass="btn-accent-outline"
         [icon]="savingSession() ? 'pi pi-spin pi-spinner' : 'pi pi-check'"
         [disabled]="savingSession()"></button>
     </footer>
