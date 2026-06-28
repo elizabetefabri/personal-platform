@@ -10,7 +10,7 @@
       <p-button
         label="Cadastrar Projeto Profissional"
         icon="pi pi-plus"
-        styleClass="btn-primary"
+        styleClass="btn-accent-outline"
         pTooltip="Cadastrar novo projeto profissional"
         tooltipPosition="bottom"
         (onClick)="openCreateModal()"
@@ -19,7 +19,7 @@
   </app-project-card-grid>
 </div>
 
-<!-- Modal: Cadastrar -->
+<!-- Modal: Cadastrar / Editar -->
 <p-dialog
   [(visible)]="modalVisible"
   [modal]="true"
@@ -28,49 +28,52 @@
   [resizable]="false"
   [style]="{ width: '540px' }"
   [header]="editingProject ? 'Editar Projeto Profissional' : 'Cadastrar Projeto Profissional'"
+  styleClass="studyModal"
   (onHide)="cancelModal()"
 >
-  <div class="modal-form">
+  <form class="form" (ngSubmit)="saveProject()">
     @if (errorMessage) {
-      <div class="modal-form__error">{{ errorMessage }}</div>
+      <div class="form__error">{{ errorMessage }}</div>
     }
-    <div class="modal-form__field">
-      <label>Nome *</label>
-      <input pInputText [(ngModel)]="form.name" placeholder="Ex: Rollout Service" />
+    <label class="field">
+      <span>Nome *</span>
+      <input pInputText name="name" [(ngModel)]="form.name" placeholder="Ex: Rollout Service" />
+    </label>
+    <label class="field">
+      <span>Slug</span>
+      <input pInputText name="slug" [(ngModel)]="form.slug" placeholder="Ex: rollout-service" />
+    </label>
+    <label class="field">
+      <span>Descrição</span>
+      <input pInputText name="description" [(ngModel)]="form.description" placeholder="Descrição curta do projeto" />
+    </label>
+    <label class="field">
+      <span>Tags (separadas por vírgula)</span>
+      <input pInputText name="tagsInput" [(ngModel)]="tagsInput" placeholder="Go, Angular, ..." />
+    </label>
+    <label class="field">
+      <span>Rota interna (Ver Detalhes)</span>
+      <input pInputText name="detailRoute" [(ngModel)]="form.detailRoute" placeholder="/rollout-service" />
+    </label>
+    <div class="form__row">
+      <label class="field">
+        <span>URL do Repositório</span>
+        <input pInputText name="repoUrl" [(ngModel)]="form.repoUrl" placeholder="https://github.com/..." />
+      </label>
+      <label class="field">
+        <span>Cor do card</span>
+        <input pInputText name="bannerColor" [(ngModel)]="form.bannerColor" placeholder="linear-gradient(...)" />
+      </label>
     </div>
-    <div class="modal-form__field">
-      <label>Slug</label>
-      <input pInputText [(ngModel)]="form.slug" placeholder="Ex: rollout-service" />
-    </div>
-    <div class="modal-form__field">
-      <label>Descrição</label>
-      <input pInputText [(ngModel)]="form.description" placeholder="Descrição curta do projeto" />
-    </div>
-    <div class="modal-form__field">
-      <label>Tags (separadas por vírgula)</label>
-      <input pInputText [(ngModel)]="tagsInput" placeholder="Go, Angular, ..." />
-    </div>
-    <div class="modal-form__field">
-      <label>Rota interna (Ver Detalhes)</label>
-      <input pInputText [(ngModel)]="form.detailRoute" placeholder="/rollout-service" />
-    </div>
-    <div class="modal-form__field">
-      <label>URL do Repositório</label>
-      <input pInputText [(ngModel)]="form.repoUrl" placeholder="https://github.com/..." />
-    </div>
-    <div class="modal-form__field">
-      <label>Cor do card</label>
-      <input pInputText [(ngModel)]="form.bannerColor" placeholder="linear-gradient(...)" />
-    </div>
-    <div class="modal-form__field">
-      <label>URL da imagem</label>
-      <input pInputText [(ngModel)]="form.imageUrl" placeholder="/assets/images/..." />
-    </div>
-  </div>
-  <ng-template pTemplate="footer">
-    <p-button label="Cancelar" styleClass="btn-cancel" (onClick)="cancelModal()" />
-    <p-button [label]="editingProject ? 'Salvar alterações' : 'Cadastrar'" icon="pi pi-check" [loading]="saving()" styleClass="btn-primary" (onClick)="saveProject()" />
-  </ng-template>
+    <label class="field">
+      <span>URL da imagem</span>
+      <input pInputText name="imageUrl" [(ngModel)]="form.imageUrl" placeholder="/assets/images/..." />
+    </label>
+    <footer class="formActions">
+      <button pButton type="button" label="Cancelar" class="btn-cancel" (click)="cancelModal()"></button>
+      <button pButton type="submit" [label]="editingProject ? 'Salvar alterações' : 'Cadastrar'" icon="pi pi-check" [disabled]="saving()" class="btn-primary"></button>
+    </footer>
+  </form>
 </p-dialog>
 
 <!-- Modal: Confirmar exclusão -->
@@ -82,6 +85,7 @@
   [resizable]="false"
   [style]="{ width: '440px' }"
   header="Confirmar exclusão"
+  styleClass="studyModal"
 >
   <div class="delete-confirm">
     <i class="pi pi-exclamation-triangle delete-confirm__icon"></i>
@@ -90,8 +94,8 @@
       <br /><span class="delete-confirm__hint">Esta ação não pode ser desfeita.</span>
     </p>
   </div>
-  <ng-template pTemplate="footer">
-    <p-button label="Cancelar" styleClass="btn-cancel" (onClick)="cancelDelete()" />
-    <p-button label="Confirmar exclusão" icon="pi pi-trash" severity="danger" (onClick)="confirmDelete()" />
-  </ng-template>
+  <footer class="formActions">
+    <button pButton type="button" label="Cancelar" class="btn-cancel" (click)="cancelDelete()"></button>
+    <button pButton type="button" label="Confirmar exclusão" icon="pi pi-trash" severity="danger" (click)="confirmDelete()"></button>
+  </footer>
 </p-dialog>

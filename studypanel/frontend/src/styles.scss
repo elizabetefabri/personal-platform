@@ -151,3 +151,140 @@
   box-shadow: 0 0 0 0.15rem rgba(32, 31, 37, 0.15) !important;
   outline: none !important;
 }
+
+// ============================================================================
+// Modal padrão global — studyModal
+// Header escuro (#201F25), body limpo, sem footer PrimeNG (usa formActions)
+// Pages com --page-accent definido sobrescrevem o header via cascata.
+// ============================================================================
+
+::ng-deep .studyModal {
+  border-radius: 1rem !important;
+  overflow: hidden;
+
+  .p-dialog-header {
+    background: var(--page-accent, #201F25);
+    color: #fff;
+    padding: 1.125rem 1.5rem;
+    border-bottom: none;
+
+    .p-dialog-title {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .p-dialog-header-icon {
+      color: rgba(255, 255, 255, 0.75) !important;
+      &:hover {
+        color: #fff !important;
+        background: rgba(255, 255, 255, 0.12) !important;
+      }
+    }
+  }
+
+  .p-dialog-content {
+    padding: 1.25rem 1.5rem;
+    background: var(--color-surface, #fbfaf8);
+  }
+}
+
+// ============================================================================
+// Form layout global (dentro de modais)
+// ============================================================================
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+
+  .field--grow { grid-column: span 2; }
+
+  @media (max-width: 36rem) {
+    grid-template-columns: 1fr;
+    .field--grow { grid-column: span 1; }
+  }
+}
+
+.form__error {
+  padding: 0.5rem 0.875rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.375rem;
+  color: #dc2626;
+  font-size: 0.875rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  span {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #111827);
+  }
+
+  input, textarea { width: 100%; box-sizing: border-box; }
+}
+
+.field__select {
+  width: 100%;
+  height: 2.5rem;
+  border: 0.0625rem solid var(--color-border-subtle, #e5e7eb);
+  border-radius: 0.5rem;
+  padding: 0 0.875rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  background: var(--color-surface, #fff);
+  color: var(--color-text-primary, #111827);
+  cursor: pointer;
+  outline: none;
+  box-sizing: border-box;
+
+  &:focus { border-color: #201F25; box-shadow: 0 0 0 0.15rem rgba(32, 31, 37, 0.15); }
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border-subtle, #e5e7eb);
+}
+
+// ─── Delete confirm ───────────────────────────────────────────────────────────
+
+.delete-confirm {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.5rem 0;
+
+  &__icon {
+    font-size: 1.75rem;
+    color: #f59e0b;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
+
+  &__text {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--color-text-primary, #111827);
+    line-height: 1.6;
+  }
+
+  &__hint {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary, #6b7280);
+  }
+}

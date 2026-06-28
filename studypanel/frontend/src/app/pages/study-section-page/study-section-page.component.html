@@ -8,7 +8,7 @@
   >
     <div slot="header-actions" class="section-page__actions">
       <p-button
-        label="Cadastrar Item da Trilha"
+        label="Novo tópico da trilha"
         icon="pi pi-plus"
         [outlined]="true"
         styleClass="btn-accent-outline"
@@ -28,50 +28,53 @@
   [draggable]="false"
   [resizable]="false"
   [style]="{ width: '520px' }"
-  [header]="editingTopic ? 'Editar Item da Trilha' : 'Cadastrar Item da Trilhaxxx'"
+  [header]="editingTopic ? 'Editar Item da Trilha' : 'Cadastrar tópico da trilha'"
+  styleClass="studyModal"
   (onHide)="cancelModal()"
 >
-  <div class="modal-form">
+  <form class="form" (ngSubmit)="saveTopic()">
     @if (errorMessage) {
-      <div class="modal-form__error">{{ errorMessage }}</div>
+      <div class="form__error">{{ errorMessage }}</div>
     }
-    <div class="modal-form__field">
-      <label for="topic-label">Nome *</label>
-      <input pInputText id="topic-label" [(ngModel)]="form.label" placeholder="Ex: Node.js" />
+    <label class="field">
+      <span>Nome *</span>
+      <input pInputText id="topic-label" name="label" [(ngModel)]="form.label" placeholder="Ex: Node.js" />
+    </label>
+    <label class="field">
+      <span>Slug *</span>
+      <input pInputText id="topic-slug" name="slug" [(ngModel)]="form.slug" placeholder="Ex: nodejs" [disabled]="!!editingTopic" />
+    </label>
+    <label class="field">
+      <span>Descrição</span>
+      <input pInputText id="topic-desc" name="description" [(ngModel)]="form.description" placeholder="Descrição curta do tópico" />
+    </label>
+    <label class="field">
+      <span>Tag / Skill</span>
+      <input pInputText id="topic-skill" name="skill" [(ngModel)]="form.skill" placeholder="Ex: Runtime" />
+    </label>
+    <div class="form__row">
+      <label class="field">
+        <span>Cor do card</span>
+        <input pInputText id="topic-color" name="bannerColor" [(ngModel)]="form.bannerColor" placeholder="linear-gradient(...)" />
+      </label>
+      <label class="field">
+        <span>Ícone (PrimeIcons)</span>
+        <input pInputText id="topic-icon" name="iconClass" [(ngModel)]="form.iconClass" placeholder="pi-code" />
+      </label>
     </div>
-    <div class="modal-form__field">
-      <label for="topic-slug">Slug *</label>
-      <input pInputText id="topic-slug" [(ngModel)]="form.slug" placeholder="Ex: nodejs" [disabled]="!!editingTopic" />
-    </div>
-    <div class="modal-form__field">
-      <label for="topic-desc">Descrição</label>
-      <input pInputText id="topic-desc" [(ngModel)]="form.description" placeholder="Descrição curta do tópico" />
-    </div>
-    <div class="modal-form__field">
-      <label for="topic-skill">Tag / Skill</label>
-      <input pInputText id="topic-skill" [(ngModel)]="form.skill" placeholder="Ex: Runtime" />
-    </div>
-    <div class="modal-form__field">
-      <label for="topic-color">Cor do card</label>
-      <input pInputText id="topic-color" [(ngModel)]="form.bannerColor" placeholder="linear-gradient(...)" />
-    </div>
-    <div class="modal-form__field">
-      <label for="topic-icon">Ícone (PrimeIcons)</label>
-      <input pInputText id="topic-icon" [(ngModel)]="form.iconClass" placeholder="pi-code" />
-    </div>
-    <div class="modal-form__field">
-      <label for="topic-image">URL da imagem</label>
-      <input pInputText id="topic-image" [(ngModel)]="form.imageUrl" placeholder="/assets/images/..." />
-    </div>
-    <div class="modal-form__field">
-      <label for="topic-order">Ordem</label>
-      <input pInputText id="topic-order" type="number" [(ngModel)]="form.order" />
-    </div>
-  </div>
-  <ng-template pTemplate="footer">
-    <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="cancelModal()" />
-    <p-button [label]="editingTopic ? 'Salvar alterações' : 'Cadastrar'" icon="pi pi-check" [loading]="saving()" (onClick)="saveTopic()" />
-  </ng-template>
+    <label class="field">
+      <span>URL da imagem</span>
+      <input pInputText id="topic-image" name="imageUrl" [(ngModel)]="form.imageUrl" placeholder="/assets/images/..." />
+    </label>
+    <label class="field">
+      <span>Ordem</span>
+      <input pInputText id="topic-order" type="number" name="order" [(ngModel)]="form.order" />
+    </label>
+    <footer class="formActions">
+      <button pButton type="button" label="Cancelar" class="btn-cancel" (click)="cancelModal()"></button>
+      <button pButton type="submit" [label]="editingTopic ? 'Salvar alterações' : 'Salvar tópico'" icon="pi pi-check" [disabled]="saving()" class="btn-primary"></button>
+    </footer>
+  </form>
 </p-dialog>
 
 <!-- Modal: Confirmar exclusão -->
@@ -83,6 +86,7 @@
   [resizable]="false"
   [style]="{ width: '440px' }"
   header="Confirmar exclusão"
+  styleClass="studyModal"
 >
   <div class="delete-confirm">
     <i class="pi pi-exclamation-triangle delete-confirm__icon"></i>
@@ -91,8 +95,8 @@
       <br /><span class="delete-confirm__hint">Esta ação não pode ser desfeita.</span>
     </p>
   </div>
-  <ng-template pTemplate="footer">
-    <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="cancelDelete()" />
-    <p-button label="Confirmar exclusão" icon="pi pi-trash" severity="danger" (onClick)="confirmDelete()" />
-  </ng-template>
+  <footer class="formActions">
+    <button pButton type="button" label="Cancelar" class="btn-cancel" (click)="cancelDelete()"></button>
+    <button pButton type="button" label="Confirmar exclusão" icon="pi pi-trash" severity="danger" (click)="confirmDelete()"></button>
+  </footer>
 </p-dialog>

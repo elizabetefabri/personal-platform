@@ -132,56 +132,54 @@
   [modal]="true"
   [draggable]="false"
   [resizable]="false"
-  styleClass="addModal"
+  styleClass="studyModal"
   [style]="{ width: '480px' }">
 
-  <div class="addForm">
-    <div class="addForm__field">
-      <label>Seção</label>
-      <select class="addForm__select" [(ngModel)]="addForm.section" (ngModelChange)="onSectionChange()">
+  <form class="form" (ngSubmit)="saveItem()">
+    <label class="field">
+      <span>Seção</span>
+      <select class="field__select" [(ngModel)]="addForm.section" name="section" (ngModelChange)="onSectionChange()">
         <option value="">Selecione uma seção</option>
         @for (sec of sections; track sec.slug) {
           <option [value]="sec.slug">{{ sec.label }}</option>
         }
       </select>
-    </div>
+    </label>
 
-    <div class="addForm__field">
-      <label>Tópico</label>
-      <select class="addForm__select" [(ngModel)]="addForm.topic" [disabled]="!availableTopics.length">
+    <label class="field">
+      <span>Tópico</span>
+      <select class="field__select" [(ngModel)]="addForm.topic" name="topic" [disabled]="!availableTopics.length">
         <option value="">Selecione um tópico</option>
         @for (topic of availableTopics; track topic.slug) {
           <option [value]="topic.slug">{{ topic.label }}</option>
         }
       </select>
-    </div>
+    </label>
 
-    <div class="addForm__field">
-      <label>Nome do curso</label>
-      <input pInputText class="addForm__input" [(ngModel)]="addForm.courseName" placeholder="Ex: Redis Fundamentals" />
-    </div>
+    <label class="field">
+      <span>Nome do curso</span>
+      <input pInputText name="courseName" [(ngModel)]="addForm.courseName" placeholder="Ex: Redis Fundamentals" />
+    </label>
 
-    <div class="addForm__field">
-      <label>URL (opcional)</label>
-      <input pInputText class="addForm__input" [(ngModel)]="addForm.url" placeholder="https://..." />
-    </div>
+    <label class="field">
+      <span>URL (opcional)</span>
+      <input pInputText name="url" [(ngModel)]="addForm.url" placeholder="https://..." />
+    </label>
 
-    <div class="addForm__field">
-      <label>Status</label>
-      <select class="addForm__select" [(ngModel)]="addForm.status">
+    <label class="field">
+      <span>Status</span>
+      <select class="field__select" [(ngModel)]="addForm.status" name="status">
         @for (s of statusOptions; track s) {
           <option [value]="s">{{ s }}</option>
         }
       </select>
-    </div>
-  </div>
+    </label>
 
-  <ng-template pTemplate="footer">
-    <button pButton label="Cancelar" class="btn-cancel"
-      (click)="addModalVisible = false"></button>
-    <button pButton label="Salvar" icon="pi pi-check" class="btn-primary"
-      [disabled]="!addForm.section || !addForm.topic || !addForm.courseName || saving()"
-      [loading]="saving()"
-      (click)="saveItem()"></button>
-  </ng-template>
+    <footer class="formActions">
+      <button pButton type="button" label="Cancelar" class="btn-cancel"
+        (click)="addModalVisible = false"></button>
+      <button pButton type="submit" label="Salvar conteúdo" icon="pi pi-check" class="btn-primary"
+        [disabled]="!addForm.section || !addForm.topic || !addForm.courseName || saving()"></button>
+    </footer>
+  </form>
 </p-dialog>
