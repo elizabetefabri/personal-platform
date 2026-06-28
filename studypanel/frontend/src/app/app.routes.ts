@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 const sectionChild = {
   path: '',
   loadComponent: () =>
-    import('./pages/study-section-page/study-section-page.component').then(
+    import('./pages/estudos-labs/study-section-page/study-section-page.component').then(
       (m) => m.StudySectionPageComponent,
     ),
 };
@@ -14,14 +14,14 @@ const detailChild = {
     {
       path: '',
       loadComponent: () =>
-        import('./pages/study-detail-page/study-detail-page.component').then(
+        import('./pages/estudos-labs/study-detail-page/study-detail-page.component').then(
           (m) => m.StudyDetailPageComponent,
         ),
     },
     {
       path: ':itemId',
       loadComponent: () =>
-        import('./pages/course-detail/course-detail.component').then(
+        import('./pages/estudos-labs/course-detail/course-detail.component').then(
           (m) => m.CourseDetailComponent,
         ),
     },
@@ -60,14 +60,14 @@ export const routes: Routes = [
       {
         path: 'pessoais',
         loadComponent: () =>
-          import('./pages/projetos-pessoais/projetos-pessoais.component').then(
+          import('./pages/projetos/projetos-pessoais/projetos-pessoais.component').then(
             (m) => m.ProjetosPessoaisComponent,
           ),
       },
       {
         path: 'profissionais',
         loadComponent: () =>
-          import('./pages/projetos-profissionais/projetos-profissionais.component').then(
+          import('./pages/projetos/projetos-profissionais/projetos-profissionais.component').then(
             (m) => m.ProjetosProfissionaisComponent,
           ),
       },
