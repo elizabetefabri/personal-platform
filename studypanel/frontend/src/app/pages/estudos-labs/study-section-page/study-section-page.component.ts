@@ -5,15 +5,10 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
-import { StudyCardGrid } from '../../shared/components/study-card-grid/study-card-grid';
-import { StudyCardItem } from '../../shared/interfaces/study-template.interface';
-import {
-  CourseTopic,
-  CourseTopicService,
-  CreateCourseTopicDto,
-  UpdateCourseTopicDto,
-} from '../../core/services/course-topic.service';
-import { getSectionBySlug } from '../../core/constants/study-topics';
+import { StudyCardItem } from '../../../shared/interfaces/study-template.interface';
+import { CourseTopic, CourseTopicService, CreateCourseTopicDto, UpdateCourseTopicDto } from '../../../core/services/course-topic.service';
+import { getSectionBySlug } from '../../../core/constants/study-topics';
+import { StudyCardGrid } from '../../../shared/components/study-card-grid/study-card-grid';
 
 @Component({
   selector: 'app-study-section-page',

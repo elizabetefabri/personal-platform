@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { StudyDetailTemplate } from '../../shared/components/study-detail-template/study-detail-template';
-import { getSectionBySlug, getTopicBySlug, SectionConfig, TopicConfig } from '../../core/constants/study-topics';
+import { StudyDetailTemplate } from '../../../shared/components/study-detail-template/study-detail-template';
+import { getSectionBySlug, getTopicBySlug, SectionConfig, TopicConfig } from '../../../core/constants/study-topics';
+
 
 @Component({
   selector: 'app-study-detail-page',

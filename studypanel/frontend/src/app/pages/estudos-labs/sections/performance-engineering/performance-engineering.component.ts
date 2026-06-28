@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { StudyCardGrid } from '../../shared/components/study-card-grid/study-card-grid';
-import { StudyCardItem } from '../../shared/interfaces/study-template.interface';
-import { getSectionBySlug } from '../../core/constants/study-topics';
+import { StudyCardGrid } from '../../../../shared/components/study-card-grid/study-card-grid';
+import { getSectionBySlug } from '../../../../core/constants/study-topics';
+import { StudyCardItem } from '../../../../shared/interfaces/study-template.interface';
 
 @Component({
   selector: 'app-performance-engineering',

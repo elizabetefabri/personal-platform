@@ -201,6 +201,15 @@
   p { margin: 0; font-size: 1rem; }
 }
 
+.formActions {
+  display: flex;
+  justify-content: space-between;
+
+  .p-button {
+    width: 100%;
+  }
+}
+
 .delete-confirm {
   display: flex;
   flex-direction: column;

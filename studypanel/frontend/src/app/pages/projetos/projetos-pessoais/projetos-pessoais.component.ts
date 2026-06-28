@@ -4,16 +4,9 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
-import {
-  ProjectCardGrid,
-  ProjectItem,
-} from '../../shared/components/project-card-grid/project-card-grid';
-import {
-  CreateProjectDto,
-  Project,
-  ProjectService,
-  UpdateProjectDto,
-} from '../../core/services/project.service';
+import { ProjectCardGrid, ProjectItem } from '../../../shared/components/project-card-grid/project-card-grid';
+import { CreateProjectDto, Project, ProjectService, UpdateProjectDto } from '../../../core/services/project.service';
+
 
 @Component({
   selector: 'app-projetos-pessoais',
