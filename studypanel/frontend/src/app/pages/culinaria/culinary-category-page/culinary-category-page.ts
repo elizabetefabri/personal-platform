@@ -6,7 +6,6 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
-import { DropdownModule } from 'primeng/dropdown';
 import { BackButtonComponent } from '../../../shared/components/back-button/back-button';
 import {
   CulinaryService,
@@ -27,7 +26,6 @@ import {
     DialogModule,
     InputTextModule,
     TextareaModule,
-    DropdownModule,
     BackButtonComponent,
   ],
   templateUrl: './culinary-category-page.html',

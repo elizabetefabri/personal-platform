@@ -226,25 +226,19 @@
     <div class="form__row">
       <label class="field">
         <span>Dificuldade</span>
-        <p-dropdown
-          name="edit-difficulty"
-          [(ngModel)]="editForm.difficulty"
-          [options]="difficultyOptions"
-          optionLabel="label"
-          optionValue="value"
-          [style]="{ width: '100%' }"
-        />
+        <select class="field__select" name="edit-difficulty" [(ngModel)]="editForm.difficulty">
+          @for (opt of difficultyOptions; track opt.value) {
+            <option [value]="opt.value">{{ opt.label }}</option>
+          }
+        </select>
       </label>
       <label class="field">
         <span>Status</span>
-        <p-dropdown
-          name="edit-status"
-          [(ngModel)]="editForm.status"
-          [options]="statusOptions"
-          optionLabel="label"
-          optionValue="value"
-          [style]="{ width: '100%' }"
-        />
+        <select class="field__select" name="edit-status" [(ngModel)]="editForm.status">
+          @for (opt of statusOptions; track opt.value) {
+            <option [value]="opt.value">{{ opt.label }}</option>
+          }
+        </select>
       </label>
     </div>
     <div class="form__row">

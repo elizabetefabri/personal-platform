@@ -111,25 +111,19 @@
     <div class="form__row">
       <label class="field">
         <span>Dificuldade</span>
-        <p-dropdown
-          name="difficulty"
-          [(ngModel)]="form.difficulty"
-          [options]="difficultyOptions"
-          optionLabel="label"
-          optionValue="value"
-          [style]="{ width: '100%' }"
-        />
+        <select class="field__select" name="difficulty" [(ngModel)]="form.difficulty">
+          @for (opt of difficultyOptions; track opt.value) {
+            <option [value]="opt.value">{{ opt.label }}</option>
+          }
+        </select>
       </label>
       <label class="field">
         <span>Status</span>
-        <p-dropdown
-          name="status"
-          [(ngModel)]="form.status"
-          [options]="statusOptions"
-          optionLabel="label"
-          optionValue="value"
-          [style]="{ width: '100%' }"
-        />
+        <select class="field__select" name="status" [(ngModel)]="form.status">
+          @for (opt of statusOptions; track opt.value) {
+            <option [value]="opt.value">{{ opt.label }}</option>
+          }
+        </select>
       </label>
     </div>
     <div class="form__row">

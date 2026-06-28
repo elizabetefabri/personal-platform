@@ -11,29 +11,15 @@ import { SliderModule } from 'primeng/slider';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
-import { getSectionBySlug, getTopicBySlug } from '../../core/constants/study-topics';
-import { BreadcrumbService } from '../../core/services/breadcrumb.service';
-import { QuizQuestionService } from '../../core/services/quiz-question.service';
-import { StudyItemService } from '../../core/services/study-item.service';
-import { StudyNoteService, CreateNoteDto } from '../../core/services/study-note.service';
-import { StudyResourceService, CreateResourceDto } from '../../core/services/study-resource.service';
-import { StudySessionService, CreateSessionDto } from '../../core/services/study-session.service';
-import {
-  NoteStatus,
-  NoteType,
-  QuizDifficulty,
-  QuizQuestion,
-  ResourcePriority,
-  ResourceStatus,
-  ResourceType,
-  SessionFocus,
-  StudyMilestone,
-  StudyNote,
-  StudyResource,
-  StudySession,
-  StudyStatus,
-  StudyTableItem,
-} from '../../shared/interfaces/study-template.interface';
+import { NoteStatus, NoteType, QuizDifficulty, QuizQuestion, ResourcePriority, ResourceStatus, ResourceType, SessionFocus, StudyMilestone, StudyNote, StudyResource, StudySession, StudyStatus, StudyTableItem } from '../../../shared/interfaces/study-template.interface';
+import { CreateNoteDto, StudyNoteService } from '../../../core/services/study-note.service';
+import { CreateResourceDto, StudyResourceService } from '../../../core/services/study-resource.service';
+import { StudyItemService } from '../../../core/services/study-item.service';
+import { QuizQuestionService } from '../../../core/services/quiz-question.service';
+import { CreateSessionDto, StudySessionService } from '../../../core/services/study-session.service';
+import { BreadcrumbService } from '../../../core/services/breadcrumb.service';
+import { getSectionBySlug, getTopicBySlug } from '../../../core/constants/study-topics';
+
 
 @Component({
   selector: 'app-course-detail',
