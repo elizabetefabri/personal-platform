@@ -14,7 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const culinariaRecipeCollection = "culinaria_recipes"
+const culinariaRecipeCollection = "culinary_recipes"
 
 type CulinariaRecipeRepository struct {
 	collection *mongo.Collection
@@ -50,10 +50,22 @@ func (r *CulinariaRecipeRepository) GetByID(ctx context.Context, id string) (*en
 	return &recipe, nil
 }
 
-func (r *CulinariaRecipeRepository) List(ctx context.Context, category string) ([]*entity.CulinariaRecipe, error) {
+func (r *CulinariaRecipeRepository) GetBySlug(ctx context.Context, categorySlug, recipeSlug string) (*entity.CulinariaRecipe, error) {
+	var recipe entity.CulinariaRecipe
+	filter := bson.M{"category_slug": categorySlug, "slug": recipeSlug}
+	if err := r.collection.FindOne(ctx, filter).Decode(&recipe); err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, errors.New("receita não encontrada")
+		}
+		return nil, err
+	}
+	return &recipe, nil
+}
+
+func (r *CulinariaRecipeRepository) List(ctx context.Context, categorySlug string) ([]*entity.CulinariaRecipe, error) {
 	query := bson.M{}
-	if category != "" {
-		query["category"] = category
+	if categorySlug != "" {
+		query["category_slug"] = categorySlug
 	}
 	opts := options.Find().SetSort(bson.D{{Key: "created_at", Value: -1}})
 	cursor, err := r.collection.Find(ctx, query, opts)
@@ -74,12 +86,31 @@ func (r *CulinariaRecipeRepository) Update(ctx context.Context, id string, recip
 		return nil, errors.New("id inválido")
 	}
 	update := bson.M{"$set": bson.M{
-		"title": recipe.Title, "description": recipe.Description,
-		"category": recipe.Category, "ingredients": recipe.Ingredients,
-		"instructions": recipe.Instructions, "prep_time": recipe.PrepTime,
-		"difficulty": recipe.Difficulty, "tags": recipe.Tags,
-		"image_url": recipe.ImageURL, "servings": recipe.Servings,
-		"active": recipe.Active, "updated_at": time.Now().UTC(),
+		"category_id":          recipe.CategoryID,
+		"category_slug":        recipe.CategorySlug,
+		"name":                 recipe.Name,
+		"description":          recipe.Description,
+		"prep_time_minutes":    recipe.PrepTimeMinutes,
+		"cook_time_minutes":    recipe.CookTimeMinutes,
+		"servings_str":         recipe.ServingsStr,
+		"difficulty":           recipe.Difficulty,
+		"status":               recipe.Status,
+		"tags":                 recipe.Tags,
+		"image_url":            recipe.ImageURL,
+		"youtube_url":          recipe.YoutubeURL,
+		"source_url":           recipe.SourceURL,
+		"ingredients":          recipe.Ingredients,
+		"preparation_steps":    recipe.PreparationSteps,
+		"utensils":             recipe.Utensils,
+		"tips":                 recipe.Tips,
+		"substitutions":        recipe.Substitutions,
+		"storage_instructions": recipe.StorageInstructions,
+		"estimated_cost":       recipe.EstimatedCost,
+		"personal_rating":      recipe.PersonalRating,
+		"tested":               recipe.Tested,
+		"notes":                recipe.Notes,
+		"active":               recipe.Active,
+		"updated_at":           time.Now().UTC(),
 	}}
 	opts := options.FindOneAndUpdate().SetReturnDocument(options.After)
 	var updated entity.CulinariaRecipe

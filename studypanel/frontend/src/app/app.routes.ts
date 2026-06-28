@@ -89,11 +89,23 @@ export const routes: Routes = [
         (m) => m.PainelFinanceiroComponent,
       ),
   },
-    {
+  {
     path: 'culinaria',
     loadComponent: () =>
-      import('./pages/culinaria/culinaria').then(
-        (m) => m.Culinaria,
+      import('./pages/culinaria/culinaria').then((m) => m.Culinaria),
+  },
+  {
+    path: 'culinaria/:categorySlug',
+    loadComponent: () =>
+      import('./pages/culinaria/culinary-category-page/culinary-category-page').then(
+        (m) => m.CulinaryCategoryPageComponent,
+      ),
+  },
+  {
+    path: 'culinaria/:categorySlug/:recipeSlug',
+    loadComponent: () =>
+      import('./pages/culinaria/recipe-detail-page/recipe-detail-page').then(
+        (m) => m.RecipeDetailPageComponent,
       ),
   },
   {

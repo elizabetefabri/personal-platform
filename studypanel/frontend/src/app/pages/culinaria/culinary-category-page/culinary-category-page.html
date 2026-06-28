@@ -1,0 +1,198 @@
+<div class="categoryPage">
+  <header class="categoryPage__header">
+    <div class="categoryPage__topRow">
+      <app-back-button></app-back-button>
+      <p-button
+        label="Nova receita"
+        icon="pi pi-plus"
+        [outlined]="true"
+        styleClass="btn-accent-outline"
+        (onClick)="openCreateModal()"
+      />
+    </div>
+
+    <nav class="breadcrumb" aria-label="Caminho">
+      <a routerLink="/dashboard" class="breadcrumb__item">Dashboard</a>
+      <span class="breadcrumb__sep">›</span>
+      <a routerLink="/culinaria" class="breadcrumb__item">Culinária</a>
+      <span class="breadcrumb__sep">›</span>
+      <span class="breadcrumb__item breadcrumb__item--active">{{ category()?.name ?? categorySlug }}</span>
+    </nav>
+
+    <h1 class="categoryPage__title">{{ category()?.name ?? 'Categoria' }}</h1>
+    @if (category()?.description) {
+      <p class="categoryPage__description">{{ category()!.description }}</p>
+    }
+  </header>
+
+  @if (loading()) {
+    <div class="categoryPage__loading">
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>Carregando receitas...</span>
+    </div>
+  } @else if (recipes().length === 0) {
+    <div class="studyGrid__empty">
+      <i class="pi pi-inbox"></i>
+      <p>Nenhuma receita nessa categoria ainda.</p>
+      <p-button label="Adicionar receita" icon="pi pi-plus" styleClass="btn-primary" (onClick)="openCreateModal()" />
+    </div>
+  } @else {
+    <div class="recipesGrid">
+      @for (recipe of recipes(); track recipe.id) {
+        <article class="recipeCard">
+          @if (recipe.imageUrl) {
+            <div class="recipeCard__image">
+              <img [src]="recipe.imageUrl" [alt]="recipe.name" loading="lazy" />
+            </div>
+          }
+          <div class="recipeCard__content">
+            <div class="recipeCard__meta">
+              <span class="recipeCard__difficulty">{{ recipe.difficulty }}</span>
+              <span class="recipeCard__status" [ngClass]="getStatusClass(recipe.status)">
+                {{ getStatusLabel(recipe.status) }}
+              </span>
+            </div>
+            <h2 class="recipeCard__title">{{ recipe.name }}</h2>
+            <p class="recipeCard__description">{{ recipe.description }}</p>
+            <div class="recipeCard__info">
+              @if (recipe.prepTimeMinutes) {
+                <span><i class="pi pi-clock"></i> {{ recipe.prepTimeMinutes }}min prep</span>
+              }
+              @if (recipe.servingsStr) {
+                <span><i class="pi pi-users"></i> {{ recipe.servingsStr }}</span>
+              }
+            </div>
+          </div>
+          <div class="recipeCard__footer">
+            <p-button
+              label="Ver receita"
+              styleClass="btn-accent-outline"
+              [routerLink]="['/culinaria', categorySlug, recipe.slug]"
+            />
+            <div class="recipeCard__actions">
+              <button pButton type="button" icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="openEditModal(recipe)" pTooltip="Editar" tooltipPosition="top"></button>
+              <button pButton type="button" icon="pi pi-trash" class="p-button-text p-button-sm p-button-danger" (click)="openDeleteModal(recipe)" pTooltip="Excluir" tooltipPosition="top"></button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</div>
+
+<!-- Modal: Cadastrar / Editar Receita -->
+<p-dialog
+  [(visible)]="modalVisible"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '620px' }"
+  [header]="editingRecipe ? 'Editar Receita' : 'Nova Receita'"
+  styleClass="studyModal"
+  (onHide)="cancelModal()"
+>
+  <form class="form" (ngSubmit)="saveRecipe()">
+    @if (errorMessage) {
+      <div class="form__error">{{ errorMessage }}</div>
+    }
+    <label class="field">
+      <span>Nome *</span>
+      <input pInputText name="name" [(ngModel)]="form.name" placeholder="Ex: Lasanha de Frango" />
+    </label>
+    <label class="field">
+      <span>Slug *</span>
+      <input pInputText name="slug" [(ngModel)]="form.slug" placeholder="Ex: lasanha-de-frango" [disabled]="!!editingRecipe" />
+    </label>
+    <label class="field">
+      <span>Descrição</span>
+      <input pInputText name="description" [(ngModel)]="form.description" placeholder="Breve descrição da receita" />
+    </label>
+    <div class="form__row">
+      <label class="field">
+        <span>Dificuldade</span>
+        <p-dropdown
+          name="difficulty"
+          [(ngModel)]="form.difficulty"
+          [options]="difficultyOptions"
+          optionLabel="label"
+          optionValue="value"
+          [style]="{ width: '100%' }"
+        />
+      </label>
+      <label class="field">
+        <span>Status</span>
+        <p-dropdown
+          name="status"
+          [(ngModel)]="form.status"
+          [options]="statusOptions"
+          optionLabel="label"
+          optionValue="value"
+          [style]="{ width: '100%' }"
+        />
+      </label>
+    </div>
+    <div class="form__row">
+      <label class="field">
+        <span>Tempo de preparo (min)</span>
+        <input pInputText type="number" name="prepTimeMinutes" [(ngModel)]="form.prepTimeMinutes" />
+      </label>
+      <label class="field">
+        <span>Tempo de cozimento (min)</span>
+        <input pInputText type="number" name="cookTimeMinutes" [(ngModel)]="form.cookTimeMinutes" />
+      </label>
+    </div>
+    <label class="field">
+      <span>Porções</span>
+      <input pInputText name="servingsStr" [(ngModel)]="form.servingsStr" placeholder="Ex: 4 pessoas" />
+    </label>
+    <label class="field">
+      <span>Tags (separadas por vírgula)</span>
+      <input pInputText name="tagsText" [(ngModel)]="tagsText" placeholder="Ex: rápida, fácil, sem glúten" />
+    </label>
+    <label class="field">
+      <span>URL da imagem</span>
+      <input pInputText name="imageUrl" [(ngModel)]="form.imageUrl" placeholder="https://..." />
+    </label>
+    <label class="field">
+      <span>URL do YouTube</span>
+      <input pInputText name="youtubeUrl" [(ngModel)]="form.youtubeUrl" placeholder="https://youtube.com/..." />
+    </label>
+    <label class="field">
+      <span>Ingredientes (um por linha)</span>
+      <textarea pTextarea name="ingredientsText" [(ngModel)]="ingredientsText" rows="5" placeholder="2 xícaras de farinha&#10;1 ovo&#10;..."></textarea>
+    </label>
+    <label class="field">
+      <span>Modo de preparo (um passo por linha)</span>
+      <textarea pTextarea name="preparationText" [(ngModel)]="preparationText" rows="5" placeholder="Misture os ingredientes&#10;Leve ao forno..."></textarea>
+    </label>
+    <footer class="formActions">
+      <button pButton type="button" label="Cancelar" class="btn-cancel" (click)="cancelModal()"></button>
+      <button pButton type="submit" [label]="editingRecipe ? 'Salvar alterações' : 'Criar receita'" icon="pi pi-check" [disabled]="saving()" class="btn-primary"></button>
+    </footer>
+  </form>
+</p-dialog>
+
+<!-- Modal: Confirmar exclusão -->
+<p-dialog
+  [(visible)]="deleteModalVisible"
+  [modal]="true"
+  [closable]="false"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '440px' }"
+  header="Confirmar exclusão"
+  styleClass="studyModal"
+>
+  <div class="delete-confirm">
+    <i class="pi pi-exclamation-triangle delete-confirm__icon"></i>
+    <p class="delete-confirm__text">
+      Tem certeza que deseja excluir <strong>{{ deleteTargetName }}</strong>?
+      <br /><span class="delete-confirm__hint">Esta ação não pode ser desfeita.</span>
+    </p>
+  </div>
+  <footer class="formActions">
+    <button pButton type="button" label="Cancelar" class="btn-cancel" (click)="cancelDelete()"></button>
+    <button pButton type="button" label="Confirmar exclusão" icon="pi pi-trash" severity="danger" (click)="confirmDelete()"></button>
+  </footer>
+</p-dialog>

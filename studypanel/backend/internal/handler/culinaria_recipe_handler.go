@@ -29,16 +29,16 @@ func NewCulinariaRecipeHandler(
 }
 
 func (h *CulinariaRecipeHandler) RegisterRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("GET /api/v1/culinaria/recipes", h.List)
-	mux.HandleFunc("POST /api/v1/culinaria/recipes", h.Create)
-	mux.HandleFunc("GET /api/v1/culinaria/recipes/{id}", h.Get)
-	mux.HandleFunc("PUT /api/v1/culinaria/recipes/{id}", h.Update)
-	mux.HandleFunc("DELETE /api/v1/culinaria/recipes/{id}", h.Delete)
+	mux.HandleFunc("GET /api/v1/culinary/recipes", h.List)
+	mux.HandleFunc("POST /api/v1/culinary/recipes", h.Create)
+	mux.HandleFunc("GET /api/v1/culinary/recipes/{id}", h.Get)
+	mux.HandleFunc("PUT /api/v1/culinary/recipes/{id}", h.Update)
+	mux.HandleFunc("DELETE /api/v1/culinary/recipes/{id}", h.Delete)
 }
 
 func (h *CulinariaRecipeHandler) List(w http.ResponseWriter, r *http.Request) {
-	category := r.URL.Query().Get("category")
-	recipes, err := h.listUC.Execute(r.Context(), category)
+	categorySlug := r.URL.Query().Get("category_slug")
+	recipes, err := h.listUC.Execute(r.Context(), categorySlug)
 	if err != nil {
 		response.Error(w, http.StatusInternalServerError, err.Error())
 		return

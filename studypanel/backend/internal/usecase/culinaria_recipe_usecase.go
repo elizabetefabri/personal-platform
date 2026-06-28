@@ -12,17 +12,31 @@ import (
 // ── Create ───────────────────────────────────────────────────────────────────
 
 type CreateCulinariaRecipeInput struct {
-	Title        string                   `json:"title"`
-	Description  string                   `json:"description"`
-	Category     string                   `json:"category"`
-	Ingredients  []string                 `json:"ingredients"`
-	Instructions []string                 `json:"instructions"`
-	PrepTime     int                      `json:"prepTime"`
-	Difficulty   entity.RecipeDifficulty  `json:"difficulty"`
-	Tags         []string                 `json:"tags"`
-	ImageURL     string                   `json:"imageUrl"`
-	Servings     int                      `json:"servings"`
-	Active       bool                     `json:"active"`
+	CategoryID          string                  `json:"categoryId"`
+	CategorySlug        string                  `json:"categorySlug"`
+	Name                string                  `json:"name"`
+	Slug                string                  `json:"slug"`
+	Description         string                  `json:"description"`
+	PrepTimeMinutes     int                     `json:"prepTimeMinutes"`
+	CookTimeMinutes     int                     `json:"cookTimeMinutes"`
+	ServingsStr         string                  `json:"servingsStr"`
+	Difficulty          entity.RecipeDifficulty `json:"difficulty"`
+	Status              entity.RecipeStatus     `json:"status"`
+	Tags                []string                `json:"tags"`
+	ImageURL            string                  `json:"imageUrl"`
+	YoutubeURL          string                  `json:"youtubeUrl"`
+	SourceURL           string                  `json:"sourceUrl"`
+	Ingredients         []string                `json:"ingredients"`
+	PreparationSteps    []string                `json:"preparationSteps"`
+	Utensils            string                  `json:"utensils"`
+	Tips                string                  `json:"tips"`
+	Substitutions       string                  `json:"substitutions"`
+	StorageInstructions string                  `json:"storageInstructions"`
+	EstimatedCost       float64                 `json:"estimatedCost"`
+	PersonalRating      int                     `json:"personalRating"`
+	Tested              bool                    `json:"tested"`
+	Notes               string                  `json:"notes"`
+	Active              bool                    `json:"active"`
 }
 
 type CreateCulinariaRecipeUseCase struct{ repo repository.CulinariaRecipeRepository }
@@ -32,8 +46,11 @@ func NewCreateCulinariaRecipeUseCase(r repository.CulinariaRecipeRepository) *Cr
 }
 
 func (uc *CreateCulinariaRecipeUseCase) Execute(ctx context.Context, in CreateCulinariaRecipeInput) (*entity.CulinariaRecipe, error) {
-	if in.Title == "" {
-		return nil, errors.New("title é obrigatório")
+	if in.Name == "" {
+		return nil, errors.New("name é obrigatório")
+	}
+	if in.Slug == "" {
+		return nil, errors.New("slug é obrigatório")
 	}
 	if in.Tags == nil {
 		in.Tags = []string{}
@@ -41,16 +58,40 @@ func (uc *CreateCulinariaRecipeUseCase) Execute(ctx context.Context, in CreateCu
 	if in.Ingredients == nil {
 		in.Ingredients = []string{}
 	}
-	if in.Instructions == nil {
-		in.Instructions = []string{}
+	if in.PreparationSteps == nil {
+		in.PreparationSteps = []string{}
+	}
+	if in.Status == "" {
+		in.Status = entity.RecipeStatusPending
 	}
 	recipe := &entity.CulinariaRecipe{
-		Title: in.Title, Description: in.Description,
-		Category: in.Category, Ingredients: in.Ingredients,
-		Instructions: in.Instructions, PrepTime: in.PrepTime,
-		Difficulty: in.Difficulty, Tags: in.Tags,
-		ImageURL: in.ImageURL, Servings: in.Servings, Active: in.Active,
-		CreatedAt: time.Now().UTC(), UpdatedAt: time.Now().UTC(),
+		CategoryID:          in.CategoryID,
+		CategorySlug:        in.CategorySlug,
+		Name:                in.Name,
+		Slug:                in.Slug,
+		Description:         in.Description,
+		PrepTimeMinutes:     in.PrepTimeMinutes,
+		CookTimeMinutes:     in.CookTimeMinutes,
+		ServingsStr:         in.ServingsStr,
+		Difficulty:          in.Difficulty,
+		Status:              in.Status,
+		Tags:                in.Tags,
+		ImageURL:            in.ImageURL,
+		YoutubeURL:          in.YoutubeURL,
+		SourceURL:           in.SourceURL,
+		Ingredients:         in.Ingredients,
+		PreparationSteps:    in.PreparationSteps,
+		Utensils:            in.Utensils,
+		Tips:                in.Tips,
+		Substitutions:       in.Substitutions,
+		StorageInstructions: in.StorageInstructions,
+		EstimatedCost:       in.EstimatedCost,
+		PersonalRating:      in.PersonalRating,
+		Tested:              in.Tested,
+		Notes:               in.Notes,
+		Active:              in.Active,
+		CreatedAt:           time.Now().UTC(),
+		UpdatedAt:           time.Now().UTC(),
 	}
 	return uc.repo.Create(ctx, recipe)
 }
@@ -63,8 +104,8 @@ func NewListCulinariaRecipesUseCase(r repository.CulinariaRecipeRepository) *Lis
 	return &ListCulinariaRecipesUseCase{repo: r}
 }
 
-func (uc *ListCulinariaRecipesUseCase) Execute(ctx context.Context, category string) ([]*entity.CulinariaRecipe, error) {
-	return uc.repo.List(ctx, category)
+func (uc *ListCulinariaRecipesUseCase) Execute(ctx context.Context, categorySlug string) ([]*entity.CulinariaRecipe, error) {
+	return uc.repo.List(ctx, categorySlug)
 }
 
 // ── Get ──────────────────────────────────────────────────────────────────────
@@ -82,20 +123,48 @@ func (uc *GetCulinariaRecipeUseCase) Execute(ctx context.Context, id string) (*e
 	return uc.repo.GetByID(ctx, id)
 }
 
+// ── GetBySlug ─────────────────────────────────────────────────────────────────
+
+type GetCulinariaRecipeBySlugUseCase struct{ repo repository.CulinariaRecipeRepository }
+
+func NewGetCulinariaRecipeBySlugUseCase(r repository.CulinariaRecipeRepository) *GetCulinariaRecipeBySlugUseCase {
+	return &GetCulinariaRecipeBySlugUseCase{repo: r}
+}
+
+func (uc *GetCulinariaRecipeBySlugUseCase) Execute(ctx context.Context, categorySlug, recipeSlug string) (*entity.CulinariaRecipe, error) {
+	if categorySlug == "" || recipeSlug == "" {
+		return nil, errors.New("categorySlug e recipeSlug são obrigatórios")
+	}
+	return uc.repo.GetBySlug(ctx, categorySlug, recipeSlug)
+}
+
 // ── Update ───────────────────────────────────────────────────────────────────
 
 type UpdateCulinariaRecipeInput struct {
-	Title        string                   `json:"title"`
-	Description  string                   `json:"description"`
-	Category     string                   `json:"category"`
-	Ingredients  []string                 `json:"ingredients"`
-	Instructions []string                 `json:"instructions"`
-	PrepTime     int                      `json:"prepTime"`
-	Difficulty   entity.RecipeDifficulty  `json:"difficulty"`
-	Tags         []string                 `json:"tags"`
-	ImageURL     string                   `json:"imageUrl"`
-	Servings     int                      `json:"servings"`
-	Active       bool                     `json:"active"`
+	CategoryID          string                  `json:"categoryId"`
+	CategorySlug        string                  `json:"categorySlug"`
+	Name                string                  `json:"name"`
+	Description         string                  `json:"description"`
+	PrepTimeMinutes     int                     `json:"prepTimeMinutes"`
+	CookTimeMinutes     int                     `json:"cookTimeMinutes"`
+	ServingsStr         string                  `json:"servingsStr"`
+	Difficulty          entity.RecipeDifficulty `json:"difficulty"`
+	Status              entity.RecipeStatus     `json:"status"`
+	Tags                []string                `json:"tags"`
+	ImageURL            string                  `json:"imageUrl"`
+	YoutubeURL          string                  `json:"youtubeUrl"`
+	SourceURL           string                  `json:"sourceUrl"`
+	Ingredients         []string                `json:"ingredients"`
+	PreparationSteps    []string                `json:"preparationSteps"`
+	Utensils            string                  `json:"utensils"`
+	Tips                string                  `json:"tips"`
+	Substitutions       string                  `json:"substitutions"`
+	StorageInstructions string                  `json:"storageInstructions"`
+	EstimatedCost       float64                 `json:"estimatedCost"`
+	PersonalRating      int                     `json:"personalRating"`
+	Tested              bool                    `json:"tested"`
+	Notes               string                  `json:"notes"`
+	Active              bool                    `json:"active"`
 }
 
 type UpdateCulinariaRecipeUseCase struct{ repo repository.CulinariaRecipeRepository }
@@ -114,15 +183,34 @@ func (uc *UpdateCulinariaRecipeUseCase) Execute(ctx context.Context, id string, 
 	if in.Ingredients == nil {
 		in.Ingredients = []string{}
 	}
-	if in.Instructions == nil {
-		in.Instructions = []string{}
+	if in.PreparationSteps == nil {
+		in.PreparationSteps = []string{}
 	}
 	recipe := &entity.CulinariaRecipe{
-		Title: in.Title, Description: in.Description,
-		Category: in.Category, Ingredients: in.Ingredients,
-		Instructions: in.Instructions, PrepTime: in.PrepTime,
-		Difficulty: in.Difficulty, Tags: in.Tags,
-		ImageURL: in.ImageURL, Servings: in.Servings, Active: in.Active,
+		CategoryID:          in.CategoryID,
+		CategorySlug:        in.CategorySlug,
+		Name:                in.Name,
+		Description:         in.Description,
+		PrepTimeMinutes:     in.PrepTimeMinutes,
+		CookTimeMinutes:     in.CookTimeMinutes,
+		ServingsStr:         in.ServingsStr,
+		Difficulty:          in.Difficulty,
+		Status:              in.Status,
+		Tags:                in.Tags,
+		ImageURL:            in.ImageURL,
+		YoutubeURL:          in.YoutubeURL,
+		SourceURL:           in.SourceURL,
+		Ingredients:         in.Ingredients,
+		PreparationSteps:    in.PreparationSteps,
+		Utensils:            in.Utensils,
+		Tips:                in.Tips,
+		Substitutions:       in.Substitutions,
+		StorageInstructions: in.StorageInstructions,
+		EstimatedCost:       in.EstimatedCost,
+		PersonalRating:      in.PersonalRating,
+		Tested:              in.Tested,
+		Notes:               in.Notes,
+		Active:              in.Active,
 	}
 	return uc.repo.Update(ctx, id, recipe)
 }

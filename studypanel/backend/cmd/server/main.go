@@ -125,6 +125,15 @@ func main() {
 	financialDeleteUC := usecase.NewDeleteFinancialRecordUseCase(financialRepo)
 	financialHandler := handler.NewFinancialRecordHandler(financialCreateUC, financialListUC, financialGetUC, financialUpdateUC, financialDeleteUC)
 
+	// CulinaryCategory
+	culCategoryRepo := mongoRepo.NewCulinaryCategoryRepository(db)
+	culCategoryCreateUC := usecase.NewCreateCulinaryCategoryUseCase(culCategoryRepo)
+	culCategoryListUC := usecase.NewListCulinaryCategoriesUseCase(culCategoryRepo)
+	culCategoryGetUC := usecase.NewGetCulinaryCategoryUseCase(culCategoryRepo)
+	culCategoryUpdateUC := usecase.NewUpdateCulinaryCategoryUseCase(culCategoryRepo)
+	culCategoryDeleteUC := usecase.NewDeleteCulinaryCategoryUseCase(culCategoryRepo)
+	culCategoryHandler := handler.NewCulinaryCategoryHandler(culCategoryCreateUC, culCategoryListUC, culCategoryGetUC, culCategoryUpdateUC, culCategoryDeleteUC)
+
 	// CulinariaRecipe
 	culinariaRepo := mongoRepo.NewCulinariaRecipeRepository(db)
 	culinariaCreateUC := usecase.NewCreateCulinariaRecipeUseCase(culinariaRepo)
@@ -145,6 +154,7 @@ func main() {
 	projectHandler.RegisterRoutes(mux)
 	vidaCriativaHandler.RegisterRoutes(mux)
 	financialHandler.RegisterRoutes(mux)
+	culCategoryHandler.RegisterRoutes(mux)
 	culinariaHandler.RegisterRoutes(mux)
 
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {

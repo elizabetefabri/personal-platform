@@ -1,16 +1,142 @@
-<section class="comingSoon">
-  <header class="comingSoon__header">
-    <div class="comingSoon__topRow">
+<div class="culinariaPage">
+  <header class="culinariaPage__header">
+    <div class="culinariaPage__topRow">
       <app-back-button></app-back-button>
+      <p-button
+        label="Nova categoria"
+        icon="pi pi-plus"
+        [outlined]="true"
+        styleClass="btn-accent-outline"
+        (onClick)="openCreateModal()"
+      />
     </div>
-    <h1 class="comingSoon__title">Culinária</h1>
-    <p class="comingSoon__description">
-      Descubra receitas deliciosas, dicas de culinária e muito mais.
+    <h1 class="culinariaPage__title">Culinária</h1>
+    <p class="culinariaPage__description">
+      Organize suas receitas por categoria. Cadastre, edite e explore o seu acervo culinário.
     </p>
   </header>
 
-  <div class="comingSoon__body">
-    <span class="comingSoon__icon pi pi-sparkles" aria-hidden="true"></span>
-    <p class="comingSoon__text">Em breve — conteúdo sendo preparado.</p>
+  @if (loading()) {
+    <div class="culinariaPage__loading">
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>Carregando categorias...</span>
+    </div>
+  } @else if (categories().length === 0) {
+    <div class="studyGrid__empty">
+      <i class="pi pi-inbox"></i>
+      <p>Nenhuma categoria cadastrada ainda.</p>
+      <p-button label="Criar primeira categoria" icon="pi pi-plus" styleClass="btn-primary" (onClick)="openCreateModal()" />
+    </div>
+  } @else {
+    <div class="culinariaGrid">
+      @for (cat of categories(); track cat.id) {
+        <article class="culinaryCard" [style.background]="cat.color || '#201F25'">
+          <div class="culinaryCard__header">
+            <i class="pi" [ngClass]="cat.icon"></i>
+            @if (cat.tag) {
+              <span class="culinaryCard__tag">{{ cat.tag }}</span>
+            }
+          </div>
+          <div class="culinaryCard__body">
+            <h2>{{ cat.name }}</h2>
+            <p>{{ cat.description }}</p>
+          </div>
+          <div class="culinaryCard__footer">
+            <p-button
+              label="Abrir categoria"
+              styleClass="btn-accent-outline"
+              [routerLink]="['/culinaria', cat.slug]"
+            />
+            <div class="culinaryCard__actions">
+              <button pButton type="button" icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="openEditModal(cat)" pTooltip="Editar" tooltipPosition="top"></button>
+              <button pButton type="button" icon="pi pi-trash" class="p-button-text p-button-sm p-button-danger" (click)="openDeleteModal(cat)" pTooltip="Excluir" tooltipPosition="top"></button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</div>
+
+<!-- Modal: Cadastrar / Editar Categoria -->
+<p-dialog
+  [(visible)]="modalVisible"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '520px' }"
+  [header]="editingCategory ? 'Editar Categoria' : 'Nova Categoria Culinária'"
+  styleClass="studyModal"
+  (onHide)="cancelModal()"
+>
+  <form class="form" (ngSubmit)="saveCategory()">
+    @if (errorMessage) {
+      <div class="form__error">{{ errorMessage }}</div>
+    }
+    <label class="field">
+      <span>Nome *</span>
+      <input pInputText name="name" [(ngModel)]="form.name" placeholder="Ex: Massas" />
+    </label>
+    <label class="field">
+      <span>Slug *</span>
+      <input pInputText name="slug" [(ngModel)]="form.slug" placeholder="Ex: massas" [disabled]="!!editingCategory" />
+    </label>
+    <label class="field">
+      <span>Descrição</span>
+      <input pInputText name="description" [(ngModel)]="form.description" placeholder="Breve descrição da categoria" />
+    </label>
+    <div class="form__row">
+      <label class="field">
+        <span>Tag</span>
+        <input pInputText name="tag" [(ngModel)]="form.tag" placeholder="Ex: Italiana" />
+      </label>
+      <label class="field">
+        <span>Ícone (PrimeIcons)</span>
+        <input pInputText name="icon" [(ngModel)]="form.icon" placeholder="pi-utensils" />
+      </label>
+    </div>
+    <div class="form__row">
+      <label class="field">
+        <span>Cor do card</span>
+        <input pInputText name="color" [(ngModel)]="form.color" placeholder="#201F25" />
+      </label>
+      <label class="field">
+        <span>Ordem</span>
+        <input pInputText type="number" name="order" [(ngModel)]="form.order" />
+      </label>
+    </div>
+    <label class="field">
+      <span>URL da imagem</span>
+      <input pInputText name="imageUrl" [(ngModel)]="form.imageUrl" placeholder="/assets/..." />
+    </label>
+    <footer class="formActions">
+      <button pButton type="button" label="Cancelar" class="btn-cancel" (click)="cancelModal()"></button>
+      <button pButton type="submit" [label]="editingCategory ? 'Salvar alterações' : 'Criar categoria'" icon="pi pi-check" [disabled]="saving()" class="btn-primary"></button>
+    </footer>
+  </form>
+</p-dialog>
+
+<!-- Modal: Confirmar exclusão -->
+<p-dialog
+  [(visible)]="deleteModalVisible"
+  [modal]="true"
+  [closable]="false"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '440px' }"
+  header="Confirmar exclusão"
+  styleClass="studyModal"
+>
+  <div class="delete-confirm">
+    <i class="pi pi-exclamation-triangle delete-confirm__icon"></i>
+    <p class="delete-confirm__text">
+      Tem certeza que deseja excluir <strong>{{ deleteTargetName }}</strong>?
+      <br /><span class="delete-confirm__hint">Esta ação não pode ser desfeita.</span>
+    </p>
   </div>
-</section>
+  <footer class="formActions">
+    <button pButton type="button" label="Cancelar" class="btn-cancel" (click)="cancelDelete()"></button>
+    <button pButton type="button" label="Confirmar exclusão" icon="pi pi-trash" severity="danger" (click)="confirmDelete()"></button>
+  </footer>
+</p-dialog>
