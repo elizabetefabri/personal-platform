@@ -65,9 +65,8 @@
     </div>
   </div>
   <ng-template pTemplate="footer">
-    <button pButton label="Cancelar" severity="contrast" [outlined]="true" (onClick)="cancelModal()"></button>
-
-    <button pButton [label]="editingSection ? 'Salvar alterações' : 'Cadastrar'" [loading]="saving()" severity="contrast" (onClick)="saveSection()" ></button>
+    <p-button label="Cancelar" styleClass="btn-cancel" (onClick)="cancelModal()" />
+    <p-button [label]="editingSection ? 'Salvar alterações' : 'Cadastrar'" icon="pi pi-check" [loading]="saving()" styleClass="btn-primary" (onClick)="saveSection()" />
   </ng-template>
 </p-dialog>
 
@@ -89,7 +88,7 @@
     </p>
   </div>
   <ng-template pTemplate="footer">
-    <button pButton label="Cancelar" severity="secondary" [outlined]="true" (onClick)="cancelDelete()" ></button>
-    <button pButton label="Confirmar exclusão" icon="pi pi-trash" severity="danger" (onClick)="confirmDelete()" ></button>
+    <p-button label="Cancelar" styleClass="btn-cancel" (onClick)="cancelDelete()" />
+    <p-button label="Confirmar exclusão" icon="pi pi-trash" severity="danger" (onClick)="confirmDelete()" />
   </ng-template>
 </p-dialog>
