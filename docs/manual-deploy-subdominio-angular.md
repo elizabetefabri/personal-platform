@@ -3,6 +3,8 @@
 ````md
 # Manual Oficial de Deploy Angular v21 em Subdomínios Hostinger
 
+> Nota: Este repositório também disponibiliza um script automatizado de deploy em `studypanel/frontend/deploy.ts` (TypeScript) que utiliza `basic-ftp`. Consulte `@personal-platform/studypanel/documentation/deploy.md` para instruções detalhadas sobre como usar o script e configurar `.env.deployment`.
+
 ## Objetivo
 
 Este manual define o processo oficial para criar, configurar e publicar aplicações Angular v21 em subdomínios hospedados na Hostinger.
